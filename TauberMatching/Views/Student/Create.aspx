@@ -1,0 +1,79 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<TauberMatching.Models.Student>" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
+	Create
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <% Html.EnableClientValidation(); %>
+    <h2>Add New Student</h2>
+
+    <% using (Html.BeginForm()) {%>
+        <%--<%: Html.ValidationSummary(true) %>--%>
+
+        <fieldset>
+            <legend>Fields</legend>
+            
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.UniqueName) %>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextBoxFor(model => model.UniqueName) %>
+                <%: Html.ValidationMessageFor(model => model.UniqueName) %>
+            </div>
+            
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.First) %>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextBoxFor(model => model.First) %>
+                <%: Html.ValidationMessageFor(model => model.First) %>
+            </div>
+            
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.Last) %>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextBoxFor(model => model.Last) %>
+                <%: Html.ValidationMessageFor(model => model.Last) %>
+            </div>
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.Degree) %>
+            </div>
+            <div class="editor-field">
+                <%foreach (String item in ViewData["degrees"] as IEnumerable)
+                  { %>
+                    <%: Html.RadioButtonFor(model=>model.Degree,item) %><%:item %>
+                <%} %>
+                <%: Html.ValidationMessageFor(model => model.Degree) %>
+            </div>
+            
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.Email) %>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextBoxFor(model => model.Email) %>
+                <%: Html.ValidationMessageFor(model => model.Email) %>
+            </div>
+            
+           <div class="editor-label">
+                <%: Html.LabelFor(model => model.Comments) %>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextAreaFor(model => model.Comments, new { style = "width: 250px;" })%>
+                <%: Html.ValidationMessageFor(model => model.Comments) %>
+            </div> 
+                      
+            <p>
+                <input type="submit" value="Create" />
+            </p>
+        </fieldset>
+
+    <% } %>
+
+    <div>
+        <%: Html.ActionLink("Back to List", "Index") %>
+    </div>
+
+</asp:Content>
+
