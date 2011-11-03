@@ -1,0 +1,132 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Web.Mvc;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
+using TauberMatching.Services;
+
+namespace TauberMatching.Models
+{
+    public class Student
+    {
+        private string _uniqueName;
+        private string _first;
+        private string _last;
+        private string _comments;
+        private bool _emailed = false;
+
+        public Student() { }
+        public Student(StudentDTO sdto)
+        {
+            this.UniqueName = sdto.UniqueName;
+            this.FirstName = sdto.StudentFirst;
+            this.LastName = sdto.StudentLast;
+            this.Email = sdto.UniqueName + "@umich.edu";
+            this.Degree = sdto.Degree;
+        }
+        [HiddenInput]
+        public int Id { get; set; }
+        [Required(ErrorMessage = "Mandatory Field: You must enter the unique name for the student!")]
+        [DisplayName("Unique Name")]
+        public string UniqueName 
+        { 
+            get
+            {
+                return _uniqueName;
+            }
+            set
+            {
+                _uniqueName = Regex.Replace(value.Trim(), @"\s+", " ").ToLower();
+            } 
+        }
+        [Required(ErrorMessage = "Mandatory Field: You must enter the first name of the student!")]
+        [DisplayName("First Name")]
+        public string FirstName 
+        {
+            get
+            {
+                return _first;
+            }
+            set
+            {
+                _first = Regex.Replace(value.Trim(), @"\s+", " ").InitCap();
+            }
+        }
+        [Required(ErrorMessage = "Mandatory Field: You must enter the last name of the student!")]
+        [DisplayName("Last Name")]
+        public string LastName
+        {
+            get
+            {
+                return _last;
+            }
+            set
+            {
+                _last = Regex.Replace(value.Trim(), @"\s+", " ").InitCap();
+            }
+        }
+        [Required(ErrorMessage = "Mandatory Field: You must choose the degree for the student!")]
+        [DisplayName("Degree")]
+        public String Degree { get; set; } // Bus: business, Eng:Engineering
+        [Required(ErrorMessage = "Mandatory Field: You must enter the email for the student!")]
+        [DisplayName("Email")]
+        [RegularExpression(@"^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$", ErrorMessage = "Valid Email Address is required.")]  
+        public string Email { get; set; }
+        [DisplayName("Emailed?")]
+        public bool Emailed { get { return _emailed; } set { _emailed = value; } }
+        /// <summary>
+        /// Comments used on the administration interface
+        /// </summary>
+        [DisplayName("Comments")]
+        public string Comments
+        {
+            get { return _comments; }
+            set
+            {
+                if (value != null && value.Trim() != null)
+                    _comments = Regex.Replace(value.Trim(), @"\s+", " ");
+                _comments = value;
+            }
+        }
+        [HiddenInput]
+        public Guid Guid { get; set; }
+        public virtual ICollection<Matching> Matchings { get; set; }
+        public virtual ICollection<EmailLog> EmailLogs { get; set; }
+        public virtual ICollection<UserError> UserErrorLogs { get; set; }
+        public virtual ICollection<StudentFeedback> StudentFeedbacks { get; set; }
+        /// <summary>
+        /// Comments provided by the student at the time when the student is submitting preferences.
+        /// </summary>
+        public string OtherComments { get; set; }
+        /// <summary>
+        /// The date when the student submitted the ranking form
+        /// </summary>
+        public DateTime? ScoreDate { get; set; }
+    }
+
+    public class StudentFeedback
+    {
+        public int Id { get; set; }
+        public virtual Student Student { get; set; }
+        public virtual Project Project { get; set; }
+        public char Type { get; set; } //P: positive feedback, C: Constructive feedback
+        public int FeedbackScore { get; set; }
+    }
+
+    public enum Degree
+    {
+        Bus,Eng
+    }
+
+    public class StudentDTO
+    {
+        public String UniqueName { get; set; }
+        public String StudentFirst { get; set; }
+        public String StudentLast { get; set; }
+        public String Degree { get; set; }
+        public String Email { get; set; }
+    }
+}
