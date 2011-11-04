@@ -10,6 +10,8 @@ namespace TauberMatching.Controllers
     [HandleError]
     public class ProjectController : Controller
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ProjectController));
+
         private String uniqueProjectNameErrorMsg="You have to pick a unique project name. There's already an existing project with the name you have specified.";
         MatchingDB db = new MatchingDB();
 

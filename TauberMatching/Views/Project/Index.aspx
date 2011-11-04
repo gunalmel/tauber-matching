@@ -48,7 +48,7 @@
                 <%: item.Emailed?"Yes":"No" %>
             </td>
             <td>
-                <%: item.ContactFirst+", "+item.ContactLast%>
+                <%: (item.ContactFirst!=null||item.ContactLast!=null)?(item.ContactFirst+", "+item.ContactLast):"" %>
             </td>
             <td>
                 <%: item.ContactEmail %>
