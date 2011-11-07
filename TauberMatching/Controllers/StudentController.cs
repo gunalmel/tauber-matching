@@ -10,13 +10,14 @@ namespace TauberMatching.Controllers
     public class StudentController : Controller
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ProjectController));
-
         private String uniqueNameErrorMsg = "There's already an existing student with the unique name you specified.";
-        MatchingDB db = new MatchingDB();
 
         public ActionResult Index()
         {
-            return View(db.Students.ToList());
+            MatchingDB db = new MatchingDB();
+            var students = db.Students.ToList();
+            db.Dispose();
+            return View(students);
         }
 
         //
@@ -46,10 +47,12 @@ namespace TauberMatching.Controllers
                 this.ModelState.AddModelError("UniqueName", uniqueNameErrorMsg);
             if (ModelState.IsValid)
             {
+                MatchingDB db = new MatchingDB();
                 st.Guid = new Guid();
                 db.Students.Add(st);
                 db.SaveChanges();
                 TempData["message"] = "Student \"" + st.FirstName+" "+st.LastName + "\" is added!";
+                db.Dispose();
                 return RedirectToAction("Index");
             }
             setViewDataForListOfDegrees();
@@ -59,18 +62,20 @@ namespace TauberMatching.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var student = from s in db.Students where s.Id == id select s;
+            MatchingDB db = new MatchingDB();
+            var student = (from s in db.Students where s.Id == id select s).FirstOrDefault<Student>();
             setViewDataForListOfDegrees();
-            return View(student.FirstOrDefault<Student>());
+            db.Dispose();
+            return View(student);
         }
         [HttpPost]
         public ActionResult Edit(Student st)
         {
             if (!ModelState.IsValid)
                 return View(st);
-
+            MatchingDB db = new MatchingDB();
             Student student = db.Students.FirstOrDefault(s => s.Id == st.Id);
-
+            db.Dispose();
             if (student.UniqueName.ToLower() != st.UniqueName.ToLower() && !ValidateStudent(st))
             {
                 setViewDataForListOfDegrees();
@@ -94,10 +99,12 @@ namespace TauberMatching.Controllers
  
         public ActionResult Delete(int id)
         {
+            MatchingDB db = new MatchingDB();
             Student s = db.Students.SingleOrDefault(st => st.Id == id);
             db.Students.Remove(s);
             db.SaveChanges();
             TempData["message"] = "Student \"" + s.FirstName+" "+s.LastName + "\" is deleted.";
+            db.Dispose();
             return RedirectToAction("Index");
         }
 
@@ -127,7 +134,10 @@ namespace TauberMatching.Controllers
         }
         private int GetStudentCountByUniqueName(String uname)
         {
-            return db.Students.Where(s => s.UniqueName == uname.ToLower()).Count();
+            MatchingDB db = new MatchingDB();
+            int count=db.Students.Where(s => s.UniqueName == uname.ToLower()).Count();
+            db.Dispose();
+            return count;
         }
         private bool ValidateStudent(Student s)
         {

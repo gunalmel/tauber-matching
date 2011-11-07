@@ -11,27 +11,29 @@ namespace TauberMatching.Controllers
     public class ProjectController : Controller
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ProjectController));
-
         private String uniqueProjectNameErrorMsg="You have to pick a unique project name. There's already an existing project with the name you have specified.";
-        MatchingDB db = new MatchingDB();
 
         public ActionResult Index()
         {
+            MatchingDB db = new MatchingDB();
             var projects = from p in db.Projects select p;
+            db.Dispose();
             return View(projects.ToList());
         }
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var project = from p in db.Projects where p.Id == id select p;
-            return View(project.FirstOrDefault<Project>());
+            MatchingDB db = new MatchingDB();
+            var project = (from p in db.Projects where p.Id == id select p).FirstOrDefault<Project>();
+            db.Dispose();
+            return View(project);
         }
         [HttpPost]
         public ActionResult Edit(Project p)
         {
             if (!ModelState.IsValid)
                 return View(p);
-
+            MatchingDB db = new MatchingDB();
             Project pr = db.Projects.FirstOrDefault(project => project.Id == p.Id);
 
             if (pr.Name.ToLower() != p.Name.ToLower() && !ValidateProject(p))
@@ -48,15 +50,18 @@ namespace TauberMatching.Controllers
             pr.ContactPhone = p.ContactPhone;
             db.SaveChanges();
             TempData["message"] = "Project \"" + pr.Name + "\" is updated.";
+            db.Dispose();
             return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id)
         {
+            MatchingDB db = new MatchingDB();
             Project p = db.Projects.SingleOrDefault(pr => pr.Id == id);
             db.Projects.Remove(p);
             db.SaveChanges();
             TempData["message"] = "Project \"" + p.Name + "\" is deleted.";
+            db.Dispose();
             return RedirectToAction("Index");
         }
 
@@ -70,19 +75,25 @@ namespace TauberMatching.Controllers
         {
             if (!ValidateProject(p))
                 this.ModelState.AddModelError("Name", uniqueProjectNameErrorMsg);
+         
             if (ModelState.IsValid)
             {
+                MatchingDB db = new MatchingDB();
                 p.Guid = new Guid();
                 db.Projects.Add(p);
                 db.SaveChanges();
                 TempData["message"] = "Project \"" + p.Name + "\" is added!";
+                db.Dispose();
                 return RedirectToAction("Index");
             }
             return View(p);
         }
         private int GetProjectCountByName(String name)
         {
-            return db.Projects.Where(p => p.Name.ToLower() == name.ToLower()).Count();
+            MatchingDB db = new MatchingDB();
+            int count =  db.Projects.Where(p => p.Name.ToLower() == name.ToLower()).Count();
+            db.Dispose();
+            return count;
         }
         private bool ValidateProject(Project p)
         {

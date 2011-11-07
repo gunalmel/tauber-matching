@@ -14,12 +14,12 @@ namespace TauberMatching.Controllers
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ProjectController));
 
-        MatchingDB db = new MatchingDB();
-
         private String InitializeConnectionString()
         {
+            MatchingDB db = new MatchingDB();
             //string appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase);
             string appPath = Server.MapPath("~/App_Data");
+            db.Dispose();
             return "Data Source=" + Path.Combine(appPath, "MatchingDB.sdf") + " ;pwd=;";
         }
         //
@@ -71,11 +71,13 @@ namespace TauberMatching.Controllers
         /// <param name="entities">Collection of Upload Entities to be persisted.</param>
         private void InsertIntoTempTableUsingEF(IEnumerable<UploadEntity> entities)
         {
+            MatchingDB db = new MatchingDB();
             foreach (UploadEntity ue in entities)
             {
                 db.UploadEntities.Add(ue);
                 db.SaveChanges();
             }
+            db.Dispose();
         }
         /// <summary>
         /// Deletes all records in the temporary table that will store student/project matchings before they are migrated into actual production tables.
