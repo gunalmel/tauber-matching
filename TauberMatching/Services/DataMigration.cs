@@ -16,23 +16,20 @@ namespace TauberMatching.Services
         /// <summary>
         /// Moves the data from UploadEntities table whic stores Project and Student matchings to project, student and matchings table.
         /// </summary>
-        public void MigrateFromUploadEntities()
+        public void MigrateFromUploadedEntities()
         {
+            CreateProjects(ExtractProjects());
+            CreateStudents(ExtractStudents());
+            CreateMatchings(ExtractMatchings());
         }
-
-        public IList<Models.Project> MigrateProjects()
-        {
-            
-            return null;
-        }
-
         /// <summary>
         /// Extracts the list of projects from UploadEntities table which holds the data imported from student-project matching sheet.
         /// </summary>
         /// <returns>List of unique project records from the student-project list</returns>
         public IList<ProjectDTO> ExtractProjects()
         {
-            return db.UploadEntities.Select(ue => new ProjectDTO(){ Name = ue.ProjectName, ContactFirst = ue.ContactFirst, ContactLast = ue.ContactLast, ContactEmail = ue.ContactEmail, ContactPhone = ue.ContactPhone }).Distinct().ToList<ProjectDTO>();
+            var projectDtos= db.UploadEntities.Select(ue => new ProjectDTO() { Name = ue.ProjectName, ContactFirst = ue.ContactFirst, ContactLast = ue.ContactLast, ContactEmail = ue.ContactEmail, ContactPhone = ue.ContactPhone }).Distinct().ToList<ProjectDTO>();
+            return projectDtos;
         }
         /// <summary>
         /// Extracts the list of students from UploadEntities table which holds the data imported from student-project matching sheet.
@@ -40,7 +37,8 @@ namespace TauberMatching.Services
         /// <returns>List of distinct student records from the student-project matching list</returns>
         public IList<StudentDTO> ExtractStudents()
         {
-            return db.UploadEntities.Select(ue => new StudentDTO() { UniqueName = ue.UniqueName, StudentFirst = ue.StudentFirst, StudentLast = ue.StudentLast, Degree = ue.StudentDegree, Email = ue.UniqueName.ToLower()+"@umich.edu" }).Distinct().ToList<StudentDTO>();
+            var studentDtos = db.UploadEntities.Select(ue => new StudentDTO() { UniqueName = ue.UniqueName, StudentFirst = ue.StudentFirst, StudentLast = ue.StudentLast, Degree = ue.StudentDegree, Email = ue.UniqueName.ToLower() + "@umich.edu" }).Distinct().ToList<StudentDTO>();
+            return studentDtos;
         }
         public void CreateProjects(IList<ProjectDTO> pdtos)
         {
@@ -63,17 +61,11 @@ namespace TauberMatching.Services
             using (SqlCeConnection conn = new SqlCeConnection(InitializeConnectionString()))
             {
                 conn.Open();
-                string deleteTable = "delete from "+e.ToString();
+                string deleteTable = "delete from " + e.ToString();
                 SqlCeCommand cmdDelete = new SqlCeCommand(deleteTable, conn);
                 cmdDelete.ExecuteNonQuery();
             }
         }
-
-        private String InitializeConnectionString()
-        {
-            return ConfigurationManager.ConnectionStrings["MatchingDB"].ConnectionString;
-        }
-
         public void CreateStudents(IList<StudentDTO> sdtos)
         {
             db.Configuration.ValidateOnSaveEnabled = false;
@@ -96,7 +88,7 @@ namespace TauberMatching.Services
         /// <returns>List of student id/project id matchings to be inserted into production tables from uploadentities table</returns>
         public IList<MatchingDTO> ExtractMatchings()
         {
-            return db.UploadEntities.Select(ue=>new MatchingDTO(){ProjectId=ue.ProjectId, StudentId=ue.StudentId}).ToList();
+            return db.UploadEntities.Select(ue => new MatchingDTO() { ProjectId = ue.ProjectId, StudentId = ue.StudentId }).ToList();
         }
 
         public void CreateMatchings(IList<MatchingDTO> mdtos)
@@ -110,6 +102,10 @@ namespace TauberMatching.Services
                 db.Matchings.Add(matching);
                 db.SaveChanges();
             }
+        }
+        private String InitializeConnectionString()
+        {
+            return ConfigurationManager.ConnectionStrings["MatchingDB"].ConnectionString;
         }
     }
     public enum EntityType { Projects, Students, UploadEntities, Matchings }
