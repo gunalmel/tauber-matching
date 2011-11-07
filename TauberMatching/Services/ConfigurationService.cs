@@ -15,7 +15,7 @@ namespace TauberMatching.Services
         /// Retrieves all application settings in AppConfiguration object
         /// </summary>
         /// <returns>AppConfiguration object that encapsulates all named application configuration parameters.</returns>
-        public AppConfiguration GetConfigParameters()
+        public static AppConfiguration GetConfigParameters()
         {
             AppConfiguration appConfig;
             using (MatchingDB db = new MatchingDB())
@@ -26,7 +26,7 @@ namespace TauberMatching.Services
         /// Updates the config parameters in the database matching the properties of the method argument
         /// </summary>
         /// <param name="config">AppCOnfiguration object encapsulating application configuration parameters to be set in the db.</param>
-        public void UpdateConfigParameters(AppConfiguration config)
+        public static void UpdateConfigParameters(AppConfiguration config)
         {
             using(MatchingDB db = new MatchingDB())
             {
