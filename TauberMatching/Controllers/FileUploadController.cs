@@ -12,6 +12,8 @@ namespace TauberMatching.Controllers
 {
     public class FileUploadController : Controller
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ProjectController));
+
         MatchingDB db = new MatchingDB();
 
         private String InitializeConnectionString()

@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AppSetupController.cs" />
     <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -111,6 +112,8 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AppConfiguration.cs" />
+    <Compile Include="Models\ConfigParameter.cs" />
+    <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Services\CustomExtensions.cs" />
     <Compile Include="Models\EmailLog.cs" />
     <Compile Include="Models\Matching.cs" />
@@ -170,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\uploads\" />
+    <Folder Include="Views\AppSetup\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

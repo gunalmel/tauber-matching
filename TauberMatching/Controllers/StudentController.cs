@@ -9,7 +9,9 @@ namespace TauberMatching.Controllers
 {
     public class StudentController : Controller
     {
-        private String uniqueNameErrorMsg = "There's already an existing student with the unique name you have specified.";
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ProjectController));
+
+        private String uniqueNameErrorMsg = "There's already an existing student with the unique name you specified.";
         MatchingDB db = new MatchingDB();
 
         public ActionResult Index()

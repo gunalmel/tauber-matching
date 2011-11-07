@@ -79,6 +79,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppConfigurationTest.cs" />
     <Compile Include="Services\DataMigrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
@@ -92,6 +93,9 @@
       <Project>{5E3C4CCD-6702-4FD4-B06A-74ECDA02B039}</Project>
       <Name>TauberMatching</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Shadow Include="Test References\TauberMatching.accessor" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

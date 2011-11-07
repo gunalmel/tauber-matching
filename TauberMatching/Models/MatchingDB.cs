@@ -16,5 +16,6 @@ namespace TauberMatching.Models
         public DbSet<EmailLog> EmailLogs { get; set; }
         public DbSet<UploadEntity> UploadEntities { get; set; }
         public DbSet<ProjectReject> ProjectRejects { get; set; }
+        public DbSet<ConfigParameter> ConfigParameters { get; set; }
     }
 }
