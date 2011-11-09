@@ -10,7 +10,7 @@ using TauberMatching.Services;
 
 namespace TauberMatching.Services
 {
-    public class DataMigration
+    public class DataMigrationService
     {
         MatchingDB db = new MatchingDB();
         /// <summary>

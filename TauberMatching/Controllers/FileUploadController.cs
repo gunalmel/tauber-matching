@@ -7,6 +7,7 @@ using LinqToExcel;
 using System.Data.SqlServerCe;
 using TauberMatching.Models;
 using System.Collections.Generic;
+using TauberMatching.Services;
 
 namespace TauberMatching.Controllers
 {
@@ -40,6 +41,8 @@ namespace TauberMatching.Controllers
                 //linqtoExcel requires that application be compiled using x86 platform. Under project properties set platform target to x86 for both debug and release
                 DeleteUploadTable();
                 InsertIntoTempTableUsingEF(ReadUploadedExcelFile(path));
+                DataMigrationService dm = new DataMigrationService();
+                dm.MigrateFromUploadedEntities();
             }
             return View();
         }

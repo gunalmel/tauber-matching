@@ -16,9 +16,9 @@ namespace TauberMatching.Controllers
         public ActionResult Index()
         {
             MatchingDB db = new MatchingDB();
-            var projects = from p in db.Projects select p;
+            var projects = db.Projects.ToList();
             db.Dispose();
-            return View(projects.ToList());
+            return View(projects);
         }
         [HttpGet]
         public ActionResult Edit(int id)

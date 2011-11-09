@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="AppConfigurationTest.cs" />
     <Compile Include="ConfigurationServiceTest.cs" />
+    <Compile Include="EmailServiceTest.cs" />
     <Compile Include="Services\DataMigrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />

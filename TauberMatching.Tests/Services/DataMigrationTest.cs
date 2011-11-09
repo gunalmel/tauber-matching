@@ -19,7 +19,7 @@ namespace TauberMatching.Tests
     public class DataMigrationTest
     {
 
-        DataMigration m = new DataMigration();
+        DataMigrationService m = new DataMigrationService();
         private TestContext testContextInstance;
 
         /// <summary>
