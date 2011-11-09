@@ -35,8 +35,11 @@ namespace TauberMatching.Services
             IS_TESTING = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["IsTesting"]);
             MAIL_FROM = new MatchingDB().ConfigParameters.First(c => c.Id == ((int)ConfigEnum.SiteMasterEmail)).Value;
 
-            PICKUP_DIR = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName);
-            //PICKUP_DIR = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            if(System.Web.HttpContext.Current==null)
+                PICKUP_DIR = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName);
+            else
+                PICKUP_DIR = System.Web.HttpContext.Current.Server.MapPath("~/");
+            //PICKUP_DIR = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase); //Returns in URI form (starst with file:// which can not be used by smtpClient as pickup directory)
             PICKUP_DIR = System.IO.Path.Combine(PICKUP_DIR,"App_Data","emails");
             if (!System.IO.Directory.Exists(PICKUP_DIR))
                 System.IO.Directory.CreateDirectory(PICKUP_DIR);
