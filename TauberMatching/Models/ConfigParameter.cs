@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace TauberMatching.Models
 {
@@ -27,7 +28,9 @@ namespace TauberMatching.Models
         /// <summary>
         /// Id of config parameters are specified by COnfigEnum
         /// </summary>
-        public int Id;
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)] 
+        public int Id{get;set;}
         /// <summary>
         /// Application configuration parameter name as specified by ConfigEnum. Property is read-only, if needed to be set then either constructor or SetName method should be used.
         /// </summary>

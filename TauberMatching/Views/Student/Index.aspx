@@ -47,10 +47,10 @@
                 <%: item.UniqueName %>
             </td>
             <td>
-                <%: item.Last %>
+                <%: item.FirstName %>
             </td>
             <td>
-                <%: item.First %>
+                <%: item.LastName %>
             </td>
             <td>
                 <%: item.Degree %>

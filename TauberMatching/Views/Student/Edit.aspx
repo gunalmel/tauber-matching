@@ -25,19 +25,19 @@
             </div>
             
             <div class="editor-label">
-                <%: Html.LabelFor(model => model.First) %>
+                <%: Html.LabelFor(model => model.FirstName) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.First) %>
-                <%: Html.ValidationMessageFor(model => model.First) %>
+                <%: Html.TextBoxFor(model => model.FirstName) %>
+                <%: Html.ValidationMessageFor(model => model.FirstName) %>
             </div>
             
             <div class="editor-label">
-                <%: Html.LabelFor(model => model.Last) %>
+                <%: Html.LabelFor(model => model.LastName) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.Last) %>
-                <%: Html.ValidationMessageFor(model => model.Last) %>
+                <%: Html.TextBoxFor(model => model.LastName) %>
+                <%: Html.ValidationMessageFor(model => model.LastName) %>
             </div>
             
             <div class="editor-label">

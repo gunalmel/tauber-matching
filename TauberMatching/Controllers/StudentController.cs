@@ -75,7 +75,6 @@ namespace TauberMatching.Controllers
                 return View(st);
             MatchingDB db = new MatchingDB();
             Student student = db.Students.FirstOrDefault(s => s.Id == st.Id);
-            db.Dispose();
             if (student.UniqueName.ToLower() != st.UniqueName.ToLower() && !ValidateStudent(st))
             {
                 setViewDataForListOfDegrees();
@@ -91,6 +90,7 @@ namespace TauberMatching.Controllers
             student.Comments = st.Comments;
             db.SaveChanges();
             TempData["message"] = "Student \"" + student.FirstName+" "+student.LastName + "\" is updated.";
+            db.Dispose();
             return RedirectToAction("Index");
         }
 
@@ -108,23 +108,6 @@ namespace TauberMatching.Controllers
             return RedirectToAction("Index");
         }
 
-        //
-        // POST: /Student/Delete/5
-
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
- 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
         /// <summary>
         /// Sets view data with the key degrees to the list of available degrees option for a student so that relevant screen element can bind to it.
         /// </summary>
