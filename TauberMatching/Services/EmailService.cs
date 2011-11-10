@@ -45,7 +45,6 @@ namespace TauberMatching.Services
                 System.IO.Directory.CreateDirectory(PICKUP_DIR);
         }
 
-        //TODO using Quartz implement a scheduled Email task using a db queue.
         public EmailService(string to, string subject, string body)
         {
             CreateMessage(to, subject, body);
@@ -82,16 +81,19 @@ namespace TauberMatching.Services
             _mailServer.Port = MAIL_PORT;
             _mailServer.EnableSsl = ENABLE_SSL;
         }
-        public void SendMessage()
+        public String SendMessage()
         {
+            String status = "Failed";
             try
             {
                 _mailServer.Send(_mail);
+                status = "Success";
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+            return status;
         }
     }
 }
