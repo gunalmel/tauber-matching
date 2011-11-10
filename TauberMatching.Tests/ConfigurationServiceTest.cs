@@ -68,19 +68,20 @@ namespace TauberMatching.Tests
         [TestMethod()]
         public void GetConfigParametersTest()
         {
-            AppConfiguration expected = null; // TODO: Initialize to an appropriate value
+            AppConfiguration expected = null; 
             AppConfiguration actual;
             actual = ConfigurationService.GetConfigParameters();
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            Assert.AreNotEqual(expected, actual);
         }
 
         [TestMethod()]
         public void UpdateConfigParametersTest()
         {
-            AppConfiguration config = null; // TODO: Initialize to an appropriate value
+            AppConfiguration config = new AppConfiguration() { EnforceContinuousProjectRanking = true, MaxRejectedBusStudents = 10 };
             ConfigurationService.UpdateConfigParameters(config);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
+            AppConfiguration updated = ConfigurationService.GetConfigParameters();
+            Assert.AreEqual(true,updated.EnforceContinuousProjectRanking);
+            Assert.AreEqual(10, updated.MaxRejectedBusStudents);
         }
     }
 }

@@ -71,7 +71,7 @@ namespace TauberMatching.Tests
             string to = "gunalmel@yahoo.com";
             string subject = "Just testing!";
             string body = "An Html <b>test</b> message body.";
-            EmailService target = new EmailService(to, subject, body); // TODO: Initialize to an appropriate value
+            EmailService target = new EmailService(to, subject, body);
             target.SendMessage();
         }
     }

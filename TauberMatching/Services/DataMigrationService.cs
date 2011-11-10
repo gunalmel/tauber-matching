@@ -48,6 +48,7 @@ namespace TauberMatching.Services
             foreach (var pdto in pdtos)
             {
                 Project p = new Project(pdto);
+                p.Guid = Guid.NewGuid();
                 db.Projects.Add(p);
                 db.SaveChanges();
                 Func<UploadEntity, bool> setId = (ue) => { ue.ProjectId = p.Id; return true; };
@@ -74,6 +75,7 @@ namespace TauberMatching.Services
             foreach (var sdto in sdtos)
             {
                 Student s = new Student(sdto);
+                s.Guid = Guid.NewGuid();
                 db.Students.Add(s);
                 db.SaveChanges();
                 Func<UploadEntity, bool> setId = (ue) => { ue.StudentId = s.Id; return true; };

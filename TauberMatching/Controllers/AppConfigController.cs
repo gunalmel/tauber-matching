@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TauberMatching.Models;
+using TauberMatching.Services;
 
 namespace TauberMatching.Controllers
 {
@@ -15,9 +16,7 @@ namespace TauberMatching.Controllers
  
         public ActionResult Edit()
         {
-            MatchingDB db = new MatchingDB();
-            AppConfiguration appConfig = new AppConfiguration(db.ConfigParameters);
-            return View(appConfig);
+            return View(ConfigurationService.GetConfigParameters());
         }
 
         //
@@ -28,18 +27,8 @@ namespace TauberMatching.Controllers
         {
             try
             {
-                MatchingDB db = new MatchingDB();
-                IEnumerable<ConfigParameter> parameters = appConfig.GetConfigParameters();
-                foreach (var param in parameters)
-                {
-                    var pm = db.ConfigParameters.FirstOrDefault(p => p.Id == param.Id);
-                    if (pm == null)
-                        db.ConfigParameters.Add(param);
-                    else
-                        pm.Value = param.Value;
-                }
+                ConfigurationService.UpdateConfigParameters(appConfig);
                 TempData["message"] = _updateMessage;
-                db.SaveChanges();
                 return View();
             }
             catch(Exception ex)

@@ -25,16 +25,21 @@ namespace TauberMatching.Services
         /// <summary>
         /// Updates the config parameters in the database matching the properties of the method argument
         /// </summary>
-        /// <param name="config">AppCOnfiguration object encapsulating application configuration parameters to be set in the db.</param>
+        /// <param name="config">AppConfiguration object encapsulating application configuration parameters to be set in the db.</param>
         public static void UpdateConfigParameters(AppConfiguration config)
         {
-            using(MatchingDB db = new MatchingDB())
+            using (MatchingDB db = new MatchingDB())
             {
-                foreach (ConfigParameter p in config.GetConfigParameters())
+                IEnumerable<ConfigParameter> parameters = config.GetConfigParameters();
+                foreach (var param in parameters)
                 {
-                    db.ConfigParameters.Where(pr=>pr.Id==p.Id).First().Value=p.Value;
-                    db.SaveChanges();
+                    var pm = db.ConfigParameters.FirstOrDefault(p => p.Id == param.Id);
+                    if (pm == null)
+                        db.ConfigParameters.Add(param);
+                    else
+                        pm.Value = param.Value;
                 }
+                db.SaveChanges();
             }
         }
     }

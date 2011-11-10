@@ -17,5 +17,11 @@ namespace TauberMatching.Models
         public DbSet<UploadEntity> UploadEntities { get; set; }
         public DbSet<ProjectReject> ProjectRejects { get; set; }
         public DbSet<ConfigParameter> ConfigParameters { get; set; }
+        public DbSet<EmailQueueMessage> EmailQueueMessages { get; set; }
+        public MatchingDB()
+        {
+            Database.SetInitializer<MatchingDB>(new DropCreateDatabaseIfModelChanges<MatchingDB>());
+        }
+        
     }
 }
