@@ -91,7 +91,7 @@ namespace TauberMatching.Services
             }
             catch (Exception ex)
             {
-                throw ex;
+                log.Error("Error while sending email using SmtpClient ", ex);
             }
             return status;
         }

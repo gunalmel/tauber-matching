@@ -7,6 +7,7 @@ using System.Web.Routing;
 using Quartz;
 using Quartz.Impl;
 using TauberMatching.Services;
+using log4net.Appender;
 
 namespace TauberMatching
 {
@@ -33,7 +34,7 @@ namespace TauberMatching
             AreaRegistration.RegisterAllAreas();
             RegisterRoutes(RouteTable.Routes);
 
-            //TODO Protect Quartz from getting recycled.
+            //TODO Protect Quartz from getting recycled. #9
             ISchedulerFactory schedFact = new StdSchedulerFactory();
             // get a scheduler
             IScheduler sched = schedFact.GetScheduler();
@@ -47,6 +48,16 @@ namespace TauberMatching
             sched.Start();
             log4net.ILog log = log4net.LogManager.GetLogger(typeof(MvcApplication));
             log.Info("Quartz Queue started! Application Started!");
+
+            //To flush logger buffer immediatley if not configured in the config file
+            //foreach (IAppender appender in log.Logger.Repository.GetAppenders())
+            //{
+            //    var buffered = appender as BufferingAppenderSkeleton;
+            //    if (buffered != null)
+            //    {
+            //        buffered.Flush();
+            //    }
+            //}
         }
     }
 }
