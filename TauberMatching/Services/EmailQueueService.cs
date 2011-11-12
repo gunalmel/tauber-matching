@@ -33,8 +33,28 @@ namespace TauberMatching.Services
 
         private static void LogMessage(MatchingDB db, EmailQueueMessage qMessage,string status)
         {
+            //TODO From the db ContactType field is missing. StudentId and ProjectId fields are irrelevant and not getting updated. Update Email log object as needed. #11
             EmailLog eLog = new EmailLog(qMessage,status);
-            db.EmailLogs.Add(eLog);
+            Project pr; Student st;
+            switch (qMessage.ContactType)
+            {
+                case "Project":
+                    pr = db.Projects.Where(p => p.Id == qMessage.ContactId).First();
+                    pr.Emailed=(status==EmailStatus.Success.ToString());
+                    if (pr.EmailLogs == null)
+                        pr.EmailLogs = new List<EmailLog>();
+                    pr.EmailLogs.Add(eLog);
+                    break;
+                case "Student":
+                    st = db.Students.Where(s => s.Id == qMessage.ContactId).First();
+                    st.Emailed = (status == EmailStatus.Success.ToString());
+                    if (st.EmailLogs == null)
+                        st.EmailLogs = new List<EmailLog>();
+                    st.EmailLogs.Add(eLog);
+                    break;
+                default:
+                    break;
+            }
             db.SaveChanges();
         }
         public static void SendMailsInTheQueue()
@@ -42,12 +62,13 @@ namespace TauberMatching.Services
             int i = 0;
             using (var db = new MatchingDB())
             {
+                //TODO Contacts emailed field is not being updated #12
                 foreach (var m in GetMessages(db))
                 {
                     EmailService emailService = new EmailService(m.To, m.Subject, m.Body);
                     String status = emailService.SendMessage();
                     LogMessage(db, m, status);
-                    if (status == "Success")
+                    if (status == EmailStatus.Success.ToString())
                         db.EmailQueueMessages.Remove(m);
                     i++;
                 }

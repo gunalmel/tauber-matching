@@ -35,6 +35,7 @@ namespace TauberMatching.Services
             IS_TESTING = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["IsTesting"]);
             MAIL_FROM = new MatchingDB().ConfigParameters.First(c => c.Id == ((int)ConfigEnum.SiteMasterEmail)).Value;
 
+            //TODO Quartz.NET does not have access to a HttpContext.Current #13
             if(System.Web.HttpContext.Current==null)
                 PICKUP_DIR = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName);
             else
@@ -83,11 +84,11 @@ namespace TauberMatching.Services
         }
         public String SendMessage()
         {
-            String status = "Failed";
+            String status = EmailStatus.Failed.ToString();
             try
             {
                 _mailServer.Send(_mail);
-                status = "Success";
+                status = EmailStatus.Success.ToString();
             }
             catch (Exception ex)
             {
@@ -96,4 +97,5 @@ namespace TauberMatching.Services
             return status;
         }
     }
+    public enum EmailStatus { Success, Failed };
 }

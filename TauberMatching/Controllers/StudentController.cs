@@ -17,7 +17,6 @@ namespace TauberMatching.Controllers
             MatchingDB db = new MatchingDB();
             var students = db.Students.ToList();
             db.Dispose();
-            EmailQueueMessage msg = new EmailQueueMessage(students.First().Id, 'S', students.First().FirstName, students.First().LastName, students.First().Guid, students.First().Email, "Testing", "Test Message");
             return View(students);
         }
 

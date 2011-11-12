@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace TauberMatching.Models
 {
@@ -13,7 +14,7 @@ namespace TauberMatching.Models
         //TODO Add Message Templating Issue#7
         public int Id { get; set; }
         public int ContactId { get; set; }
-        public char ContactType { get; set; }
+        public string ContactType { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public Guid Guid { get; set; }
@@ -21,7 +22,7 @@ namespace TauberMatching.Models
         public string Subject { get; set; }
         public string Body { get; set; }
         public EmailQueueMessage() { }
-        public EmailQueueMessage(int contactId,char contactType,string firstName,string lastName,Guid guid, string to, string subject, string body)
+        public EmailQueueMessage(int contactId,string contactType,string firstName,string lastName,Guid guid, string to, string subject, string body)
         {
             ContactId = contactId;
             ContactType = contactType;

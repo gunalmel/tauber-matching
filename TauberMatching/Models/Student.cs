@@ -110,8 +110,8 @@ namespace TauberMatching.Models
     public class StudentFeedback
     {
         public int Id { get; set; }
-        public virtual Student Student { get; set; }
-        public virtual Project Project { get; set; }
+        public Student Student { get; set; }
+        public Project Project { get; set; }
         public char Type { get; set; } //P: positive feedback, C: Constructive feedback
         public int FeedbackScore { get; set; }
     }

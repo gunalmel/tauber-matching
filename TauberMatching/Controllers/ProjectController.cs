@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TauberMatching.Models;
+using TauberMatching.Services;
 
 namespace TauberMatching.Controllers
 {
@@ -17,6 +18,9 @@ namespace TauberMatching.Controllers
         {
             MatchingDB db = new MatchingDB();
             var projects = db.Projects.ToList();
+            Project p = projects.First();
+            EmailQueueMessage m = new EmailQueueMessage(p.Id, "Project", "Mel", "Gunal", p.Guid, "gunalmel@yahoo.com", "Test", "Test message");
+            EmailQueueService.QueueMessage(m);
             db.Dispose();
             return View(projects);
         }
