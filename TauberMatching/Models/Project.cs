@@ -56,7 +56,7 @@ namespace TauberMatching.Models
             }
         }
         [HiddenInput]
-        public Nullable<Guid> Guid { get; set; }
+        public Guid Guid { get; set; }
         [DisplayName("Contact First Name")]
         public string ContactFirst
         {

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TauberMatching.Models
 {
     public class EmailLog
     {
         public int Id { get; set; }
-        public char ContactType { get; set; }
-        public int ContactId { get; set; }
         public DateTime Date { get; set; }
         public Guid Guid { get; set; }
         public String Status { get; set; }
@@ -16,8 +15,6 @@ namespace TauberMatching.Models
         public EmailLog() { }
         public EmailLog(EmailQueueMessage qMessage, String status)
         {
-            ContactId = qMessage.ContactId;
-            ContactType = qMessage.ContactType;
             Date = DateTime.Now;
             Guid = qMessage.Guid;
             Status = status;
