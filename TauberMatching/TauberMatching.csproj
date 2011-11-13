@@ -123,6 +123,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AppConfiguration.cs" />
     <Compile Include="Models\ConfigParameter.cs" />
+    <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\EmailQueueMessage.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Services\CustomExtensions.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Services\EmailJob.cs" />
     <Compile Include="Services\EmailQueueService.cs" />
     <Compile Include="Services\EmailService.cs" />
+    <Compile Include="Services\UrlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\MatchingDB.old" />

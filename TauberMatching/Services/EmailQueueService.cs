@@ -10,7 +10,7 @@ namespace TauberMatching.Services
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(EmailQueueService));
         /// <summary>
-        /// Drops the message in the email queueing table for Quartz job to pick it up.
+        /// Drops the message in the email queueing table for Quartz job to pick it up. This is the main method to send templated -emails to project contacts and students.
         /// </summary>
         /// <param name="to">Recipient</param>
         /// <param name="subject">Subject of the email</param>
@@ -33,7 +33,6 @@ namespace TauberMatching.Services
 
         private static void LogMessage(MatchingDB db, EmailQueueMessage qMessage,string status)
         {
-            //TODO From the db ContactType field is missing. StudentId and ProjectId fields are irrelevant and not getting updated. Update Email log object as needed. #11
             EmailLog eLog = new EmailLog(qMessage,status);
             Project pr; Student st;
             switch (qMessage.ContactType)
@@ -62,7 +61,6 @@ namespace TauberMatching.Services
             int i = 0;
             using (var db = new MatchingDB())
             {
-                //TODO Contacts emailed field is not being updated #12
                 foreach (var m in GetMessages(db))
                 {
                     EmailService emailService = new EmailService(m.To, m.Subject, m.Body);

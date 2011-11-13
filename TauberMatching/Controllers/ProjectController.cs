@@ -19,8 +19,6 @@ namespace TauberMatching.Controllers
             MatchingDB db = new MatchingDB();
             var projects = db.Projects.ToList();
             Project p = projects.First();
-            EmailQueueMessage m = new EmailQueueMessage(p.Id, "Project", "Mel", "Gunal", p.Guid, "gunalmel@yahoo.com", "Test", "Test message");
-            EmailQueueService.QueueMessage(m);
             db.Dispose();
             return View(projects);
         }
