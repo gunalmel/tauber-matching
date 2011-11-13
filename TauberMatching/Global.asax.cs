@@ -38,6 +38,7 @@ namespace TauberMatching
             ISchedulerFactory schedFact = new StdSchedulerFactory();
             // get a scheduler
             IScheduler sched = schedFact.GetScheduler();
+            
             // construct job info
             JobDetail jobDetail = new JobDetail("mySendMailJob", typeof(EmailJob));
             // fire every minute to check for queued e-mail messages in the db

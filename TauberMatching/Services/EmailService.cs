@@ -35,7 +35,7 @@ namespace TauberMatching.Services
             IS_TESTING = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["IsTesting"]);
             MAIL_FROM = new MatchingDB().ConfigParameters.First(c => c.Id == ((int)ConfigEnum.SiteMasterEmail)).Value;
 
-            //TODO Quartz.NET does not have access to a HttpContext.Current #13
+            //TODO Quartz.NET does not have access to HttpContext.Current #13
             if(System.Web.HttpContext.Current==null)
                 PICKUP_DIR = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName);
             else
