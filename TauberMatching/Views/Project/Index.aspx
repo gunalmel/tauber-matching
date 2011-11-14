@@ -5,6 +5,8 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
     <script type="text/javascript" defer="defer">
+        //Flag to denote if any of the listed items has been e-mailed before
+        var duplicateSendEmail = false;
         $(document).ready(function () {
             // Make the header checkbox select all checkbox
             $("[id=chkAll]").live("click", function () { $("input[type=checkbox][id*=chkSelect]").attr('checked', $(this).attr("checked")); });
@@ -12,7 +14,7 @@
         });
         //Finds the checked checkboxes used to select the entries in the list and returns the ids appended to the checkbox id in a csv list to be fed to the web service method.
         function getSelected() {
-            duplicateSendEmail = $("input[type=checkbox][id*=chkSelect]:checked").parent().parent().find("input[type=checkbox]:last-child:checked").length > 0;
+            duplicateSendEmail = $("input[type=checkbox][id*=chkSelect]:checked").parent().parent().find("input[type=checkbox][id*=chkEmailed]:checked").length > 0;
             var checkboxes = $("input[type=checkbox][id*=chkSelect]:checked");
             var csv = "";
             checkboxes.each(function (index) {
@@ -75,7 +77,7 @@
                 <%: item.ContactEmail %>
             </td>
             <td align="center">
-                <%: Html.CheckBox("chkEmailed", item.Emailed, new { disabled = "disabled" })%>
+                <%: Html.CheckBox("chkEmailed_"+item.Id, item.Emailed, new { disabled = "disabled" })%>
             </td>
             <td>
                 <%: item.ContactPhone %>
@@ -84,7 +86,6 @@
                 <%: item.Comments %>
             </td>
         </tr>
-    
     <% } %>
 
     </table>
