@@ -25,10 +25,7 @@
                 Unique Name
             </th>
             <th>
-                Last Name
-            </th>
-            <th>
-                First Name
+                Student Name
             </th>
             <th>
                 Degree
@@ -59,10 +56,7 @@
                 <%: item.UniqueName %>
             </td>
             <td>
-                <%: item.FirstName %>
-            </td>
-            <td>
-                <%: item.LastName %>
+                <%: (item.FirstName != null || item.LastName != null) ? (item.FirstName + " " + item.LastName) : ""%>
             </td>
             <td>
                 <%: item.Degree %>
@@ -70,8 +64,8 @@
             <td>
                 <%: item.Email %>
             </td>
-            <td>
-                <%: item.Emailed?"Yes":"No" %>
+            <td align="center">
+                <%: Html.CheckBox("chkEmailed", item.Emailed, new { disabled = "disabled" })%>
             </td>
             <td>
                 <%: item.Comments %>
