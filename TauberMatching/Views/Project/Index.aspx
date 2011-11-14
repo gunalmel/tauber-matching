@@ -10,6 +10,17 @@
             $("[id=chkAll]").live("click", function () { $("input[type=checkbox][id*=chkSelect]").attr('checked', $(this).attr("checked")); });
             $.ajaxSetup({ type: "POST", contentType: "application/json;charset=utf-8", dataType: "json", processData: false });
         });
+        //Finds the checked checkboxes used to select the entries in the list and returns the ids appended to the checkbox id in a csv list to be fed to the web service method.
+        function getSelected() {
+            duplicateSendEmail = $("input[type=checkbox][id*=chkSelect]:checked").parent().parent().find("input[type=checkbox]:last-child:checked").length > 0;
+            var checkboxes = $("input[type=checkbox][id*=chkSelect]:checked");
+            var csv = "";
+            checkboxes.each(function (index) {
+                var id = this.id.split('_')[1];
+                csv += (index == 0) ? id : ("," + id);
+            });
+            return csv;
+        }
     </script>
 </asp:Content>
 
@@ -27,13 +38,13 @@
                 Name
             </th>
             <th>
-                URL Emailed?
-            </th>
-            <th>
                 Contact Name
             </th>
             <th>
                 Contact Email
+            </th>
+            <th>
+                URL Emailed?
             </th>
             <th>
                 Contact Phone
@@ -58,13 +69,13 @@
                 <%: item.Name %>
             </td>
             <td>
-                <%: item.Emailed?"Yes":"No" %>
-            </td>
-            <td>
-                <%: (item.ContactFirst!=null||item.ContactLast!=null)?(item.ContactFirst+", "+item.ContactLast):"" %>
+                <%: (item.ContactFirst!=null||item.ContactLast!=null)?(item.ContactFirst+" "+item.ContactLast):"" %>
             </td>
             <td>
                 <%: item.ContactEmail %>
+            </td>
+            <td align="center">
+                <%: Html.CheckBox("chkEmailed", item.Emailed, new { disabled = "disabled" })%>
             </td>
             <td>
                 <%: item.ContactPhone %>
