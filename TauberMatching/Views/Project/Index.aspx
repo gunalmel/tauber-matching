@@ -3,6 +3,16 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Tauber Matching - Projects
 </asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
+	<%//TODO #22   Write a function to highlight the menu option the user is in. Put the document.ready function in the master page%>
+    <script type="text/javascript" defer="defer">
+        $(document).ready(function () {
+            // Make the header checkbox select all checkbox
+            $("[id=chkAll]").live("click", function () { $("input[type=checkbox][id*=chkSelect]").attr('checked', $(this).attr("checked")); });
+            $.ajaxSetup({ type: "POST", contentType: "application/json;charset=utf-8", dataType: "json", processData: false });
+        });
+    </script>
+</asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     
@@ -12,6 +22,7 @@
 
     <table>
         <tr>
+            <th><%: Html.CheckBox("chkAll", new { title="Chek all"})%></th>
             <th></th>
             <th>
                 Name
@@ -36,6 +47,9 @@
     <% foreach (var item in Model) { %>
     
         <tr>
+            <td>
+                <%:Html.CheckBox("chkSelect_"+item.Id) %>
+            </td>
             <td>
                 <%: Html.ActionLink("Edit", "Edit", new { id=item.Id }) %> |
                 <%: Html.ActionLink("Details", "Details", new { id=item.Id })%> |
