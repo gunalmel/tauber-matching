@@ -4,7 +4,6 @@
 	Tauber Matching - Projects
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
-	<%//TODO #22   Write a function to highlight the menu option the user is in. Put the document.ready function in the master page%>
     <script type="text/javascript" defer="defer">
         $(document).ready(function () {
             // Make the header checkbox select all checkbox
