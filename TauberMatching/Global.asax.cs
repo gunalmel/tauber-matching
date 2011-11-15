@@ -8,6 +8,7 @@ using Quartz;
 using Quartz.Impl;
 using TauberMatching.Services;
 using log4net.Appender;
+using Microsoft.Web.Mvc;
 
 namespace TauberMatching
 {
@@ -30,6 +31,7 @@ namespace TauberMatching
 
         protected void Application_Start()
         {
+            ValueProviderFactories.Factories.Add(new JsonValueProviderFactory()); // Depends on MVC2Futures library to make MVC ver2 controllers to accept JSON serialized objects
             log4net.Config.XmlConfigurator.Configure();
             AreaRegistration.RegisterAllAreas();
             RegisterRoutes(RouteTable.Routes);

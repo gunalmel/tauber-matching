@@ -54,6 +54,9 @@
       <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Mvc">
+      <HintPath>..\packages\Mvc2Futures.2.0.50217.0\lib\Microsoft.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="Quartz">
       <HintPath>..\packages\Quartz.1.0.3\lib\3.5\Quartz.dll</HintPath>
     </Reference>
@@ -113,6 +116,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AppConfigController.cs" />
+    <Compile Include="Controllers\EmailController.cs" />
     <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -124,6 +128,7 @@
     <Compile Include="Models\AppConfiguration.cs" />
     <Compile Include="Models\ConfigParameter.cs" />
     <Compile Include="Models\Contact.cs" />
+    <Compile Include="Models\ContactString.cs" />
     <Compile Include="Models\EmailQueueMessage.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Services\CustomExtensions.cs" />
@@ -144,6 +149,7 @@
   <ItemGroup>
     <None Include="App_Data\MatchingDB.old" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\json.js" />
     <Content Include="Scripts\MicrosoftMvcJQueryValidation.js" />
     <Content Include="Views\AppConfig\Edit.aspx" />
     <Content Include="Views\FileUpload\UploadMatchingFile.aspx" />

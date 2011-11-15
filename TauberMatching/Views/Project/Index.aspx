@@ -4,7 +4,12 @@
 	Tauber Matching - Projects
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
+    <%//TODO refs#1 Display a wait animated gif, handle errors,upon success refresh page and display a message to the user to periodically refresh to see the e-mail process progress.%>
+    <script src="../../Scripts/json.js" type="text/javascript"></script>
     <script type="text/javascript" defer="defer">
+        function Contact(id, guid, email, firstName, lastName) {
+            this.Id = id; this.Guid = guid; this.Email = email, this.FirstName = firstName; this.LastName = lastName; this.ContactType = "20";
+        }
         //Flag to denote if any of the listed items has been e-mailed before
         var duplicateSendEmail = false;
         $(document).ready(function () {
@@ -12,16 +17,46 @@
             $("[id=chkAll]").live("click", function () { $("input[type=checkbox][id*=chkSelect]").attr('checked', $(this).attr("checked")); });
             $.ajaxSetup({ type: "POST", contentType: "application/json;charset=utf-8", dataType: "json", processData: false });
         });
+        function sendMail() {
+            var list = getSelected();
+            var answer = true;
+            if (duplicateSendEmail)
+                answer = confirm("Some of your selections has already been e-mailed before. Are you sure you'd like to e-mail the previously e-mailed contacts?");
+            if (!answer)
+                return;
+            if (list == "")
+                return;
+            var paramString = $.toJSON({ contacts: list });
+            $.ajax({
+                url: '<%=ResolveUrl("~/Email/SendAccessUrl") %>',
+                data: paramString,
+                // beforeSend: beforeEmailSend,
+                // success: onEmailSuccess,
+                //  error: onError,
+                async: false
+            });
+        }
         //Finds the checked checkboxes used to select the entries in the list and returns the ids appended to the checkbox id in a csv list to be fed to the web service method.
         function getSelected() {
             duplicateSendEmail = $("input[type=checkbox][id*=chkSelect]:checked").parent().parent().find("input[type=checkbox][id*=chkEmailed]:checked").length > 0;
-            var checkboxes = $("input[type=checkbox][id*=chkSelect]:checked");
-            var csv = "";
-            checkboxes.each(function (index) {
-                var id = this.id.split('_')[1];
-                csv += (index == 0) ? id : ("," + id);
+            var selectedRows = $("input[type=checkbox][id*=chkSelect]:checked").parent().parent();
+            var contactArray = new Array();
+            selectedRows.each(function (index) {
+                contactArray[index] = extractContactFromTableRow($(this));
             });
-            return csv;
+            return contactArray;
+        }
+        function extractContactFromTableRow(row) {
+            var id = row.find("[id*=hdnId]").val();
+            var guid = row.find("[id*=hdnGuid]").val();
+            var names = extractTextFromTableRowColumn(row, 'Contact Name').split(' ');
+            var email = extractTextFromTableRowColumn(row, 'Contact Email');
+            return new Contact(id, guid, email, names[0], names[1]);
+        }
+        function extractTextFromTableRowColumn(row,colHeader) {
+            var index = $("table tr:first-child th:contains('"+colHeader+"')").index();
+            var colText = row.find("td:eq(" + index + ")").text();
+            return colText;
         }
     </script>
 </asp:Content>
@@ -31,29 +66,17 @@
     <% =ViewContext.TempData["message"] %>
 
     <h2>Projects</h2>
-
+    <a href="javascript:sendMail();">Send Email to the Selected Contacts</a>
     <table>
         <tr>
             <th><%: Html.CheckBox("chkAll", new { title="Chek all"})%></th>
             <th></th>
-            <th>
-                Name
-            </th>
-            <th>
-                Contact Name
-            </th>
-            <th>
-                Contact Email
-            </th>
-            <th>
-                URL Emailed?
-            </th>
-            <th>
-                Contact Phone
-            </th>
-            <th>
-                Comments
-            </th>
+            <th>Name</th>
+            <th>Contact Name</th>
+            <th>Contact Email</th>
+            <th>URL Emailed?</th>
+            <th>Contact Phone</th>
+            <th>Comments</th>
         </tr>
 
     <% foreach (var item in Model) { %>
@@ -61,33 +84,22 @@
         <tr>
             <td>
                 <%:Html.CheckBox("chkSelect_"+item.Id) %>
+                <%:Html.Hidden("hdnGuid_"+item.Id,item.Guid) %>
+                <%:Html.Hidden("hdnId_"+item.Id,item.Id) %>
             </td>
             <td>
                 <%: Html.ActionLink("Edit", "Edit", new { id=item.Id }) %> |
                 <%: Html.ActionLink("Details", "Details", new { id=item.Id })%> |
                 <%: Html.ActionLink("Delete", "Delete", new { id=item.Id })%>
             </td>
-            <td>
-                <%: item.Name %>
-            </td>
-            <td>
-                <%: (item.ContactFirst!=null||item.ContactLast!=null)?(item.ContactFirst+" "+item.ContactLast):"" %>
-            </td>
-            <td>
-                <%: item.ContactEmail %>
-            </td>
-            <td align="center">
-                <%: Html.CheckBox("chkEmailed_"+item.Id, item.Emailed, new { disabled = "disabled" })%>
-            </td>
-            <td>
-                <%: item.ContactPhone %>
-            </td>
-            <td>
-                <%: item.Comments %>
-            </td>
+            <td><%: item.Name %></td>
+            <td><%: (item.ContactFirst!=null||item.ContactLast!=null)?(item.ContactFirst+" "+item.ContactLast):"" %></td>
+            <td><%: item.ContactEmail %></td>
+            <td align="center"><%: Html.CheckBox("chkEmailed_"+item.Id, item.Emailed, new { disabled = "disabled" })%></td>
+            <td><%: item.ContactPhone %></td>
+            <td><%: item.Comments %></td>
         </tr>
     <% } %>
-
     </table>
 
     <p>

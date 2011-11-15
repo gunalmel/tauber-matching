@@ -59,6 +59,7 @@
         <tr>
             <td>
                 <%:Html.CheckBox("chkSelect"+item.Id) %>
+                <%:Html.Hidden("hdnGuid_"+item.Id,item.Guid) %>
             </td>
             <td>
                 <%: Html.ActionLink("Edit", "Edit", new { id=item.Id }) %> |
