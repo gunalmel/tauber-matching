@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace TauberMatching.Models
 {
+    [Serializable]
     public class Contact
     {
         public int Id { get; set; }
@@ -14,6 +15,11 @@ namespace TauberMatching.Models
         public ContactType ContactType { get; set; }
         public string Email { get; set; }
         public Guid Guid{get;set;}
+        public Contact() { this.ContactType = ContactType.Project; }
+        public Contact(int id, Guid guid, string email, string firtName, string lastName,ContactType cType)
+        {
+            Id = id; Guid = guid; Email = email; FirstName = FirstName; LastName = lastName; ContactType = cType;
+        }
         public Contact(Project p)
         {
             this.Id = p.Id;
@@ -33,5 +39,5 @@ namespace TauberMatching.Models
             this.ContactType = ContactType.Student;
         }
     }
-    public enum ContactType { Student, Project }
+    public enum ContactType { Student=10, Project=20 }
 }
