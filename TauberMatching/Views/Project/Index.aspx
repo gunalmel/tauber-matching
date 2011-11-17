@@ -5,7 +5,8 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
     <%//TODO refs#1 Display a wait animated gif, handle errors,upon success refresh page and display a message to the user to periodically refresh to see the e-mail process progress.%>
-    <script src="../../Scripts/json.js" type="text/javascript"></script>
+    <script src='<%=ResolveUrl("~/Scripts/json.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveUrl("~/Scripts/UIFunctions.js")%>' type="text/javascript" defer="defer"></script>
     <script type="text/javascript" defer="defer">
         function Contact(id, guid, email, firstName, lastName) {
             this.Id = id; this.Guid = guid; this.Email = email, this.FirstName = firstName; this.LastName = lastName; this.ContactType = "20";
@@ -30,13 +31,32 @@
             $.ajax({
                 url: '<%=ResolveUrl("~/Email/SendAccessUrl") %>',
                 data: paramString,
-                // beforeSend: beforeEmailSend,
-                // success: onEmailSuccess,
-                //  error: onError,
+                beforeSend: beforeEmailSend,
+                success: onEmailSuccess,
+                error: onError,
                 async: false
             });
         }
-        //Finds the checked checkboxes used to select the entries in the list and returns the ids appended to the checkbox id in a csv list to be fed to the web service method.
+        function beforeEmailSend() {
+            grayOut(true);
+            $("#divWait").toggle();
+        }
+        function onEmailSuccess(msg, event, xhr) {
+            $("#divWait").toggle();
+            grayOut(false);
+            $("#divMessage").css("color", "black");
+            // Reloads the page by resetting the selected page in pagination so that grid will be bound to fresh data
+            $("input[type=checkbox][id*=chkSelect]:checked").attr('checked', false);
+            $("#chkAll").attr('checked', false);
+            window.location = location.href;
+        }
+        function onError(xhr, error) {
+            grayOut(false);
+            $("#divMessage").css("color", "red");
+            $("#divMessage").html(xhr.status + ": " + xhr.statusText + " " + xhr.responseText);
+            $("#divWait").toggle();
+        }
+        //Finds the checked checkboxes used to select the entries in the list and returns the list of contact objects to pass to the web service method
         function getSelected() {
             duplicateSendEmail = $("input[type=checkbox][id*=chkSelect]:checked").parent().parent().find("input[type=checkbox][id*=chkEmailed]:checked").length > 0;
             var selectedRows = $("input[type=checkbox][id*=chkSelect]:checked").parent().parent();
@@ -62,9 +82,12 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    
-    <% =ViewContext.TempData["message"] %>
-
+    <div id="divWait" style="position:fixed;top:50%;left:50%;background-color:white;z-index:100;display:none">
+        Please Wait. Processing...
+    </div>
+    <div id="divMessage">
+        <% =ViewContext.TempData["message"] %>
+    </div>
     <h2>Projects</h2>
     <a href="javascript:sendMail();">Send Email to the Selected Contacts</a>
     <table>

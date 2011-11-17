@@ -128,7 +128,6 @@
     <Compile Include="Models\AppConfiguration.cs" />
     <Compile Include="Models\ConfigParameter.cs" />
     <Compile Include="Models\Contact.cs" />
-    <Compile Include="Models\ContactString.cs" />
     <Compile Include="Models\EmailQueueMessage.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Services\CustomExtensions.cs" />
@@ -151,6 +150,7 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\json.js" />
     <Content Include="Scripts\MicrosoftMvcJQueryValidation.js" />
+    <Content Include="Scripts\UIFunctions.js" />
     <Content Include="Views\AppConfig\Edit.aspx" />
     <Content Include="Views\FileUpload\UploadMatchingFile.aspx" />
     <Content Include="Views\Project\Create.aspx" />
