@@ -115,7 +115,7 @@
                 <%: Html.ActionLink("Delete", "Delete", new { id = item.Id })%>
             </td>
             <td><%: item.UniqueName %></td>
-            <td><%: (item.FirstName != null || item.LastName != null) ? (item.FirstName + " " + item.LastName) : ""%></td>
+            <td><%: item.FullName %></td>
             <td><%: item.Degree %></td>
             <td><%: item.Email %></td>
             <td align="center"><%: Html.CheckBox("chkEmailed_"+item.Id, item.Emailed, new { disabled = "disabled" })%></td>

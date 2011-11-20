@@ -117,7 +117,7 @@ namespace TauberMatching.Models
         {
             get
             {
-                return ContactFirst ?? String.Empty + " " + ContactLast ?? String.Empty;
+                return (ContactFirst != null || ContactLast != null) ? (ContactFirst + " " + ContactLast) : "";
             }
         }
     }
