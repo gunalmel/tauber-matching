@@ -132,7 +132,7 @@ namespace TauberMatching.Models
         public int FeedbackScore { get; set; }
     }
 
-    public enum Degree
+    public enum StudentDegree
     {
         Bus,Eng
     }

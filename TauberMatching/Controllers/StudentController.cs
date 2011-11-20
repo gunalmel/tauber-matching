@@ -113,7 +113,7 @@ namespace TauberMatching.Controllers
         /// </summary>
         private void setViewDataForListOfDegrees()
         {
-            ViewData["degrees"] = from String d in Enum.GetNames(typeof(Degree)) select d;
+            ViewData["degrees"] = from String d in Enum.GetNames(typeof(StudentDegree)) select d;
         }
         private int GetStudentCountByUniqueName(String uname)
         {

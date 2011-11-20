@@ -120,6 +120,7 @@
     <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RankProjectsController.cs" />
     <Compile Include="Controllers\RankStudentsController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Global.asax.cs">
@@ -130,7 +131,9 @@
     <Compile Include="Models\ConfigParameter.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\EmailQueueMessage.cs" />
+    <Compile Include="Models\RankStudentsIndexModel.cs" />
     <Compile Include="Models\Score.cs" />
+    <Compile Include="Models\ProjectScoreStudentCountMatrix.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Services\CustomExtensions.cs" />
     <Compile Include="Models\EmailLog.cs" />
@@ -145,6 +148,8 @@
     <Compile Include="Services\EmailJob.cs" />
     <Compile Include="Services\EmailQueueService.cs" />
     <Compile Include="Services\EmailService.cs" />
+    <Compile Include="Services\ProjectService.cs" />
+    <Compile Include="Services\StudentService.cs" />
     <Compile Include="Services\UrlHelper.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,5 @@
-﻿<%@ Import Namespace="TauberMatching.Controllers" %>
-<%@ Import Namespace="TauberMatching.Models" %>
-<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<IDictionary<RankStudentsController.IndexModelAttributes,Object>>" %>
+﻿<%@ Import Namespace="TauberMatching.Models" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<RankStudentsIndexModel>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Index
@@ -12,28 +11,28 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2><%= Model[RankStudentsController.IndexModelAttributes.ProjectName].ToString()%></h2>
+    <h2><%= Model.IsError?"":Model.ProjectName %></h2>
     <div id="divMessage">
+        <%= Model.IsError?Model.ErrorMessage:"" %>
         <%=ViewContext.TempData["message"] %>
     </div>
-    <%  if (Model[RankStudentsController.IndexModelAttributes.GroupedStudents]!=null)
-            foreach (ScoreDetail scoreDetail in (IList<ScoreDetail>)Model[RankStudentsController.IndexModelAttributes.ScoreDetails])
-            { 
-                var rankStudentDict = ((IDictionary<string, List<Student>>)Model[RankStudentsController.IndexModelAttributes.GroupedStudents]);
-                var engDegree = Degree.Eng.ToString();
-                var busDegree = Degree.Bus.ToString();
-                var engCount = rankStudentDict.Keys.Contains(scoreDetail.Score)?rankStudentDict[scoreDetail.Score].Where(s=>s.Degree==engDegree).Count():0;
-                var busCount = rankStudentDict.Keys.Contains(scoreDetail.Score)?rankStudentDict[scoreDetail.Score].Where(s=>s.Degree==busDegree).Count():0;
-             %>
+    <%  string hiddenStudentCountIdTemplate = "hdn_{0}_{1}";
+        if(!Model.IsError)
+        foreach(ScoreDetail scoreDetail in Model.ScoreGroupedStudents.Keys)
+        { %>
                 <ul id="<%=scoreDetail.Score %>" class="droptrue">
                     <li class="list-heading">
                         <b><%=scoreDetail.ScoreTypeDisplay %></b>
-                        <input id="hdn<%=scoreDetail.Score %>_Eng" type="hidden" value="<%= engCount %>" />
-                        <input id="hdn<%=scoreDetail.Score %>_Bus" type="hidden" value="<%= busCount %>"/>
+                        <% foreach(StudentDegree degree in Enum.GetValues(typeof(StudentDegree)))
+                           {
+                               string hiddenStudentCountId = String.Format(hiddenStudentCountIdTemplate, scoreDetail.Score, degree.ToString());
+                               %>
+                                <input id="<%=hiddenStudentCountId %>" type="hidden" value="<%= Model.ProjectScoreStudentCountMatrix[scoreDetail.Score,degree] %>" />
+                        <% } %>
                     </li>
                     <% 
-                       if(rankStudentDict.Keys.Contains(scoreDetail.Score))
-                           foreach (Student student in rankStudentDict[scoreDetail.Score])
+                       if(Model.ScoreGroupedStudents.Keys.Contains(scoreDetail))
+                           foreach (Student student in Model.ScoreGroupedStudents[scoreDetail])
                            { %>
                                 <li id="<%= student.Id%>" class="<%= student.Degree%>">
                                     <%= student.FullName %><span class="degree">(<%= student.Degree%>)</span>

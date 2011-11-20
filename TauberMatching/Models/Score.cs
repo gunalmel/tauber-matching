@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 namespace TauberMatching.Models
 {
     /// <summary>
-    /// Class that will be used by UI to build score buckets for Students and Projects
+    /// Class that will be used by UI to build score buckets for Students and Projects. ScoreFor + Score makes up the composite primary key
     /// </summary>
     public class ScoreDetail
     {
@@ -44,5 +44,27 @@ namespace TauberMatching.Models
             set { _scoreTypeDisplay = value; }
         }
 
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int result = Id.GetHashCode();
+                result = (result * 397) ^ Score.GetHashCode()^ScoreFor.GetHashCode();
+                return result;
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+                throw new NullReferenceException("obj is null");
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof(ScoreDetail)) return false;
+            var param = (ScoreDetail)obj;
+            if (param.Id == this.Id && param.Score == this.Score&&param.ScoreFor==this.ScoreFor)
+                return true;
+            return false;
+        } 
     }
 }
