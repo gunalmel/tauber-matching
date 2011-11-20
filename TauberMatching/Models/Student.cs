@@ -118,7 +118,7 @@ namespace TauberMatching.Models
         {
             get
             {
-                return FirstName ?? String.Empty + " " + LastName ?? String.Empty;
+                return (FirstName != null || LastName != null) ? (FirstName + " " + LastName) : "";
             }
         }
     }
