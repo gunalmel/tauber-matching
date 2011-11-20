@@ -46,11 +46,15 @@ namespace TauberMatching.Models
         #region Properties
         public int Id { get; set; }
         public int ContactId { get; set; }
+        [MaxLength(32, ErrorMessage = "Contact type can be at most 32 characters long. See ContactType enum for possible values")]
         public string ContactType { get; set; }
+        [MaxLength(128, ErrorMessage = "Contact first name can be at most 128 characters long.")]
         public string FirstName { get; set; }
+        [MaxLength(128, ErrorMessage = "Contact last name can be at most 128 characters long.")]
         public string LastName { get; set; }
         public Guid Guid { get; set; }
         public string To { get; set; }
+        [MaxLength(512, ErrorMessage = "Email subject can be at most 512 characters long.")]
         public string Subject { get; set; }
         public string Body { get; set; } 
         #endregion

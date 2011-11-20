@@ -18,7 +18,7 @@ namespace TauberMatching.Controllers
         {
             MatchingDB db = new MatchingDB();
             var projects = db.Projects.ToList();
-            Project p = projects.First();
+            Project p = projects.FirstOrDefault();
             db.Dispose();
             return View(projects);
         }
@@ -55,6 +55,14 @@ namespace TauberMatching.Controllers
             db.Dispose();
             return RedirectToAction("Index");
         }
+        //
+        // GET: /Student/Details/5
+        //TODO #19 Display project-student matchings and let admin user add new project matching
+        public ActionResult Details(int id)
+        {
+            return View();
+        }
+
 
         public ActionResult Delete(int id)
         {

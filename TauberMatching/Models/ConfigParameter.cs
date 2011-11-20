@@ -34,6 +34,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Application configuration parameter name as specified by ConfigEnum. Property is read-only, if needed to be set then either constructor or SetName method should be used.
         /// </summary>
+        [MaxLength(64, ErrorMessage = "Application configuration parameter name can be at most 64 characters long. See ConfigEnum in ConfigParameter file for possible values.")]
         public String Name { get; private set; }
         /// <summary>
         /// Setter for the read-only property name. Property is made read-only to constrain the parameter names that can be specified.
@@ -43,6 +44,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Value set for the application parameter specified by Name property
         /// </summary>
+        [MaxLength(256, ErrorMessage = "Application configuration parameter value can be at most 256 characters long.")]
         public String Value { get; set; }
 
         public override int GetHashCode()

@@ -4,7 +4,6 @@
 	Tauber Matching - Projects
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
-    <%//TODO refs#1 Display a wait animated gif, handle errors,upon success refresh page and display a message to the user to periodically refresh to see the e-mail process progress.%>
     <script src='<%=ResolveUrl("~/Scripts/json.js")%>' type="text/javascript"></script>
     <script src='<%=ResolveUrl("~/Scripts/UIFunctions.js")%>' type="text/javascript" defer="defer"></script>
     <script type="text/javascript" defer="defer">
