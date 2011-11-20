@@ -47,6 +47,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Web.Mvc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
@@ -96,6 +97,8 @@
     <Compile Include="ConfigurationServiceTest.cs" />
     <Compile Include="EmailQueueServiceTest.cs" />
     <Compile Include="EmailServiceTest.cs" />
+    <Compile Include="ProjectScoreStudentMatrixTest.cs" />
+    <Compile Include="ScoreDetailTest.cs" />
     <Compile Include="Services\DataMigrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
