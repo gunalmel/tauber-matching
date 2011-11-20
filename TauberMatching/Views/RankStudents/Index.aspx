@@ -18,14 +18,20 @@
     </div>
     <%  if (Model[RankStudentsController.IndexModelAttributes.GroupedStudents]!=null)
             foreach (ScoreDetail scoreDetail in (IList<ScoreDetail>)Model[RankStudentsController.IndexModelAttributes.ScoreDetails])
-            { %>
-                <ul id="<%=scoreDetail.Score %>" class="droptrue" eng="0" bus="0">
+            { 
+                var rankStudentDict = ((IDictionary<string, List<Student>>)Model[RankStudentsController.IndexModelAttributes.GroupedStudents]);
+                var engDegree = Degree.Eng.ToString();
+                var busDegree = Degree.Bus.ToString();
+                var engCount = rankStudentDict.Keys.Contains(scoreDetail.Score)?rankStudentDict[scoreDetail.Score].Where(s=>s.Degree==engDegree).Count():0;
+                var busCount = rankStudentDict.Keys.Contains(scoreDetail.Score)?rankStudentDict[scoreDetail.Score].Where(s=>s.Degree==busDegree).Count():0;
+             %>
+                <ul id="<%=scoreDetail.Score %>" class="droptrue">
                     <li class="list-heading">
                         <b><%=scoreDetail.ScoreTypeDisplay %></b>
-                        <input id="hdn<%=scoreDetail.Score %>_Eng" type="hidden" />
-                        <input id="hdn<%=scoreDetail.Score %>_Bus" type="hidden" />
+                        <input id="hdn<%=scoreDetail.Score %>_Eng" type="hidden" value="<%= engCount %>" />
+                        <input id="hdn<%=scoreDetail.Score %>_Bus" type="hidden" value="<%= busCount %>"/>
                     </li>
-                    <% var rankStudentDict = ((IDictionary<string, List<Student>>)Model[RankStudentsController.IndexModelAttributes.GroupedStudents]);
+                    <% 
                        if(rankStudentDict.Keys.Contains(scoreDetail.Score))
                            foreach (Student student in rankStudentDict[scoreDetail.Score])
                            { %>
