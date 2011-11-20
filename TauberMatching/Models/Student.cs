@@ -30,6 +30,7 @@ namespace TauberMatching.Models
         [HiddenInput]
         public int Id { get; set; }
         [Required(ErrorMessage = "Mandatory Field: You must enter the unique name for the student!")]
+        [MaxLength(128, ErrorMessage = "Student unique name can be at most 128 characters long.")]
         [DisplayName("Unique Name")]
         public string UniqueName 
         { 
@@ -44,6 +45,7 @@ namespace TauberMatching.Models
         }
         [Required(ErrorMessage = "Mandatory Field: You must enter the first name of the student!")]
         [DisplayName("First Name")]
+        [MaxLength(128, ErrorMessage = "Student first name can be at most 128 characters long.")]
         public string FirstName 
         {
             get
@@ -57,6 +59,7 @@ namespace TauberMatching.Models
         }
         [Required(ErrorMessage = "Mandatory Field: You must enter the last name of the student!")]
         [DisplayName("Last Name")]
+        [MaxLength(128, ErrorMessage = "Student last name can be at most 128 characters long.")]
         public string LastName
         {
             get
@@ -70,11 +73,15 @@ namespace TauberMatching.Models
         }
         [Required(ErrorMessage = "Mandatory Field: You must choose the degree for the student!")]
         [DisplayName("Degree")]
+        [MaxLength(16, ErrorMessage = "Degree can be at most 16 characters long. See Degree enum for possible values")]
         public String Degree { get; set; } // Bus: business, Eng:Engineering
+        
         [Required(ErrorMessage = "Mandatory Field: You must enter the email for the student!")]
         [DisplayName("Email")]
-        [RegularExpression(@"^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$", ErrorMessage = "Valid Email Address is required.")]  
+        [RegularExpression(@"^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$", ErrorMessage = "Valid Email Address is required.")]
+        [MaxLength(256, ErrorMessage = "Student email name can be at most 256 characters long.")]
         public string Email { get; set; }
+        
         [DisplayName("Emailed?")]
         public bool Emailed { get { return _emailed; } set { _emailed = value; } }
         /// <summary>
@@ -105,6 +112,15 @@ namespace TauberMatching.Models
         /// The date when the student submitted the ranking form
         /// </summary>
         public DateTime? ScoreDate { get; set; }
+
+        [NotMapped]
+        public String FullName 
+        {
+            get
+            {
+                return FirstName ?? String.Empty + " " + LastName ?? String.Empty;
+            }
+        }
     }
 
     public class StudentFeedback

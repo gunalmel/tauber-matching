@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using System.Data;
 namespace TauberMatching.Models
 {
     public class Project
@@ -29,6 +30,7 @@ namespace TauberMatching.Models
         public int Id { get; set; }
         [Required(ErrorMessage = "Mandatory Field: You must enter the name for the project!")]
         [DisplayName("Project Name")]
+        [MaxLength(512, ErrorMessage = "Project name can be at most 512 characters long.")]
         public string Name
         {
             get { return _name; }
@@ -58,6 +60,7 @@ namespace TauberMatching.Models
         [HiddenInput]
         public Guid Guid { get; set; }
         [DisplayName("Contact First Name")]
+        [MaxLength(128, ErrorMessage = "Contact first name can be at most 128 characters long.")]
         public string ContactFirst
         {
             get { return _firstName; }
@@ -69,6 +72,7 @@ namespace TauberMatching.Models
             }
         }
         [DisplayName("Contact Last Name")]
+        [MaxLength(128, ErrorMessage = "Contact last name can be at most 128 characters long.")]
         public string ContactLast
         {
             get { return _lastName; }
@@ -81,8 +85,10 @@ namespace TauberMatching.Models
         }
         [DisplayName("Contact Email")]
         [RegularExpression(@"^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$", ErrorMessage = "Valid Email Address is required.")]
+        [MaxLength(256, ErrorMessage = "Contact email name can be at most 256 characters long.")]
         public string ContactEmail { get; set; }
         [DisplayName("Contact Phone")]
+        [MaxLength(16, ErrorMessage = "Phone number can be at most 16 characters long.")]
         public string ContactPhone { get; set; }
         public virtual ICollection<Matching> Matchings { get; set; }
         public virtual ICollection<EmailLog> EmailLogs { get; set; }
@@ -105,6 +111,15 @@ namespace TauberMatching.Models
         /// The date when project owner submitted feedback and student choices
         /// </summary>
         public DateTime? ScoreDate { get; set; }
+
+        [NotMapped]
+        public String ContactFullName
+        {
+            get
+            {
+                return ContactFirst ?? String.Empty + " " + ContactLast ?? String.Empty;
+            }
+        }
     }
     public class ProjectDTO
     {

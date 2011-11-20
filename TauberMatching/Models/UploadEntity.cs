@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Text.RegularExpressions;
 using TauberMatching.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace TauberMatching.Models
 {
@@ -18,6 +19,7 @@ namespace TauberMatching.Models
         private string _studentLast;
 
         public int Id { get; set; }
+        [MaxLength(512, ErrorMessage = "Project name can be at most 512 characters long.")]
         public string ProjectName
         {
             get { return _projectName; }
@@ -28,6 +30,7 @@ namespace TauberMatching.Models
                 _projectName = value;
             }
         }
+        [MaxLength(128, ErrorMessage = "Contact first name can be at most 128 characters long.")]
         public string ContactFirst
         {
             get { return _contactFirst; }
@@ -38,6 +41,7 @@ namespace TauberMatching.Models
                 _contactFirst = value;
             }
         }
+        [MaxLength(128, ErrorMessage = "Contact last name can be at most 128 characters long.")]
         public string ContactLast
         {
             get { return _contactLast; }
@@ -48,8 +52,11 @@ namespace TauberMatching.Models
                 _contactLast = value;
             }
         }
+        [MaxLength(256, ErrorMessage = "Contact email name can be at most 256 characters long.")]
         public String ContactEmail { get; set; }
+        [MaxLength(16, ErrorMessage = "Phone number can be at most 16 characters long.")]
         public String ContactPhone { get; set; }
+        [MaxLength(128, ErrorMessage = "Student unique name can be at most 128 characters long.")]
         public string UniqueName
         {
             get
@@ -61,6 +68,7 @@ namespace TauberMatching.Models
                 _uniqueName = Regex.Replace(value.Trim(), @"\s+", " ").ToLower();
             }
         }
+        [MaxLength(128, ErrorMessage = "Student first name can be at most 128 characters long.")]
         public string StudentFirst
         {
             get
@@ -72,6 +80,7 @@ namespace TauberMatching.Models
                 _studentFirst = Regex.Replace(value.Trim(), @"\s+", " ").InitCap();
             }
         }
+        [MaxLength(128, ErrorMessage = "Student last name can be at most 128 characters long.")]
         public string StudentLast
         {
             get

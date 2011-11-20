@@ -9,7 +9,9 @@ namespace TauberMatching.Models
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public Guid Guid { get; set; }
+        [MaxLength(16, ErrorMessage = "Status can be at 16 characters long. Success|Failed See EmailStatus enum in EmailService")]
         public String Status { get; set; }
+        [MaxLength(512, ErrorMessage = "Email subject that will be logged can be at most 512 characters long.")]
         public String Subject { get; set; }
         public String Message { get; set; }
         public EmailLog() { }
