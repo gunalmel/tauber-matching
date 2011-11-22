@@ -10,6 +10,14 @@ namespace TauberMatching.Models
     /// </summary>
     public class RankStudentsIndexModel
     {
+        private int _projectId;
+
+        public int ProjectId
+        {
+            get { return _projectId; }
+            set { _projectId = value; }
+        }
+
         private string _projectName;
 
         public string ProjectName
@@ -46,12 +54,46 @@ namespace TauberMatching.Models
             set { _projectScoreStudentCountMatrix = value; }
         }
 
-        public RankStudentsIndexModel(String projectName, IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents, ProjectScoreStudentCountMatrix projectScoreStudentCountMatrix)
+        private IDictionary<int,string> _rejects;
+
+        /// <summary>
+        /// Dictionary key is the student id, value is the reason
+        /// </summary>
+        public IDictionary<int, string> Rejects
         {
+            get { return _rejects; }
+            set { _rejects = value; }
+        }
+
+        private string _feedback;
+
+        public string Feedback
+        {
+            get { return _feedback; }
+            set { _feedback = value; }
+        }
+
+        private IDictionary<StudentDegree, int> _studentCountDict;
+
+        /// <summary>
+        /// Key is the degree, value is the student count in that degree
+        /// </summary>
+        public IDictionary<StudentDegree, int> StudentCountDict
+        {
+            get { return _studentCountDict; }
+            set { _studentCountDict = value; }
+        }
+
+        public RankStudentsIndexModel(int projectId,String projectName, IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents, ProjectScoreStudentCountMatrix projectScoreStudentCountMatrix, IDictionary<int, string> projectRejects, string feedback, IDictionary<StudentDegree, int> studentCountDict)
+        {
+            ProjectId = projectId;
             ProjectName = projectName;
             IsError = false;
             ScoreGroupedStudents = scoreGroupedStudents;
             ProjectScoreStudentCountMatrix = projectScoreStudentCountMatrix;
+            Rejects=projectRejects;
+            Feedback = feedback;
+            StudentCountDict = studentCountDict;
         }
         public RankStudentsIndexModel(bool isError, String errorMessage)
         {

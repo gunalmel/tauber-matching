@@ -17,27 +17,35 @@
         <%=ViewContext.TempData["message"] %>
     </div>
     <%  string hiddenStudentCountIdTemplate = "hdn_{0}_{1}";
-        if(!Model.IsError)
-        foreach(ScoreDetail scoreDetail in Model.ScoreGroupedStudents.Keys)
-        { %>
-                <ul id="<%=scoreDetail.Score %>" class="droptrue">
-                    <li class="list-heading">
-                        <b><%=scoreDetail.ScoreTypeDisplay %></b>
-                        <% foreach(StudentDegree degree in Enum.GetValues(typeof(StudentDegree)))
-                           {
-                               string hiddenStudentCountId = String.Format(hiddenStudentCountIdTemplate, scoreDetail.Score, degree.ToString());
-                               %>
-                                <input id="<%=hiddenStudentCountId %>" type="hidden" value="<%= Model.ProjectScoreStudentCountMatrix[scoreDetail.Score,degree] %>" />
-                        <% } %>
-                    </li>
-                    <% 
-                       if(Model.ScoreGroupedStudents.Keys.Contains(scoreDetail))
-                           foreach (Student student in Model.ScoreGroupedStudents[scoreDetail])
-                           { %>
-                                <li id="<%= student.Id%>" class="<%= student.Degree%>">
-                                    <%= student.FullName %><span class="degree">(<%= student.Degree%>)</span>
-                                </li>
-                           <%} %>
-                </ul>
+        if (!Model.IsError)
+        {%>
+           <input id="hdnProjectId" type="hidden" value="<%= Model.ProjectId %>"/>
+           <% foreach (StudentDegree degree in Enum.GetValues(typeof(StudentDegree)))
+           {%>
+                <input id="hdn<%=degree.ToString() %>Total" type="hidden" value="<%= Model.StudentCountDict[degree] %>"/>
+           <%} %>
+           
+           <% foreach (ScoreDetail scoreDetail in Model.ScoreGroupedStudents.Keys)
+            { %>
+                    <ul id="<%=scoreDetail.Score %>" class="droptrue">
+                        <li class="list-heading">
+                            <b><%=scoreDetail.ScoreTypeDisplay%></b>
+                            <% foreach (StudentDegree degree in Enum.GetValues(typeof(StudentDegree)))
+                               {
+                                   string hiddenStudentCountId = String.Format(hiddenStudentCountIdTemplate, scoreDetail.Score, degree.ToString());
+                                   %>
+                                    <input id="<%=hiddenStudentCountId %>" type="hidden" value="<%= Model.ProjectScoreStudentCountMatrix[scoreDetail.Score,degree] %>" />
+                            <% } %>
+                        </li>
+                        <% 
+                               if (Model.ScoreGroupedStudents.Keys.Contains(scoreDetail))
+                                   foreach (Student student in Model.ScoreGroupedStudents[scoreDetail])
+                                   { %>
+                                    <li id="<%= student.Id%>" class="<%= student.Degree%>">
+                                        <%= student.FullName%><span class="degree">(<%= student.Degree%>)</span>
+                                    </li>
+                               <%} %>
+                    </ul>
+                <%} %>
             <%} %>
 </asp:Content>
