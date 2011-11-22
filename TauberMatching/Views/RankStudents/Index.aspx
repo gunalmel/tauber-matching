@@ -2,7 +2,7 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<RankStudentsIndexModel>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-	Index
+	Tauber Matching Web Application - Rank Students
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">

@@ -1,11 +1,7 @@
-﻿using TauberMatching.Services;
+﻿using TauberMatching.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
-using TauberMatching.Models;
-using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
+using TauberMatching.Services;
 
 namespace TauberMatching.Tests
 {
