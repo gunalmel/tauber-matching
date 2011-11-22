@@ -16,9 +16,9 @@ namespace TauberMatching.Services
 
         static ProjectService()
         {
-            using(MatchingDB db = new MatchingDB() )
+            using (MatchingDB db = new MatchingDB())
             {
-                var scoreFor =ContactType.Project.ToString();
+                var scoreFor = ContactType.Project.ToString();
                 ProjectScoreDetails = db.ScoreDetails.Where(sc => sc.ScoreFor == scoreFor).ToList();
                 TAUBER_EMAIL = db.ConfigParameters.First(c => c.Id == ((int)ConfigEnum.SiteMasterEmail)).Value;
                 TAUBER_PHONE = db.ConfigParameters.First(c => c.Id == ((int)ConfigEnum.SiteMasterPhone)).Value;
@@ -35,10 +35,10 @@ namespace TauberMatching.Services
         {
             if (guid == null)
                 throw new ArgumentNullException("guid", "Project access url unique identifier is null no project can be fetched");
-            Project project=null;
+            Project project = null;
             using (MatchingDB db = new MatchingDB())
             {
-                project = db.Projects.Include("Matchings").Include("Matchings.Student").FirstOrDefault(p => p.Guid == guid.Value);
+                project = db.Projects.Include("Matchings").Include("ProjectRejects").Include("Matchings.Student").FirstOrDefault(p => p.Guid == guid.Value);
             }
             return project;
         }
@@ -52,8 +52,12 @@ namespace TauberMatching.Services
         {
             if (project.Matchings == null || project.Matchings.Count == 0 || project.Matchings.Select(m => m.Student).Count() == 0)
                 throw new ArgumentException("project", "There are no matching students for the project. Make sure all properties of your project was eagerly loaded before it was passed as parameter.");
-
-            var dict = project.Matchings.GroupBy(m => ProjectScoreDetails.Where(sd => sd.Score == (m.ProjectScore ?? ProjectScore.NoScore.ToString())).FirstOrDefault()).ToDictionary(key => key.Key, value => value.Select(m => m.Student).ToList() as IList<Student>);
+           
+            var unsortedDict = project.Matchings.GroupBy(m => ProjectScoreDetails.Where(sd => sd.Score == m.ProjectScore).FirstOrDefault())
+                                      .ToDictionary(key => key.Key, value => value.Select(m => m.Student).ToList() as IList<Student>);
+            
+            System.Collections.Generic.SortedDictionary<ScoreDetail,IList<Student>> dict = new System.Collections.Generic.SortedDictionary<ScoreDetail,IList<Student>>(unsortedDict);
+                
             foreach (ScoreDetail sd in ProjectScoreDetails)
             {
                 if (!dict.Keys.Contains(sd))
@@ -76,19 +80,35 @@ namespace TauberMatching.Services
             return pssm;
         }
 
+        public static IDictionary<StudentDegree, int> GetStudentsCountForProjectGroupedByDegree(Project project)
+        {
+            if (project.Matchings == null || project.Matchings.Count == 0 || project.Matchings.Select(m => m.Student).Count() == 0)
+                throw new ArgumentException("project", "There are no matching students for the project. Make sure all properties of your project was eagerly loaded before it was passed as parameter.");
+
+            var dict = project.Matchings.GroupBy(m => m.Student.Degree).ToDictionary(key => (StudentDegree)Enum.Parse(typeof(StudentDegree), key.Key), value => value.Select(m => m.Student).ToList().Count);
+            foreach (StudentDegree sd in Enum.GetValues(typeof(StudentDegree)))
+            {
+                if (!dict.Keys.Contains(sd))
+                    dict.Add(sd, 0);
+            }
+            return dict;
+        }
         public static RankStudentsIndexModel BuildRankStudentsIndexModelForProject(Guid? guid)
         {
             RankStudentsIndexModel model;
             try
             {
                 Project project = GetProjectWithFullDetailsByGuid(guid);
-                IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents =  GetStudentsForProjectGroupedByScore(project);
+                IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents = GetStudentsForProjectGroupedByScore(project);
                 ProjectScoreStudentCountMatrix psscm = GetStudentCountGroupedByDegreePerScore(scoreGroupedStudents);
-                model = new RankStudentsIndexModel(project.Name, scoreGroupedStudents, psscm);
+                IDictionary<StudentDegree, int> degreeGroupedStudentCount = GetStudentsCountForProjectGroupedByDegree(project);
+                IDictionary<int, string> projectRejects = project.ProjectRejects.ToDictionary(key => key.Student.Id, value => value.Reason);
+
+                model = new RankStudentsIndexModel(project.Id, project.Name, scoreGroupedStudents, psscm, projectRejects, project.Feedback, degreeGroupedStudentCount);
             }
             catch (ArgumentNullException ex)
             {
-                if (ex.ParamName == "project"||ex.ParamName =="guid")
+                if (ex.ParamName == "project" || ex.ParamName == "guid")
                     model = new RankStudentsIndexModel(true, INVALID_URL_ERROR_MESSAGE);
                 else
                     throw ex;

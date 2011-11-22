@@ -9,7 +9,7 @@ namespace TauberMatching.Models
     /// <summary>
     /// Class that will be used by UI to build score buckets for Students and Projects. ScoreFor + Score makes up the composite primary key
     /// </summary>
-    public class ScoreDetail
+    public class ScoreDetail : IComparable<ScoreDetail>
     {
         private string _scoreFor;       
         private string _score;
@@ -65,6 +65,13 @@ namespace TauberMatching.Models
             if (param.Id == this.Id && param.Score == this.Score&&param.ScoreFor==this.ScoreFor)
                 return true;
             return false;
-        } 
+        }
+
+        public int CompareTo(ScoreDetail other)
+        {
+            if (other==null )
+                return 1;
+            return this.Id == other.Id ? 0 : (this.Id < other.Id ? -1 : 1);
+        }
     }
 }
