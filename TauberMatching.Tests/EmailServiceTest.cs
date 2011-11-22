@@ -1,7 +1,5 @@
-﻿using TauberMatching.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TauberMatching.Services;
 
 namespace TauberMatching.Tests
 {

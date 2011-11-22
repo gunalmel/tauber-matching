@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using TauberMatching.Models;
 using TauberMatching.Services;
 
 namespace TauberMatching.Models
@@ -128,7 +129,8 @@ namespace TauberMatching.Models
         public int Id { get; set; }
         public Student Student { get; set; }
         public Project Project { get; set; }
-        public char Type { get; set; } //P: positive feedback, C: Constructive feedback
+        [MaxLength(32, ErrorMessage = "Student feedback type can be at most 32 characters long.")]
+        public string Type { get; set; } //Positive: positive feedback, Constructive: Constructive feedback
         public int FeedbackScore { get; set; }
     }
 
@@ -136,6 +138,8 @@ namespace TauberMatching.Models
     {
         Bus,Eng
     }
+
+    public enum StudentFeedbackType { Positive, Constructive }
 
     public class StudentDTO
     {

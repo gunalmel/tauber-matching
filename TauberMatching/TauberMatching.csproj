@@ -131,9 +131,11 @@
     <Compile Include="Models\ConfigParameter.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\EmailQueueMessage.cs" />
+    <Compile Include="Models\ErrorMessage.cs" />
     <Compile Include="Models\RankStudentsIndexModel.cs" />
     <Compile Include="Models\Score.cs" />
     <Compile Include="Models\ProjectScoreStudentCountMatrix.cs" />
+    <Compile Include="Services\ScoreService.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Services\CustomExtensions.cs" />
     <Compile Include="Models\EmailLog.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="Services\EmailQueueService.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\ProjectService.cs" />
+    <Compile Include="Models\RankProjectsIndexModel.cs" />
     <Compile Include="Services\StudentService.cs" />
     <Compile Include="Services\UrlHelper.cs" />
   </ItemGroup>
@@ -163,6 +166,7 @@
     <Content Include="Views\Project\Create.aspx" />
     <Content Include="Views\Project\Edit.aspx" />
     <Content Include="Views\Project\Index.aspx" />
+    <Content Include="Views\RankProjects\Index.aspx" />
     <Content Include="Views\RankStudents\Index.aspx" />
     <Content Include="Views\Student\Create.aspx" />
     <Content Include="Views\Student\Edit.aspx" />

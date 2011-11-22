@@ -62,12 +62,6 @@ namespace TauberMatching.Services
             return dict;
         }
 
-        public static IDictionary<ScoreDetail, IList<Student>> GetStudentsForProjectGroupedByScore(Guid guid)
-        {
-            Project project = ProjectService.GetProjectWithFullDetailsByGuid(guid);
-            return GetStudentsForProjectGroupedByScore(project);
-        }
-
         private static ProjectScoreStudentCountMatrix GetStudentCountGroupedByDegreePerScore(IDictionary<ScoreDetail, IList<Student>> studentGroupedByScoreDict)
         {
             ProjectScoreStudentCountMatrix pssm = new ProjectScoreStudentCountMatrix();

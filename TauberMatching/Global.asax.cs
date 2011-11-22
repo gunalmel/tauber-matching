@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 using Quartz;
 using Quartz.Impl;
-using TauberMatching.Services;
-using log4net.Appender;
 using Microsoft.Web.Mvc;
+using TauberMatching.Services;
 
 namespace TauberMatching
 {
