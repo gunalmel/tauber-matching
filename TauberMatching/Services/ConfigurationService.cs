@@ -22,6 +22,39 @@ namespace TauberMatching.Services
                 appConfig = new AppConfiguration(db.ConfigParameters);
             return appConfig;
         }
+        //TODO Cache the config parameters instead of fetching them from the db all the time
+        /// <summary>
+        /// Gets the list of config parameters that are related to business rules governing ui interaction for ranking
+        /// </summary>
+        /// <returns>List of ConfigParameter objects</returns>
+        public static IList<ConfigParameter> GetBusinessRulesConfigParametersFor(ContactType cType)
+        {
+            string[] projectConfigParams=null; 
+            switch (cType)
+            { 
+                case ContactType.Project:
+                    projectConfigParams= new string[]{
+                    ConfigEnum.EnforceContinuousStudentRanking.ToString(),ConfigEnum.MaxRejectedBusStudents.ToString(),ConfigEnum.MaxRejectedEngStudents.ToString(),ConfigEnum.MaxRejectedStudents.ToString(),ConfigEnum.MinABusStudents.ToString(),ConfigEnum.MinAEngStudents.ToString(),ConfigEnum.MinAStudents.ToString(),ConfigEnum.RejectedStudentThreshold.ToString()
+                    };
+                    break;
+                case ContactType.Student:
+                    projectConfigParams= new string[]{
+                    ConfigEnum.EnforceContinuousProjectRanking.ToString(),ConfigEnum.MaxRejectedProjects.ToString(),ConfigEnum.RejectedProjectThreshold.ToString()
+                    };
+                    break;
+                default:
+                    break;
+            }
+            IList<ConfigParameter> uiParams;
+            using (MatchingDB db = new MatchingDB())
+            {
+                if (projectConfigParams != null)
+                    uiParams = db.ConfigParameters.Where(c => projectConfigParams.Contains(c.Name)).ToList();
+                else
+                    uiParams = db.ConfigParameters.ToList();
+            }
+            return uiParams;
+        }
         /// <summary>
         /// Updates the config parameters in the database matching the properties of the method argument
         /// </summary>

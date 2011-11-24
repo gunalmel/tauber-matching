@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using TauberMatching.Models;
+using System.Text;
 
 namespace TauberMatching.Services
 {
@@ -102,9 +103,9 @@ namespace TauberMatching.Services
                 IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents = GetStudentsForProjectGroupedByScore(project);
                 ProjectScoreStudentCountMatrix psscm = GetStudentCountGroupedByDegreePerScore(scoreGroupedStudents);
                 IDictionary<StudentDegree, int> degreeGroupedStudentCount = GetStudentsCountForProjectGroupedByDegree(project);
-                IDictionary<int, string> projectRejects = project.ProjectRejects.ToDictionary(key => key.Student.Id, value => value.Reason);
-
-                model = new RankStudentsIndexModel(project.Id, project.Name, scoreGroupedStudents, psscm, projectRejects, project.Feedback, degreeGroupedStudentCount);
+                IDictionary<StudentDegree, string> projectRejects = project.ProjectRejects.ToDictionary(key =>(StudentDegree)Enum.Parse(typeof(StudentDegree), key.Student.Degree), value => value.Reason);
+                string uiRules = GetJsVariables(scoreGroupedStudents);
+                model = new RankStudentsIndexModel(project.Id, project.Name, scoreGroupedStudents, psscm, projectRejects, project.Feedback, degreeGroupedStudentCount,uiRules);
             }
             catch (ArgumentNullException ex)
             {
@@ -114,6 +115,62 @@ namespace TauberMatching.Services
                     throw ex;
             }
             return model;
+        }
+        public static string GetJsVariables(IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents)
+        {
+            StringBuilder jsVariables = new StringBuilder();
+            string jsStringArrayElementTemplate = "\"{0}\",";
+            jsVariables.Append("var scoreList = [");
+            foreach (ScoreDetail sd in scoreGroupedStudents.Keys)
+            {
+                jsVariables.AppendFormat(jsStringArrayElementTemplate, sd.Score);
+            }
+            jsVariables.Remove(jsVariables.Length-1, 1);
+            jsVariables.Append("];").AppendLine();
+
+            jsVariables.Append("var degreeList = [");
+            foreach (StudentDegree degree in Enum.GetValues(typeof(StudentDegree)))
+            {
+                jsVariables.AppendFormat(jsStringArrayElementTemplate, degree.ToString());
+            }
+            jsVariables.Remove(jsVariables.Length-1, 1);
+            jsVariables.Append("];").AppendLine();
+            return jsVariables.ToString();
+        }
+        public static string GetJsVariablesForElementsAndUIRules(IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents)
+        {
+            StringBuilder jsVariables = new StringBuilder();
+
+            #region Build js statements to set js variable that keep ui business rules parameters.
+            String jsConfigVarTemplate = "var {0} = {1};";
+            IList<ConfigParameter> uiRules = ConfigurationService.GetBusinessRulesConfigParametersFor(ContactType.Project);
+            foreach (ConfigParameter param in uiRules)
+            {
+                jsVariables.AppendFormat(jsConfigVarTemplate, param.Name, param.JsValue).AppendLine();
+            } 
+            #endregion
+
+            #region Build JQuery js statements to set js variables to hold ui elements to manipulate and transmit ui interaction
+            String jsJQueryElementVarTemplate = "var {0}_Bucket = $(\"#{0}_Bucket\");";
+            String jsJQueryHiddenElementVarTemplate = "var hf_{0}_Ids = $(\"#hf_{0}_Ids\");";
+            String jsJQueryHiddenDegreeCountTotalElementVarTemplate = "var hf_{0}_Total = $(\"#hf_{0}_Total\");";
+            String jsJQueryHiddenDegreeCountPerScoreElementVarTemplate = "var hf_{0}_{1}_Count = $(\"#hf_{0}_{1}_Count\");";
+            int scoreCounter = 0;
+            foreach (ScoreDetail sd in scoreGroupedStudents.Keys)
+            {
+                jsVariables.AppendFormat(jsJQueryElementVarTemplate, sd.Score).AppendLine();
+                jsVariables.AppendFormat(jsJQueryHiddenElementVarTemplate, sd.Score).AppendLine();
+                foreach (StudentDegree degree in Enum.GetValues(typeof(StudentDegree)))
+                {
+                    if (scoreCounter == 0)
+                        jsVariables.AppendFormat(jsJQueryHiddenDegreeCountTotalElementVarTemplate, degree.ToString()).AppendLine();
+                    jsVariables.AppendFormat(jsJQueryHiddenDegreeCountPerScoreElementVarTemplate, sd.Score, degree.ToString()).AppendLine();
+                }
+                scoreCounter++;
+            } 
+            #endregion
+            jsVariables.Append("var hfProjectId = $(\"#hfProjectId\");");
+            return jsVariables.ToString();
         }
     }
 }

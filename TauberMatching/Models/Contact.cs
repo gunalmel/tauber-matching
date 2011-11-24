@@ -39,5 +39,5 @@ namespace TauberMatching.Models
             this.ContactType = ContactType.Student;
         }
     }
-    public enum ContactType { Student=10, Project=20 }
+    public enum ContactType { All=0, Student=10, Project=20 }
 }

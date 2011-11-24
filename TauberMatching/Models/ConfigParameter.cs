@@ -41,11 +41,31 @@ namespace TauberMatching.Models
         /// </summary>
         /// <param name="name"></param>
         public void SetName(ConfigEnum name) { this.Name = Enum.GetName(typeof(ConfigEnum), name);}
+
+        private string _value;
         /// <summary>
         /// Value set for the application parameter specified by Name property
         /// </summary>
         [MaxLength(256, ErrorMessage = "Application configuration parameter value can be at most 256 characters long.")]
-        public String Value { get; set; }
+        public String Value { get { return _value; } set { this._value = value; } }
+
+        /// <summary>
+        /// Returns a string representation of configuration parameter value that can be used to produce a js variable assigment statement.
+        /// </summary>
+        [NotMapped]
+        public String JsValue
+        {
+            get
+            {
+                Int32 intValue;
+                string value;
+                if (new[] { "true", "false"}.Contains(_value.ToLower()) || Int32.TryParse(_value, out intValue))
+                    value = _value.ToLower();
+                else
+                    value = "\"" + _value + "\"";
+                return value;
+            }
+        }
 
         public override int GetHashCode()
         {
@@ -71,6 +91,7 @@ namespace TauberMatching.Models
 
 
     }
+    
     public enum ConfigEnum
     {
         /// <summary>
@@ -126,11 +147,11 @@ namespace TauberMatching.Models
         /// </summary>
         RejectedProjectThreshold=65,
         /// <summary>
-        /// Decides whether students should rank projects in a continuum. E.g.: If there are projects in 1st and 4th category then there should be projects in 2nd & 3rd category as well.
+        /// Decides whether students should rank projects in a continuum. If there are projects in 1st and 4th category then there should be projects in 2nd and 3rd category as well.
         /// </summary>
         EnforceContinuousProjectRanking=70,
         /// <summary>
-        /// Decides whether projects should rank students in a continuum. E.g.: If there are students in A and D category then there should be students in B & C category as well.
+        /// Decides whether projects should rank students in a continuum. If there are students in A and D category then there should be students in B and C category as well.
         /// </summary>
         EnforceContinuousStudentRanking=75,
     }

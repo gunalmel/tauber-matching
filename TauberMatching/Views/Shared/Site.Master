@@ -28,8 +28,8 @@
             });
         }
         function cutFromNthOccurence(str,n,delimiter) {
-            start = n,
-            tokens = str.split(delimiter).slice(start),
+            start = n;
+            tokens = str.split(delimiter).slice(start);
             result = tokens.join(delimiter);
             return result;
         }

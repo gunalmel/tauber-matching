@@ -54,7 +54,7 @@ namespace TauberMatching.Models
             String propName = Enum.GetName(typeof(ConfigEnum), name);
             var valueObject=thisType.GetProperty(propName).GetValue(this, null);
             String value = String.Empty;
-            if(valueObject!=null)
+            if (valueObject != null)
                 value = valueObject.ToString();
             return new ConfigParameter(name, value);
         }
