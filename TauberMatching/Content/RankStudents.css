@@ -1,0 +1,149 @@
+﻿body
+{
+    font-family:Verdana;
+    font-size:10pt;
+}
+.errorMessage
+{
+    color:Red;
+    font-weight:bold;
+    clear:both;
+    display:block;
+}
+.droptrue
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    float: left;
+    margin-right: 10px;
+    background: #DFDFDF;
+    padding: 5px;
+    padding-bottom:15px;
+    width:18%;
+}
+li.disc
+{
+    margin: .2em 0;
+    list-style-type:disc;
+}
+li.inst
+{
+    margin: .4em 0;
+}
+li.Bus, li.Eng
+{
+    margin: 5px;
+    padding: 5px;
+    font-size: 8pt;
+/*    width: 175px;*/
+    font-family: Verdana;
+    text-align: center;
+    border: 1px solid #D19405;
+    font-weight: bold;
+    outline: medium none;
+}
+li.list-heading
+{
+    font-family: Lucida Console;
+    background-color: #D7C2CC;
+    font-size: 10pt;
+    color: #452A38;
+}
+li.Bus
+{
+    background-color: #F6E58D;
+}
+li.Eng
+{
+    background-color: #FEEA73;
+}
+li.RejectReason
+{
+    list-style-type:none;
+    float:left;
+    width:50%;
+}
+textArea.RejectReason
+{
+    width:90%;
+    height:40px;
+}
+span.degree
+{
+    display: block;
+    clear: both;
+    text-align: center;
+    font-size: 8pt;
+}
+#btnSubmit
+{
+    clear:both;
+    display:block;
+    background-color:#CFC2EF;
+    border:1px solid; 
+    border-color: #696 #363 #363 #696; 
+    border-style:solid;
+    width:210px;
+    padding: 5px;
+    margin-top:5px;
+}
+label[for]
+{
+    font-weight:bold;
+    display:block;
+    clear:both;
+}
+#spanFeedback
+{
+    display:block;
+    clear:both;
+    width:67%;
+}
+#divRejectReasons
+{
+    display:block;
+    width:100%;
+}
+#ulRejectReasons
+{
+    padding-left:0;
+}
+#divRanking
+{
+    float:left;
+    width:100%;
+}
+/*
+table#rejectTable
+{
+    width:100%;
+}
+*/
+
+#divInstructions
+{
+    display:block;
+    clear:both;
+    width:100%;
+}
+#spnWait
+{
+    font-size:medium; 
+    font-weight:bold; 
+    color:Red; 
+    display:none;
+}
+/*
+#divCompanyTitle
+{
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	color:#ffffff;
+	font-size:15px;
+	font-weight:bold;
+	background-color:#000084 ;
+	width:100%;
+	display:block;
+	margin: 0 .2em;
+}
+*/

@@ -54,12 +54,12 @@ namespace TauberMatching.Models
             set { _projectScoreStudentCountMatrix = value; }
         }
 
-        private IDictionary<int,string> _rejects;
+        private IDictionary<StudentDegree,string> _rejects;
 
         /// <summary>
-        /// Dictionary key is the student id, value is the reason
+        /// Dictionary key is the student degree, value is the reason
         /// </summary>
-        public IDictionary<int, string> Rejects
+        public IDictionary<StudentDegree, string> Rejects
         {
             get { return _rejects; }
             set { _rejects = value; }
@@ -84,7 +84,18 @@ namespace TauberMatching.Models
             set { _studentCountDict = value; }
         }
 
-        public RankStudentsIndexModel(int projectId,String projectName, IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents, ProjectScoreStudentCountMatrix projectScoreStudentCountMatrix, IDictionary<int, string> projectRejects, string feedback, IDictionary<StudentDegree, int> studentCountDict)
+        private string _uiJsStatements;
+
+        /// <summary>
+        /// Js variable assigment statements that will be injected into the veiw to be consumed by Js files
+        /// </summary>
+        public string UIJsStatements
+        {
+            get { return _uiJsStatements; }
+            set { _uiJsStatements = value; }
+        }
+
+        public RankStudentsIndexModel(int projectId,String projectName, IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents, ProjectScoreStudentCountMatrix projectScoreStudentCountMatrix, IDictionary<StudentDegree, string> projectRejects, string feedback, IDictionary<StudentDegree, int> studentCountDict, string uiRules)
         {
             ProjectId = projectId;
             ProjectName = projectName;
@@ -94,6 +105,7 @@ namespace TauberMatching.Models
             Rejects=projectRejects;
             Feedback = feedback;
             StudentCountDict = studentCountDict;
+            UIJsStatements = uiRules;
         }
         public RankStudentsIndexModel(bool isError, String errorMessage)
         {

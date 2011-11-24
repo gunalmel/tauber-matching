@@ -157,9 +157,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\MatchingDB.old" />
+    <Content Include="Content\images\wait.gif" />
+    <Content Include="Content\jquery-ui-1.8.7.custom.min.js" />
+    <Content Include="Content\RankStudents.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\json.js" />
     <Content Include="Scripts\MicrosoftMvcJQueryValidation.js" />
+    <Content Include="Scripts\RankStudents.js" />
     <Content Include="Scripts\UIFunctions.js" />
     <Content Include="Views\AppConfig\Edit.aspx" />
     <Content Include="Views\FileUpload\UploadMatchingFile.aspx" />
