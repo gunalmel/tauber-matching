@@ -1,206 +1,253 @@
-﻿
-/*
-Score containers'(<ul> elements) hiddenfields as JQuery objects which store the Student ids in a csv format are named after hidden field element ids and are injected into the page using MVC scriplets in the view (hf<ScoreContainerId>)
-NoScore, hfNoScore, hfA, hfB, hfC, hfX
-*/
+﻿/**
+ * @fileOverview This file has functions, classes and variables related to implementing user interaction on RankStudents view.
+ * @author <a href="mailto:gunalmel@yahoo.com">Melih Gunal</a> 11/25/2011
+ * The following varibales are dynamically added as they are fetched from the db by the controller into the view. The values displayed below are for providing an example only. The actual values on the UI might be different.
+ * var scoreList = ["NoScore","A","B","C","Reject"];
+ * var degreeList = ["Bus","Eng"];
+ * var MinABusStudents = 1; (-1 ignores associated validation rule)
+ * var MinAEngStudents = 1; (-1 ignores associated validation rule)
+ * var MinAStudents = 2; (-1 ignores associated validation rule)
+ * var MaxRejectedBusStudents = 1; (-1 ignores associated validation rule)
+ * var MaxRejectedEngStudents = 1; (-1 ignores associated validation rule)
+ * var MaxRejectedStudents = 2; (-1 ignores associated validation rule)
+ * var RejectedStudentThreshold = 5; (0 ignores associated validation rule)
+ * var EnforceContinuousStudentRanking = true;
+ */
+/** Error message to be displayed when the user rejects more engineering students than the number specified by MinAEngStudents */
+var engStudentsErrorMessage = "You have to assign A to at least " + MinAEngStudents + " engineering student" + (MinAEngStudents > 1 ? "s.\n" : ".\n");
+/** Error message to be displayed when the user rejects more business students than the number specified by MinABusStudents */
+var busStudentsErrorMessage = "You have to assign A to at least " + MinABusStudents + " business student" + (MinABusStudents > 1 ? "s.\n" : ".\n");
+/** Error message to be displayed when the user rejects more students than the number specified by MinAStudents */
+var allStudentsErrorMessage = "You have to assign A to at least " + MinAStudents + " student" + (MinAStudents > 1 ? "s.\n" : ".\n");
+/** Error message to be displayed when ranking scheme is sparse */
+var sparseRankingErrorMessage = "When you are ranking students, your ranking scheme should not be sparse, e.g.: If there are students in A and C when there are no students in B that's an error.";
 
-var mainList;
-var hfA;
-var hfB;
-var hfC;
-var hfX;
-var maxEngReject = 1; // Maximum number of engineering students that can be rejected.
-var maxBusReject = 1;
-$("document").ready(function () {
-mainList = $("#mainList");
-hfA = $("#hfA");
-hfB = $("#hfB");
-hfC = $("#hfC");
-hfX = $("#hfX");
-})
+var minTotalStudentsToRejectViolationErrorMessage = "You should have interviewed at least " + RejectedStudentThreshold + " students to be able to reject any students";
+var maxEngStudentsToRejectViolationErrorMessage = "Maximum # of Engineering students you can reject is: " + MaxRejectedEngStudents;
+var maxBusStudentsToRejectViolationErrorMessage = "Maximum # of Business students you can reject is: " + MaxRejectedBusStudents;
+var maxTotalStudentsToRejectViolationErrorMessage = "Maximum # of students you can reject is: " + MaxRejectedStudents;
+/**
+ * Global variable to store all ranking buckets on the interface using JQuery 
+ * @type JQuery object array
+ */
+var ScoreBuckets;
+/** 
+ * Global varible to transfer the result of validation functions.
+ * @type Error 
+ * @see Error
+ */
+var StudentCount;
+
+/**
+ * @class Used to transfer error status and associated error message to be displayed between functions.
+ * @param {Boolean} isError Represents if the object has been created due to an error. When false errorMessage will be empty string.
+ * @param {String} errorMessage The message that will be displayed to user if this object has been created as a result of UI error, otherwise will be empty string.
+ */
+function UIError(isThereAnyError, messageToDisplay) {
+    this.isError = isThereAnyError;
+    this.errorMessage = messageToDisplay;
+}
+
+/**
+ * @function Equivalent of JQuery $(document).ready() function call. Makes Ranking buckets sortable drag and drop containers using JQuery UI plug-in.
+ *           Initializes global variables to store ranking buckets and student counts grouped by degree on the interface
+ */
 $(function () {
-$("ul.droptrue").sortable({
-connectWith: "ul",
-items: "li:not(.list-heading)",
-remove: onRemoved,
-receive: onReceived
+    $("ul.droptrue").sortable({
+        connectWith: "ul",
+        items: "li:not(.list-heading)",
+        receive: onReceived
+    });
+    $(".droptrue").disableSelection(); // Do not let the draggable li items to be text selectable
+    ScoreBuckets = $("ul.droptrue");
+    StudentCount = getTotalStudentCountByDegree();
 });
 
-$(".droptrue").disableSelection();
-});
-
-function onRemoved(event, ui) {
-var degree = ui.item.attr("class");
-
-var targ;
-if (event.target)
-targ = event.target;
-else if (event.srcElement)
-targ = event.srcElement;
-var engCount = $(targ).attr("eng");
-var busCount = $(targ).attr("bus");
-if (degree == "Bus") {
-if (busCount > 0)
-$(targ).attr("bus", (busCount - 1));
-}
-if (degree == "Eng") {
-if (engCount > 0)
-$(targ).attr("eng", (engCount - 1));
-}
-}
-
+/** 
+ * @function Event handler function for JQuery sortable darg and drop UI. If score names or degree names are changed this function need to be updated.
+ * Whenever the droppable elemnt receives a draggable element this function is triggered before the drop action is finalized. Handles the real time validation to decide if a selected student can be rejected.
+ * @see checkForRejectedStudentError
+ */
 function onReceived(event, ui) {
-var mainEngCount = parseInt(mainList.attr("eng"));
-var mainBusCount = parseInt(mainList.attr("bus"));
+    var receiver = ui.item.parent();
+    if (receiver.attr("id") == "ul_Reject_Bucket") {
+        var rejectError = checkForRejectedStudentError();
+        if (rejectError.isError) {
+            alert(rejectError.errorMessage);
+            $(ui.sender).sortable("cancel");
+        }
+        // alert("Eng:"+rejectedEngStudentCount+" Bus:"+rejectedBusStudentCount);
+    }
+    else {
+    }
+    //alert(isRankingContinuous().isError+" "+isRankingContinuous().errorMessage);
+    //alert(checkForAStudentError().errorMessage);
+    //alert(runAllValidations().errorMessage);
+}
 
-var degree = ui.item.attr("class");
-    
-var targ;
-if (event.target)
-targ = event.target;
-else if (event.srcElement)
-targ = event.srcElement;
+/* UI Validation Functions Starts Here.*/
 
-var engCount = parseInt($(targ).attr("eng"));
-var busCount = parseInt($(targ).attr("bus"));
-if (degree == "Bus") {
-// If the receiver is reject box check that it has at most 1 eng and 1 bus student.
-if (targ.id == "X" && busCount >= maxBusReject) {
-var item = $(targ).find(".Bus").not(ui.item);
-mainList.find("li.list-heading").after(item);
-mainList.attr("bus", mainBusCount + 1);
-//$(ui.sender).sortable("cancel");
+/**
+ * @function Calls UI validation functions to run on the client side before calling server side web service to persist user preferences.
+ * @returns {UIError}
+ */
+function runAllValidations() {
+    $("#divUserErrors").html("");
+    var AError = checkForAStudentError();
+    var isContinuousError = isRankingContinuous();
+    var error = new UIError(AError.isError || isContinuousError.isError, "");
+    error.errorMessage = (AError.isError ? AError.errorMessage : "") + (isContinuousError.isError ? isContinuousError.errorMessage : "");
+    error.errorMessage = error.errorMessage.replace(/\n/g, '<br/>').replace(/  ,/g, '<br/>');
+    $("#divUserErrors").html(error.errorMessage);
+    return error;
 }
-else {
-$(targ).attr("bus", (busCount + 1));
-}
-}
-if (degree == "Eng") {
-// If the receiver is reject box check that it has at most 1 eng and 1 bus student.
-if (targ.id == "X" && engCount >= maxEngReject) {
-var item = $(targ).find(".Eng").not(ui.item);
-mainList.find("li.list-heading").after(item);
-mainList.attr("eng", mainEngCount + 1);
-//$(ui.sender).sortable("cancel");
-}
-else {
-$(targ).attr("eng", (engCount + 1));
-}
-}
-}
-/* function to dynamically display and hide reject reason text boxes.
-function displayReject(listItem, degree,isVisible) {
-var id = listItem.attr("id");
-var text = listItem.text();
-var student = text.substring(0, text.indexOf("(")).trim();
-if (isVisible) {
-if (degree == "Eng") {
-$("#lblRejectEng").html("Reason for rejecting " + student);
-$("#hfRejectEng").val(id);
-$("#rejectRowEng").show();
-}
-else {
-$("#lblRejectBus").html("Reason for rejecting " + student);
-$("#hfRejectBus").val(id);
-$("#rejectRowBus").show();
-}
-}
-else {
-if (degree == "Eng") {
-$("#lblRejectEng").html("");
-$("#hfRejectEng").val("");
-$("#rejectRowEng").hide();
-}
-else {
-$("#lblRejectBus").html("");
-$("#hfRejectBus").val("");
-$("#rejectRowBus").hide();
-}
-}
-}
+
+/** 
+* @function Checks if more students than specified by configuration parameters have been rejected and returns UIError object accordingly
+* @returns {UIError} UIError object indicating if there's an error rejecting a student and  including error message accordingly.
 */
-function validate() {
-    var msg = "";
-    var engTotal = parseInt($("#hfEngTotal").val());
-    var busTotal = parseInt($("#hfBusTotal").val());
-    var engUnranked = parseInt(mainList.attr("eng"));
-    var busUnranked = parseInt(mainList.attr("bus"));
-    var aEng = parseInt($("#A").attr("eng"));
-    var aBus = parseInt($("#A").attr("bus"));
-    
-    var bEng = parseInt($("#B").attr("eng"));
-    var bBus = parseInt($("#B").attr("bus"));
-    
-    var cEng = parseInt($("#C").attr("eng"));
-    var cBus = parseInt($("#C").attr("bus"));
+function checkForRejectedStudentError() {
 
-    var isValid = true;
-    // What happens if there is only one business/engineering student and that student is to be rejected. Would still #1 rule apply (There should be at least one eng one bus student in A)
-    if (engTotal>0 && aEng < 1) {
-        isValid = false;
-        msg = "*You must rank at least one Engineer in the A category.<br/>";
-    }
-    if (busTotal>0 && aBus < 1) {
-        isValid = false;
-        msg += "*You must rank at least one Business student in the A category.<br/>";
-    }
-    if (engUnranked > 0 || busUnranked > 0) {
-        isValid = false;
-        msg += "*You must rank all the students you interviewed.<br/>";
-    }
-    var invalidBus1 = (aBus > 0 && bBus < 1 && cBus > 0); //101
-    var invalidBus2 = (aBus < 1 && bBus > 0 && cBus < 1); //010
-    var invalidBus3 = (aBus < 1 && bBus < 1 && cBus > 0); //001
-    var invalidBus4 = (aBus < 1 && bBus > 0 && cBus > 0); //011
-    var invalidBus = invalidBus1 || invalidBus2 || invalidBus3 || invalidBus4;
-    if (invalidBus) {
-        isValid = false;
-        msg += "*Ranking of Business students should be continuous (e.g., if you want to rank a student in the 'C' category, you must have already ranked students in the 'A' and 'B' category).<br/>";
-    }
-    var invalidEng1 = (aEng > 0 && bEng < 1 && cEng > 0); //101
-    var invalidEng2 = (aEng < 1 && bEng > 0 && cEng < 1); //010
-    var invalidEng3 = (aEng < 1 && bEng < 1 && cEng > 0); //001
-    var invalidEng4 = (aEng < 1 && bEng > 0 && cEng > 0); //011
-    var invalidEng = invalidEng1 || invalidEng2 || invalidEng3 || invalidEng4;
-    if (invalidEng) {
-        isValid = false;
-        msg += "*Ranking of Engineering students should be continuous (e.g., if you want to rank a student in the 'C' category, you must have already ranked students in the 'A' and 'B' category).<br/>";
-    }
+    var rejectedEngStudentCount = getStudentCountForScoreForDegree("Reject", "Eng");
+    var rejectedBusStudentCount = getStudentCountForScoreForDegree("Reject", "Bus");
+    var rejectedTotalStudentCount = rejectedEngStudentCount + rejectedBusStudentCount;
 
-    if (!isValid) {
-        $("#error").html(msg);
+    var error = new UIError();
+    if (rejectedTotalStudentCount != -1 && StudentCount.All < RejectedStudentThreshold && rejectedTotalStudentCount > 0) { //Projects can reject students only when they interviewed more than certain # of students
+        error.isError = true;
+        error.errorMessage = minTotalStudentsToRejectViolationErrorMessage;
     }
-    var AIds = "";
-    var BIds = "";
-    var CIds = "";
-    var XIds = "";
-    $("#hfRejectEng").val('');
-    $("#hfRejectBus").val('');
-    $("#A li:not(.list-heading)").each(function () {
-        AIds += AIds == "" ? this.id : ("," + this.id);
-    });
-    $("#B li:not(.list-heading)").each(function () {
-        BIds += BIds == "" ? this.id : ("," + this.id);
-    });
-    $("#C li:not(.list-heading)").each(function () {
-        CIds += CIds == "" ? this.id : ("," + this.id);
-    });
-    $("#X li:not(.list-heading)").each(function () {
-        XIds += XIds == "" ? this.id : ("," + this.id);
-        if ($(this).attr("class") == "Eng")
-            $("#hfRejectEng").val(this.id);
-        else if ($(this).attr("class") == "Bus")
-            $("#hfRejectBus").val(this.id);
-    });
-
-    hfA.val(AIds);
-    hfB.val(BIds);
-    hfC.val(CIds);
-    hfX.val(XIds);
-
-    return isValid;
+    else if (MaxRejectedEngStudents != -1 && rejectedEngStudentCount > MaxRejectedEngStudents) {
+        error.isError = true;
+        error.errorMessage = maxEngStudentsToRejectViolationErrorMessage;
+    }
+    else if (MaxRejectedBusStudents != -1 && rejectedBusStudentCount > MaxRejectedBusStudents) {
+        error.isError = true;
+        error.errorMessage = maxBusStudentsToRejectViolationErrorMessage;
+    }
+    else if (MaxRejectedStudents != -1 && rejectedTotalStudentCount > MaxRejectedStudents) {
+        error.isError = true;
+        error.errorMessage = maxTotalStudentsToRejectViolationErrorMessage;
+    }
+    else {
+        error.isError = false;
+        error.errorMessage = "";
+    }
+    return error;
 }
-function displayWait() {
-    $('#btnSubmit').hide();
-    $('#sWait').show();
+/**
+ * @function Checks if the required min # of eng, bus and total students are assigned A
+ * @returns {UIError} Returns an UIError object to indicate whether the validation result is an error, if it is then errorMessage property is set to the error message to be displayed.
+ */
+function checkForAStudentError() {
+    var aEngStudentCount = getStudentCountForScoreForDegree("A", "Eng");
+    var aBusStudentCount = getStudentCountForScoreForDegree("A", "Bus");
+    var aStudentCount = aEngStudentCount + aBusStudentCount;
+    var isError = false;
+    var errorMessage = "";
+    if (MinAEngStudents != -1 && aEngStudentCount < MinAEngStudents && StudentCount.Eng > 0) {
+        isError = true;
+        errorMessage += engStudentsErrorMessage;
+    }
+    if (MinABusStudents != -1 && aBusStudentCount < MinABusStudents && StudentCount.Bus > 0) {
+        isError = true;
+        errorMessage += busStudentsErrorMessage;
+    }
+    if (MinAStudents != -1 && aStudentCount < MinAStudents) {
+        isError = true;
+        errorMessage += allStudentsErrorMessage;
+    }
+    return new UIError(isError, errorMessage);
+}
+
+/**
+ * @function Checks if the student ranking scheme is sparse. e.g.: It returns an UIError object whose isError is set to true with appropriate errorMessage if there are students in A and C group when there are no students in B group
+ * @returns {UIError} Returns UIError object indicating if there's an error message and associated error message.
+ */
+function isRankingContinuous() {
+    var positionOfTheLastBucketWithStudents = -1;
+    var positionOfTheNextBucketWithStudents = 0;
+    var isContinuous = true;
+    var error = new UIError(!isContinuous, "");
+    if (!EnforceContinuousStudentRanking)
+        return new UIError(isContinuous, "");
+    ScoreBuckets.filter(":not(#ul_NoScore_Bucket,#ul_Reject_Bucket)").each(function (index) {
+        var studentCountInTheBucket = $(this).find("li.:not(.list-heading)").length;
+        positionOfTheNextBucketWithStudents = studentCountInTheBucket > 0 ? index : positionOfTheNextBucketWithStudents;
+        if (studentCountInTheBucket > 0) {
+            if ((positionOfTheNextBucketWithStudents - positionOfTheLastBucketWithStudents) > 1) {
+                isContinuous = false;
+                error.isError = !isContinuous;
+                error.errorMessage = sparseRankingErrorMessage;
+            }
+            positionOfTheLastBucketWithStudents = positionOfTheNextBucketWithStudents;
+        }
+    });
+    return error;
+}
+/* UI Validation Functions Ends Here.*/
+
+/**
+ * @function Gets the number of students within a given score bucket (ranking group) with the specified degree
+ * @param {String} score The ranking group (e.g. A, B)
+ * @param {String} degree The degree towards the student is studying. Eng(Engineering)|Bus(Business)
+ */
+function getStudentCountForScoreForDegree(score, degree) {
+    return ScoreBuckets.filter("." + score).find("li." + degree + ":not(.list-heading)").length; //$("#ul_"+score+"_Bucket li."+degree+":not(.list-heading)").length;
+}
+
+/**
+ * @function Returns an object whose properties are named such as [<Degree>TotalCount] to refer to the total number of students towards the specified degree type
+ * @returns {TotalStudentCountByDegree} A dynamic object whose properties consists of dynamically generated properties named after student degrees and an additional property called All stroing the total number of students on the interface.
+ */
+function getTotalStudentCountByDegree() {
+    var TotalStudentCountByDegree = {};
+    var degreeListLength = degreeList.length;
+    var totalStudentCount = 0;
+    for (var degreeIndex = 0; degreeIndex < degreeListLength; degreeIndex++) {
+        var degree = degreeList[degreeIndex];
+        TotalStudentCountByDegree[degree] = $("#hf_" + degree + "_Total").val();
+        totalStudentCount += parseInt(TotalStudentCountByDegree[degree]);
+    }
+    TotalStudentCountByDegree["All"] = totalStudentCount;
+    return TotalStudentCountByDegree;
+}
+
+/**
+ * @function Returns an object whose properties are named such as [<Score><Degree>Count] to refer to the count of students with a specific degree in the score bucket specified.
+ * @returns {StudentCountGroupedByScoreAndDegree} A dynamically created object that will store the count of students on the UI grouped by score and degree. The properties will be like: StudentCountGroupedByScoreAndDegree.AEngCount
+ */
+function getStudentCountGroupedByScoreAndDegree() {
+    var StudentCountGroupedByScoreAndDegree = {};
+    var scoreListLength = scoreList.length;
+    for (var scoreIndex = 0; scoreIndex < scoreListLength; scoreIndex++) {
+        var score = scoreList[scoreIndex];
+        var degreeListLength = degreeList.length;
+        var scoreBucketListItems = ScoreBuckets.filter("." + score).find("li:not(.list-heading)");
+        StudentCountGroupedByScoreAndDegree[score + "TotalCount"] = scoreBucketListItems.length;
+        for (var degreeIndex = 0; degreeIndex < degreeListLength; degreeIndex++) {
+            var degree = degreeList[degreeIndex];
+            var degreeCountInBucket = scoreBucketListItems.filter("." + degree).length;
+            StudentCountGroupedByScoreAndDegree[score + degree + "Count"] = degreeCountInBucket;
+        }
+    }
+    /* For testing
+    alert("NoScore: "+StudentCountGroupedByScoreAndDegree.NoScoreTotalCount);
+    alert("A: "+StudentCountGroupedByScoreAndDegree.ATotalCount);
+    alert("B: "+StudentCountGroupedByScoreAndDegree.BTotalCount);
+    alert("C: "+StudentCountGroupedByScoreAndDegree.CTotalCount);
+    alert("Reject: "+StudentCountGroupedByScoreAndDegree.RejectTotalCount);
+
+    alert("NoScoreEng: "+StudentCountGroupedByScoreAndDegree.NoScoreEngCount);
+    alert("NoScoreBus: "+StudentCountGroupedByScoreAndDegree.NoScoreBusCount);
+    alert("AEng: "+StudentCountGroupedByScoreAndDegree.AEngCount);
+    alert("ABus: "+StudentCountGroupedByScoreAndDegree.ABusCount);
+    alert("BEng: "+StudentCountGroupedByScoreAndDegree.BEngCount);
+    alert("BBus: "+StudentCountGroupedByScoreAndDegree.BBusCount);
+    alert("CEng: "+StudentCountGroupedByScoreAndDegree.CEngCount);
+    alert("CBus: "+StudentCountGroupedByScoreAndDegree.CBusCount);
+    alert("RejectEng: "+StudentCountGroupedByScoreAndDegree.RejectEngCount);
+    alert("RejectBus: "+StudentCountGroupedByScoreAndDegree.RejectBusCount);
+    */
+    return StudentCountGroupedByScoreAndDegree;
 }
