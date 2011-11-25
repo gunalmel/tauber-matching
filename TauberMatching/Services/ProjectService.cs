@@ -103,7 +103,7 @@ namespace TauberMatching.Services
                 IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents = GetStudentsForProjectGroupedByScore(project);
                 ProjectScoreStudentCountMatrix psscm = GetStudentCountGroupedByDegreePerScore(scoreGroupedStudents);
                 IDictionary<StudentDegree, int> degreeGroupedStudentCount = GetStudentsCountForProjectGroupedByDegree(project);
-                IDictionary<StudentDegree, string> projectRejects = project.ProjectRejects.ToDictionary(key =>(StudentDegree)Enum.Parse(typeof(StudentDegree), key.Student.Degree), value => value.Reason);
+                IDictionary<Student, string> projectRejects = project.ProjectRejects.ToDictionary(key =>key.Student, value => value.Reason);
                 string uiRules = GetJsVariables(scoreGroupedStudents);
                 model = new RankStudentsIndexModel(project.Id, project.Name, scoreGroupedStudents, psscm, projectRejects, project.Feedback, degreeGroupedStudentCount,uiRules);
             }

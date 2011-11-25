@@ -6,7 +6,7 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
     <link href="../../Content/RankStudents.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="../../Content/jquery-ui-1.8.7.custom.min.js"></script>
+    <script type="text/javascript" src="../../Content/jquery-ui-1.8.16.custom.min.js"></script>
     <% if (!Model.IsError)
     {%>     
         <script type="text/javascript">
@@ -20,7 +20,6 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 <% //TODO #32 Interaction js %>
-<% //TODO Validation for MinABusStudents, MinAEngStudents, MinAStudents %>
 <% //TODO Externalize error messages in javascript %>
 
     <h2><%= Model.IsError?"":Model.ProjectName %></h2>
@@ -86,11 +85,11 @@
             </div>
             <div id="divRejectReasons">
                 <ul id="ulRejectReasons">
-                <% foreach (StudentDegree degree in Enum.GetValues(typeof(StudentDegree)))
+                <% foreach (Student student in Model.Rejects.Keys)
                 {%>
                     <li class="RejectReason">
-                        <label id="lblReject_<%=degree.ToString() %>"  for="txtReject<%=degree.ToString() %>">Reason if any <u><i><%=degree==StudentDegree.Bus?"business":"engineering" %></i></u> is rejected</label>
-                        <textarea id="txtReject_<%=degree.ToString() %>" class="RejectReason"><%= Model.Rejects.Keys.Contains(degree)?Model.Rejects[degree]:""%></textarea>
+                        <label id="lblReject_<%=student.Id.ToString() %>"  for="txtReject<%=student.Id.ToString() %>">Please enter the reason for rejecting <u><%=student.FullName %></u></label>
+                        <textarea id="txtReject_<%=student.Id.ToString() %>" class="RejectReason"><%= Model.Rejects[student] %></textarea>
                     </li>
                 <%} %>
                 </ul>

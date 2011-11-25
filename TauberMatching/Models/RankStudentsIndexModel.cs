@@ -54,12 +54,12 @@ namespace TauberMatching.Models
             set { _projectScoreStudentCountMatrix = value; }
         }
 
-        private IDictionary<StudentDegree,string> _rejects;
+        private IDictionary<Student,string> _rejects;
 
         /// <summary>
         /// Dictionary key is the student degree, value is the reason
         /// </summary>
-        public IDictionary<StudentDegree, string> Rejects
+        public IDictionary<Student, string> Rejects
         {
             get { return _rejects; }
             set { _rejects = value; }
@@ -95,7 +95,7 @@ namespace TauberMatching.Models
             set { _uiJsStatements = value; }
         }
 
-        public RankStudentsIndexModel(int projectId,String projectName, IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents, ProjectScoreStudentCountMatrix projectScoreStudentCountMatrix, IDictionary<StudentDegree, string> projectRejects, string feedback, IDictionary<StudentDegree, int> studentCountDict, string uiRules)
+        public RankStudentsIndexModel(int projectId,String projectName, IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents, ProjectScoreStudentCountMatrix projectScoreStudentCountMatrix, IDictionary<Student, string> projectRejects, string feedback, IDictionary<StudentDegree, int> studentCountDict, string uiRules)
         {
             ProjectId = projectId;
             ProjectName = projectName;
