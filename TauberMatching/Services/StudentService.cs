@@ -28,7 +28,7 @@ namespace TauberMatching.Services
             if (student.Matchings == null || student.Matchings.Count == 0 || student.Matchings.Select(m => m.Student).Count() == 0)
                 throw new ArgumentException("student", "There are no matching projects for the student. Make sure all properties of your student was eagerly loaded before it was passed as parameter.");
 
-            var dict = student.Matchings.GroupBy(m => StudentScoreDetails.Where(sd => sd.Score == (m.StudentScore ?? StudentScore.NoScore.ToString())).FirstOrDefault()).ToDictionary(key => key.Key, value => value.Select(m => m.Project).ToList() as IList<Project>);
+            var dict = student.Matchings.GroupBy(m => StudentScoreDetails.Where(sd => sd.Score == m.StudentScore).FirstOrDefault()).ToDictionary(key => key.Key, value => value.Select(m => m.Project).ToList() as IList<Project>);
             foreach (ScoreDetail sd in StudentScoreDetails)
             {
                 if (!dict.Keys.Contains(sd))

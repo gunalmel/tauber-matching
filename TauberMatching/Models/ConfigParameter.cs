@@ -131,7 +131,7 @@ namespace TauberMatching.Models
         /// </summary>
         MaxRejectedEngStudents=45,
         /// <summary>
-        /// Maximum number of students whou can be rejected
+        /// Maximum number of students who can be rejected
         /// </summary>
         MaxRejectedStudents=50,
         /// <summary>
