@@ -135,8 +135,18 @@ namespace TauberMatching.Services
             }
             jsVariables.Remove(jsVariables.Length-1, 1);
             jsVariables.Append("];").AppendLine();
+
+            #region Build js statements to set js variable that keep ui business rules parameters.
+            String jsConfigVarTemplate = "var {0} = {1};";
+            IList<ConfigParameter> uiRules = ConfigurationService.GetBusinessRulesConfigParametersFor(ContactType.Project);
+            foreach (ConfigParameter param in uiRules)
+            {
+                jsVariables.AppendFormat(jsConfigVarTemplate, param.Name, param.JsValue).AppendLine();
+            }
+            #endregion
             return jsVariables.ToString();
         }
+        /*
         public static string GetJsVariablesForElementsAndUIRules(IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents)
         {
             StringBuilder jsVariables = new StringBuilder();
@@ -151,7 +161,7 @@ namespace TauberMatching.Services
             #endregion
 
             #region Build JQuery js statements to set js variables to hold ui elements to manipulate and transmit ui interaction
-            String jsJQueryElementVarTemplate = "var {0}_Bucket = $(\"#{0}_Bucket\");";
+            String jsJQueryElementVarTemplate = "var ul_{0}_Bucket = $(\"#{0}_Bucket\");";
             String jsJQueryHiddenElementVarTemplate = "var hf_{0}_Ids = $(\"#hf_{0}_Ids\");";
             String jsJQueryHiddenDegreeCountTotalElementVarTemplate = "var hf_{0}_Total = $(\"#hf_{0}_Total\");";
             String jsJQueryHiddenDegreeCountPerScoreElementVarTemplate = "var hf_{0}_{1}_Count = $(\"#hf_{0}_{1}_Count\");";
@@ -172,5 +182,6 @@ namespace TauberMatching.Services
             jsVariables.Append("var hfProjectId = $(\"#hfProjectId\");");
             return jsVariables.ToString();
         }
+    */
     }
 }

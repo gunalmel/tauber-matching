@@ -97,7 +97,7 @@ namespace TauberMatching.Services
             {
                 var project = db.Projects.Where(p => p.Id == mdto.ProjectId).First();
                 var student = db.Students.Where(s => s.Id == mdto.StudentId).First();
-                var matching = new Matching() { Project = project, Student = student };
+                var matching = new Matching() { Project = project, Student = student, ProjectScore=ProjectScore.NoScore.ToString(), StudentScore=StudentScore.NoScore.ToString() };
                 db.Matchings.Add(matching);
                 db.SaveChanges();
             }
