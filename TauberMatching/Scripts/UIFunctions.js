@@ -1,4 +1,17 @@
-﻿/*As written by Patrick Hunlock (2007) @ http://www.hunlock.com/blogs/Snippets:_Howto_Grey-Out_The_Screen */
+﻿
+/**
+ * @function Extracts the element that triggers the event from the event object independent of the browser type.
+ */
+function getTargetElementFromEvent(event) {
+    var targ;
+    if (event.target)
+        targ = event.target;
+    else if (event.srcElement)
+        targ = event.srcElement;
+    return targ;
+}
+
+/*As written by Patrick Hunlock (2007) @ http://www.hunlock.com/blogs/Snippets:_Howto_Grey-Out_The_Screen */
 function grayOut(vis, options) {
     // Pass true to gray out screen, false to ungray
     // options are optional.  This is a JSON object with the following (optional) properties

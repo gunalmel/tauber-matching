@@ -7,169 +7,19 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
     <link href="../../Content/RankStudents.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="../../Content/jquery-ui-1.8.7.custom.min.js"></script>
-    <% if (!Model.IsError) %>
-    <script type="text/javascript">
-        <%=Model.UIJsStatements %>
-        /*Class to store total student count on the UI in total and with respect to each Student Degree*/
-        function TotalStudentCount(engCount,busCount){
-            this.Eng=engCount;
-            this.Bus=busCount;
-            this.All=engCount+busCount;
-        }
-        /*Class to transfer error status and error message to display*/
-        function Error(isThereAnyError,messageToDisplay){
-            this.isError=isThereAnyError;
-            this.errorMessage=messageToDisplay;
-        }
-        var ScoreBuckets;
-        var StudentCount;
-        $(function () {
-            $("ul.droptrue").sortable({
-                connectWith: "ul",
-                items: "li:not(.list-heading)",
-                receive: onReceived
-            });
-            
-            $(".droptrue").disableSelection();
-            ScoreBuckets=$("ul.droptrue");
-            StudentCount=new TotalStudentCount(parseInt($("#hf_Eng_Total").val()),parseInt($("#hf_Bus_Total").val()));
-        });
-        /*Extracts the elemnt that triggers the event from the event object*/
-        function getTargetElementFromEvent(event){
-            var targ;
-            if (event.target)
-                targ = event.target;
-            else if (event.srcElement)
-                targ = event.srcElement;
-            return targ;
-        }
-        /*If score names or degree names are changed this function need to be updated.*/
-        function onReceived(event, ui) {
-            
-            var receiver = ui.item.parent();
-            var degree = ui.item.attr("class");
-
-            var rejectedEngStudentCount = getStudentCountForScoreForDegree("Reject","Eng");
-            var rejectedBusStudentCount =  getStudentCountForScoreForDegree("Reject","Bus");
-            var rejectedTotalStudentCount = rejectedEngStudentCount+rejectedBusStudentCount;
-             
-            if(receiver.attr("id")=="ul_Reject_Bucket"){
-                var rejectError = CheckForRejectedStudentError(rejectedEngStudentCount,rejectedBusStudentCount,rejectedTotalStudentCount);
-                if(rejectError.isError){
-                    alert(rejectError.errorMessage);
-                    $(ui.sender).sortable("cancel");
-                    }
-               // alert("Eng:"+rejectedEngStudentCount+" Bus:"+rejectedBusStudentCount);
+    <% if (!Model.IsError)
+    {%>     
+        <script type="text/javascript">
+            <%=Model.UIJsStatements %>
+            function submit(){                
             }
-            else{
-            }
-            alert(isRankingContinuous().isError+" "+isRankingContinuous().errorMessage);
-        }
-        /*Checks if the student ranking scheme is sparse. e.g.: It returns an Error object whose isError is set to true with appropriate errorMessage if there are students in A and C group when there are no students in B group*/
-        function isRankingContinuous(){
-            var positionOfTheLastBucketWithStudents=-1;
-            var positionOfTheNextBucketWithStudents=0;
-            var isRankingContinuous=true;
-            var error = new Error(!isRankingContinuous,"");
-            if(!EnforceContinuousStudentRanking)
-                return new Error(isRankingContinuous,"");
-            ScoreBuckets.filter(":not(#ul_NoScore_Bucket,#ul_Reject_Bucket)").each(function(index){
-                var studentCountInTheBucket = $(this).find("li.:not(.list-heading)").length;
-                positionOfTheNextBucketWithStudents=studentCountInTheBucket>0?index:positionOfTheNextBucketWithStudents;
-                if(studentCountInTheBucket>0){
-                    if((positionOfTheNextBucketWithStudents-positionOfTheLastBucketWithStudents)>1){
-                        isRankingContinuous = false;
-                        error.isError=!isRankingContinuous;
-                        error.errorMessage="When you are ranking students, your ranking scheme should not be sparse, e.g.: If you there are students in A and C when there are no students in B that's an error.";
-                        }
-                    positionOfTheLastBucketWithStudents=positionOfTheNextBucketWithStudents;
-                }
-            });
-            return error;
-        }
-        /*Error class that sets the error state and error message with respect to the number of students rejected.*/
-        function CheckForRejectedStudentError(rejectedEngStudentCount,rejectedBusStudentCount,rejectedTotalStudentCount){
-            var error = new Error();
-            if(rejectedTotalStudentCount!=-1&&StudentCount.All<RejectedStudentThreshold&&rejectedTotalStudentCount>0){ //Projects can reject students only when they interviewed more than ceratin # of students
-                error.isError=true;
-                error.errorMessage="You should have interviewed at least "+RejectedStudentThreshold+" students to be able to reject any students";
-                }
-            else if(rejectedEngStudentCount!=-1&&rejectedEngStudentCount>MaxRejectedEngStudents){
-                error.isError=true;
-                error.errorMessage="Maximum # of Engineering students you can reject is: "+MaxRejectedEngStudents;
-                }
-            else if (rejectedBusStudentCount!=-1&&rejectedBusStudentCount>MaxRejectedBusStudents){
-                error.isError=true;
-                error.errorMessage="Maximum # of Business students you can reject is: "+MaxRejectedBusStudents;
-                }
-            else if (rejectedTotalStudentCount!=-1&&rejectedTotalStudentCount>MaxRejectedStudents){
-                error.isError=true;
-                error.errorMessage="Maximum # of students you can reject is: "+MaxRejectedStudents;
-                }
-            else{
-                error.isError=false;
-                error.errorMessage="";
-            }
-            return error;
-        }
-        function submit(){
-            
-        }
-        /* Returns an object whose properties are named such as [<Degree>TotalCount] to refer to the total number of students towards the specified degree type*/
-        function getTotalStudentCountByDegree(){
-            var TotalStudentCountByDegree={};
-            var degreeListLength = degreeList.length;
-            for(var degreeIndex=0; degreeIndex<degreeListLength; degreeIndex++) {
-	            var degree = degreeList[degreeIndex];
-                TotalStudentCountByDegree[degree+"TotalCount"]=$("#hf_"+degree+"_Total").val();
-             }
-             return TotalStudentCountByDegree;
-        }
-
-        /*Returns an object whose properties are named such as [<Score><Degree>Count] to refer to the count of students with a specific degree in the score bucket specified.*/
-        function getStudentCountGroupedByScoreAndDegree(){
-            var StudentCountGroupedByScoreAndDegree={};
-            var scoreListLength = scoreList.length;
-            for(var scoreIndex=0; scoreIndex<scoreListLength; scoreIndex++) {
-	            var score = scoreList[scoreIndex];
-                var degreeListLength = degreeList.length;
-                var scoreBucketListItems = ScoreBuckets.filter("."+score).find("li:not(.list-heading)");
-                StudentCountGroupedByScoreAndDegree[score+"TotalCount"]=scoreBucketListItems.length;
-                for(var degreeIndex=0; degreeIndex<degreeListLength; degreeIndex++) {
-	                var degree = degreeList[degreeIndex];
-                    var degreeCountInBucket = scoreBucketListItems.filter("."+degree).length;
-                    StudentCountGroupedByScoreAndDegree[score+degree+"Count"]=degreeCountInBucket;
-                }
-             }
-             /* For testing
-             alert("NoScore: "+StudentCountGroupedByScoreAndDegree.NoScoreTotalCount);
-             alert("A: "+StudentCountGroupedByScoreAndDegree.ATotalCount);
-             alert("B: "+StudentCountGroupedByScoreAndDegree.BTotalCount);
-             alert("C: "+StudentCountGroupedByScoreAndDegree.CTotalCount);
-             alert("Reject: "+StudentCountGroupedByScoreAndDegree.RejectTotalCount);
-
-             alert("NoScoreEng: "+StudentCountGroupedByScoreAndDegree.NoScoreEngCount);
-             alert("NoScoreBus: "+StudentCountGroupedByScoreAndDegree.NoScoreBusCount);
-             alert("AEng: "+StudentCountGroupedByScoreAndDegree.AEngCount);
-             alert("ABus: "+StudentCountGroupedByScoreAndDegree.ABusCount);
-             alert("BEng: "+StudentCountGroupedByScoreAndDegree.BEngCount);
-             alert("BBus: "+StudentCountGroupedByScoreAndDegree.BBusCount);
-             alert("CEng: "+StudentCountGroupedByScoreAndDegree.CEngCount);
-             alert("CBus: "+StudentCountGroupedByScoreAndDegree.CBusCount);
-             alert("RejectEng: "+StudentCountGroupedByScoreAndDegree.RejectEngCount);
-             alert("RejectBus: "+StudentCountGroupedByScoreAndDegree.RejectBusCount);
-             */
-             return StudentCountGroupedByScoreAndDegree;
-        }
-        function getStudentCountForScoreForDegree(score,degree){
-            return ScoreBuckets.filter("."+score).find("li."+degree+":not(.list-heading)").length;//$("#ul_"+score+"_Bucket li."+degree+":not(.list-heading)").length;
-        }
-    </script>
-    
+        </script>
+        <script type="text/javascript" src="../../Scripts/RankStudents.js"></script>
+    <%} %>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-<% //TODO #32, #24 Interaction js %>
+<% //TODO #32 Interaction js %>
 <% //TODO Validation for MinABusStudents, MinAEngStudents, MinAStudents %>
 <% //TODO Externalize error messages in javascript %>
 
