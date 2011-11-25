@@ -54,9 +54,10 @@ function UIError(isThereAnyError, messageToDisplay) {
  */
 $(function () {
     $("ul.droptrue").sortable({
-        connectWith: "ul",
+        connectWith: "ul.droptrue",
         items: "li:not(.list-heading)",
-        receive: onReceived
+        receive: onReceived,
+        remove: onRemoved
     });
     $(".droptrue").disableSelection(); // Do not let the draggable li items to be text selectable
     ScoreBuckets = $("ul.droptrue");
@@ -64,8 +65,7 @@ $(function () {
 });
 
 /** 
- * @function Event handler function for JQuery sortable darg and drop UI. If score names or degree names are changed this function need to be updated.
- * Whenever the droppable elemnt receives a draggable element this function is triggered before the drop action is finalized. Handles the real time validation to decide if a selected student can be rejected.
+ * @function Event handler function for JQuery sortable drag and drop UI. Whenever the droppable element receives a draggable element this function is triggered before the drop action is finalized. Handles the real time validation to decide if a selected student can be rejected also adds reject reason text areas whenever a student is rejected.
  * @see checkForRejectedStudentError
  */
 function onReceived(event, ui) {
@@ -76,15 +76,26 @@ function onReceived(event, ui) {
             alert(rejectError.errorMessage);
             $(ui.sender).sortable("cancel");
         }
+        else {
+            var studentId = ui.item.attr("id");
+            var fullName = ui.item.text();
+            addRejectReasonForStudent(studentId, fullName);
+        }
         // alert("Eng:"+rejectedEngStudentCount+" Bus:"+rejectedBusStudentCount);
-    }
-    else {
     }
     //alert(isRankingContinuous().isError+" "+isRankingContinuous().errorMessage);
     //alert(checkForAStudentError().errorMessage);
     //alert(runAllValidations().errorMessage);
 }
-
+/**
+ * @function Event handler function for JQuery sortable drag and drop UI. Whenever a draggable elemnt is removed from a sortable droppable element this function is triggered to discard reject reason textarea if rejected student is removed from rejected bucket.
+ */
+function onRemoved(event, ui) {
+    if (this.id == "ul_Reject_Bucket") {
+        var studentId = ui.item.attr("id");
+        removeRejectReasonForStudent(studentId);
+    }
+}
 /* UI Validation Functions Starts Here.*/
 
 /**
@@ -136,9 +147,15 @@ function checkForRejectedStudentError() {
     return error;
 }
 /**
- * @function Checks if the required min # of eng, bus and total students are assigned A
- * @returns {UIError} Returns an UIError object to indicate whether the validation result is an error, if it is then errorMessage property is set to the error message to be displayed.
+ * @function Checks if the reject reason is entered when there are students who are rejected.
  */
+function validateRejectReason() {
+    
+}
+/**
+* @function Checks if the required min # of eng, bus and total students are assigned A
+* @returns {UIError} Returns an UIError object to indicate whether the validation result is an error, if it is then errorMessage property is set to the error message to be displayed.
+*/
 function checkForAStudentError() {
     var aEngStudentCount = getStudentCountForScoreForDegree("A", "Eng");
     var aBusStudentCount = getStudentCountForScoreForDegree("A", "Bus");
@@ -250,4 +267,33 @@ function getStudentCountGroupedByScoreAndDegree() {
     alert("RejectBus: "+StudentCountGroupedByScoreAndDegree.RejectBusCount);
     */
     return StudentCountGroupedByScoreAndDegree;
+}
+
+/**
+ * @function Adds a reject reason text area list item to the unordered list for displaying reject reasons input.
+ * @param {Integer} studentId The id of the student who is rejected.
+ * @param {String} fullName The full name of the student who is rejected.
+ */
+function addRejectReasonForStudent(studentId, fullName) {
+    $(getListElementForRejectReasonForStudent(studentId, fullName)).appendTo("#ulRejectReasons");
+}
+
+/**
+ * @function Removes the reject reason for the student who has been removed from the reject bucket.
+ * @param {Integer} stduentId The id of the student for whom the reject reason textarea is to be removed.
+ */
+function removeRejectReasonForStudent(studentId) {
+$("#liRejectReason_" + studentId).remove();
+}
+/**
+* @function Builds the list item that will have the text area to enter the reject reason for the selected student.
+* @param {Integer} studentId The id of the student who is rejected.
+* @param {String} fullName The full name of the student who is rejected.
+*/
+function getListElementForRejectReasonForStudent(studentId, fullName){
+    var listItemHtmlString = '<li id="liRejectReason_' + studentId + '" class="RejectReason">\n';
+    listItemHtmlString += '\t<label id="lblReject_' + studentId + '"  for="txtReject' + studentId + '">*Please enter the reason for rejecting' + fullName + '</label>\n';
+    listItemHtmlString += '\t<textarea id="txtReject_' + studentId + '" class="RejectReason"></textarea>\n';
+    listItemHtmlString += '</li>';
+    return listItemHtmlString;
 }
