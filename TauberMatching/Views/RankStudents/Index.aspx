@@ -107,5 +107,5 @@
             <%} %>
 
             <input type="button" id="btnSubmit" value="Submit My Preferences" />
-            <div id="divWait">Please Wait...<img src="../../Content/images/wait.gif" alt="Please Wait..."></img></div>
+            <div id="divWait"><img src="../../Content/images/wait.gif" alt="Please Wait..."></img></div>
 </asp:Content>

@@ -132,6 +132,11 @@ table#rejectTable
     font-weight:bold; 
     color:Red; 
     display:none;
+    position:fixed;
+    top:32%;
+    left:42%;
+ /*   background-color:white;*/
+    z-index:100;
 }
 /*
 #divCompanyTitle
