@@ -27,21 +27,6 @@ namespace TauberMatching.Services
             }
         }
         /// <summary>
-        /// Verifies the project identity by trying to fetch the project object corresponding to projectId and guid. If id and guid does not match method will return null indicating that project can not be verified.
-        /// </summary>
-        /// <param name="projectId">Project identifier</param>
-        /// <param name="projectGuid">Project access url identifier fro the project</param>
-        /// <returns></returns>
-        public static Project VerifyProjectIdentity(int projectId, string projectGuid)
-        {
-            Project project = null;
-            using (MatchingDB db = new MatchingDB())
-            {
-                project = db.Projects.Include("Matchings.Student").Include("ProjectRejects.Student").Where(p => p.Id == projectId && p.Guid == new Guid(projectGuid)).FirstOrDefault();
-            }
-            return project;
-        }
-        /// <summary>
         /// Using nullable guid fetches the project object eager loading all of its properties
         /// </summary>
         /// <param name="guid">Url unique identifier for the project</param>
@@ -59,9 +44,9 @@ namespace TauberMatching.Services
         }
 
         /// <summary>
-        /// Extracts all matching students from project and group them by the scores assigned to the students by the project contact in a dictionary whose key is the score value is the list of students who got that score.
+        /// Extracts all matching students from project and group them by the scores assigned to the students by the project contact in a dictionary whose key is the score and the value is the list of students who got that score.
         /// </summary>
-        /// <param name="project">Deached project object which should have had its all properties eagerly loaded, otherwise an exception will be thrown.</param>
+        /// <param name="project">Detached project object which should have had its all properties eagerly loaded, otherwise an exception will be thrown.</param>
         /// <returns>A dictionary whose key is the score assigned to the list of students in the dictionary's value.</returns>
         public static IDictionary<ScoreDetail, IList<Student>> GetStudentsForProjectGroupedByScore(Project project)
         {
@@ -135,14 +120,8 @@ namespace TauberMatching.Services
             jsVariables.Remove(jsVariables.Length-1, 1);
             jsVariables.Append("];").AppendLine();
 
-            #region Build js statements to set js variable that keep ui business rules parameters.
-            String jsConfigVarTemplate = "var {0} = {1};";
-            IList<ConfigParameter> uiRules = ConfigurationService.GetBusinessRulesConfigParametersFor(ContactType.Project);
-            foreach (ConfigParameter param in uiRules)
-            {
-                jsVariables.AppendFormat(jsConfigVarTemplate, param.Name, param.JsValue).AppendLine();
-            }
-            #endregion
+            jsVariables.Append(ConfigurationService.GetBusinessRulesConfigParametersAsJSVariableStatementFor(ContactType.Project)).AppendLine();
+
             return jsVariables.ToString();
         }
         /*

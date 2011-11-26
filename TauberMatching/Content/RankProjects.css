@@ -1,0 +1,111 @@
+﻿body
+{
+    font-family:Verdana;
+    font-size:10pt;
+}
+span#error
+{
+    color:Red;
+    font-weight:bold;
+    clear:both;
+    display:block;
+}
+#divStudentTitle
+{
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	color:#ffffff;
+	font-size:15px;
+	font-weight:bold;
+	background-color:#000084 ;
+	width:100%;
+}
+#divInstructions
+{
+    display:block;
+    clear:both;
+    width:100%;
+}
+.droptrue
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    float: left;
+    margin-right: 10px;
+    background: #eee;
+    padding: 5px;
+    padding-bottom:15px;
+    width:13%;
+}
+li.list-heading
+{
+    font-family: Lucida Console;
+    background-color: #D7C2CC;
+    font-size: 10pt;
+    color: #452A38;
+}
+li.project
+{
+    margin: 5px;
+    padding: 5px;
+    font-size: 8pt;
+    font-family: Verdana;
+    text-align: center;
+    border: 1px solid #D19405;
+    font-weight: bold;
+    outline: medium none;
+    background-color: #F6E58D;
+}
+#btnSubmit
+{
+    clear:both;
+    display:block;
+    background-color:#CFC2EF;
+    border:1px solid; 
+    border-color: #696 #363 #363 #696; 
+    border-style:solid;
+    width:210px;
+    padding: 5px;
+    margin-top:5px;
+}
+label[for]
+{
+    font-weight:bold;
+    display:block;
+    clear:both;
+}
+span.explanation
+{
+    display:block;
+    clear:both;
+    width:67%;
+}
+#tPositiveFeedback th, #tConstructiveFeedback th
+{
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size:13px;
+	text-align:center;
+	
+	padding-top:5px;
+	padding-bottom:4px;
+	background-color:#000084;
+	color:#ffffff;
+}
+
+#tPositiveFeedback tr.alt td, #tConstructiveFeedback tr.alt td 
+{
+	color:#000000;
+	background-color:#EAF2D3;
+}
+#divSection2
+{
+    display:block;
+    clear:left;
+    float:left;
+    padding-right:25px;
+}
+#divSection3
+{
+    display:block;
+    float:left;
+}

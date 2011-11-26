@@ -132,7 +132,6 @@
     <Compile Include="Models\ConfigParameter.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\EmailQueueMessage.cs" />
-    <Compile Include="Models\ErrorMessage.cs" />
     <Compile Include="Models\RankStudentsIndexModel.cs" />
     <Compile Include="Models\Score.cs" />
     <Compile Include="Services\ScoreService.cs" />
@@ -153,11 +152,14 @@
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Models\RankProjectsIndexModel.cs" />
     <Compile Include="Services\StudentService.cs" />
+    <Compile Include="Services\UIParamsAndMessages.cs" />
     <Compile Include="Services\UrlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\MatchingDB.old" />
     <Content Include="Content\images\wait.gif" />
+    <Content Include="Content\RankProjects.css" />
+    <Content Include="Scripts\RankProjects.js" />
     <Content Include="Scripts\Helper.js" />
     <Content Include="Scripts\jquery-ui-1.8.16.custom.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.7.custom.min.js" />

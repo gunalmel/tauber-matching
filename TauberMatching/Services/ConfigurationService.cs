@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using TauberMatching.Models;
+using System.Text;
 
 namespace TauberMatching.Services
 {
@@ -54,6 +55,21 @@ namespace TauberMatching.Services
                     uiParams = db.ConfigParameters.ToList();
             }
             return uiParams;
+        }
+
+        public static string GetBusinessRulesConfigParametersAsJSVariableStatementFor(ContactType cType)
+        {
+            StringBuilder jsVariables = new StringBuilder();
+
+            #region Build js statements to set js variable that keep ui business rules parameters.
+            String jsConfigVarTemplate = "var {0} = {1};";
+            IList<ConfigParameter> uiRules = ConfigurationService.GetBusinessRulesConfigParametersFor(ContactType.Project);
+            foreach (ConfigParameter param in uiRules)
+            {
+                jsVariables.AppendFormat(jsConfigVarTemplate, param.Name, param.JsValue).AppendLine();
+            }
+            #endregion
+            return jsVariables.ToString();
         }
         /// <summary>
         /// Updates the config parameters in the database matching the properties of the method argument

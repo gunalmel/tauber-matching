@@ -9,8 +9,11 @@ namespace TauberMatching.Services
 {
     public class StudentService
     {
-        private static IList<ScoreDetail> StudentScoreDetails=ScoreService.GetScoreDetailsFor(ContactType.Student);
-
+        /// <summary>
+        /// Using nullable guid fetches the student object eager loading all of its properties
+        /// </summary>
+        /// <param name="guid">Url unique identifier for the student</param>
+        /// <returns>Student object</returns>
         public static Student GetStudentWithFullDetailsByGuid(Guid? guid)
         {
             if (guid == null)
@@ -18,18 +21,22 @@ namespace TauberMatching.Services
             Student student = null;
             using (MatchingDB db = new MatchingDB())
             {
-                student = db.Students.Include("Matchings").Include("Matchings.Project").FirstOrDefault(s => s.Guid == guid.Value);
+                student = db.Students.Include("Matchings.Project").Include("StudentFeedback.Project").FirstOrDefault(s => s.Guid == guid.Value);
             }
             return student;
         }
-
+        /// <summary>
+        /// Extracts all matching projects from student and group them by the scores assigned to the projects by the student in a dictionary whose key is the score and the value is the list of rpojects who got that score.
+        /// </summary>
+        /// <param name="project">Detached student object which should have had its all properties eagerly loaded, otherwise an exception will be thrown.</param>
+        /// <returns>A dictionary whose key is the score assigned to the list of students in the dictionary's value.</returns>
         public static IDictionary<ScoreDetail, IList<Project>> GetProjectsForStudentGroupedByScore(Student student)
         {
             if (student.Matchings == null || student.Matchings.Count == 0 || student.Matchings.Select(m => m.Student).Count() == 0)
                 throw new ArgumentException("student", "There are no matching projects for the student. Make sure all properties of your student was eagerly loaded before it was passed as parameter.");
 
-            var dict = student.Matchings.GroupBy(m => StudentScoreDetails.Where(sd => sd.Score == m.StudentScore).FirstOrDefault()).ToDictionary(key => key.Key, value => value.Select(m => m.Project).ToList() as IList<Project>);
-            foreach (ScoreDetail sd in StudentScoreDetails)
+            var dict = student.Matchings.GroupBy(m => UIParamsAndMessages.StudentScoreDetails.Where(sd => sd.Score == m.StudentScore).FirstOrDefault()).ToDictionary(key => key.Key, value => value.Select(m => m.Project).ToList() as IList<Project>);
+            foreach (ScoreDetail sd in UIParamsAndMessages.StudentScoreDetails)
             {
                 if (!dict.Keys.Contains(sd))
                     dict.Add(sd, new List<Project>());
@@ -49,7 +56,7 @@ namespace TauberMatching.Services
             catch (ArgumentNullException ex)
             {
                 if (ex.ParamName == "project" || ex.ParamName == "guid")
-                    model = new RankProjectsIndexModel(true, ErrorMessage.INVALID_URL_ERROR_MESSAGE);
+                    model = new RankProjectsIndexModel(true, UIParamsAndMessages.INVALID_URL_ERROR_MESSAGE);
                 else
                     throw ex;
             }
