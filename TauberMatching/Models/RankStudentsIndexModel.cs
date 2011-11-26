@@ -103,7 +103,11 @@ namespace TauberMatching.Models
             set { _uiJsStatements = value; }
         }
 
-        public RankStudentsIndexModel(int projectId,String guid,String projectName, IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents, ProjectScoreStudentCountMatrix projectScoreStudentCountMatrix, IDictionary<Student, string> projectRejects, string feedback, IDictionary<StudentDegree, int> studentCountDict, string uiRules)
+        public string AdminPhone { get; set; }
+
+        public string AdminEmail { get; set; }
+
+        public RankStudentsIndexModel(int projectId,String guid,String projectName, IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents, ProjectScoreStudentCountMatrix projectScoreStudentCountMatrix, IDictionary<Student, string> projectRejects, string feedback, IDictionary<StudentDegree, int> studentCountDict, string uiRules, string adminEmail, string adminPhone)
         {
             ProjectId = projectId;
             Guid = guid;
@@ -115,6 +119,8 @@ namespace TauberMatching.Models
             Feedback = feedback;
             StudentCountDict = studentCountDict;
             UIJsStatements = uiRules;
+            AdminPhone = adminPhone;
+            AdminEmail = adminEmail;
         }
         public RankStudentsIndexModel(bool isError, String errorMessage)
         {
