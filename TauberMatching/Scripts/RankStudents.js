@@ -12,6 +12,7 @@
  * var MaxRejectedStudents = 2; (-1 ignores associated validation rule)
  * var RejectedStudentThreshold = 5; (0 ignores associated validation rule)
  * var EnforceContinuousStudentRanking = true;
+ * var webServiceUrlToSubmit, AdminPhone, AdminEmail is set in the view.
  */
 /** Error message to be displayed when the user rejects more engineering students than the number specified by MinAEngStudents */
 var engStudentsErrorMessage = "You have to assign A to at least " + MinAEngStudents + " engineering student" + (MinAEngStudents > 1 ? "s.\n" : ".\n");
@@ -29,6 +30,12 @@ var maxTotalStudentsToRejectViolationErrorMessage = "Maximum # of students you c
 var notAllStudentsRankedErrorMessage = "There are students who are not ranked. All students should be ranked.\n";
 
 var rejectReasonErrorMessage = "You have to enter reason for every student rejected.\n";
+
+var projectId; 
+var projectGuid;
+
+var systemErrorMessage = "We apologize for the unexpected system failure. We appreciate it if you inform Tauber Institute about the system error referencing the message below (Phone:" + AdminPhone + ", E-mail: <a href='mailto:" + AdminEmail + "?subject=Tauber Institute Matching Web Application Unexpected system Error&body=Project guid {0}, projectId {1} experienced an error with error message {2}'>"+AdminEmail+"</a>):<br/>";
+
 /**
  * Global variable to store all ranking buckets on the interface using JQuery 
  * @type JQuery object array
@@ -96,6 +103,8 @@ $(function () {
    
     ScoreBuckets = $("ul.droptrue");
     StudentCount = getTotalStudentCountByDegree();
+    projectId = parseInt($("#hfProjectId").val());
+    projectGuid = $("#hfProjectGuid").val();
     $("#btnSubmit").click(onSubmit);
     $.ajaxSetup({ type: "POST", contentType: "application/json;charset=utf-8", dataType: "json", processData: false });
 });
@@ -108,7 +117,7 @@ $(function () {
 function submitPreferences(dataToBeSubmitted) {
     var paramString = $.toJSON({ preferencesDto: dataToBeSubmitted });
     $.ajax({
-        url: '<%=ResolveUrl("~/RankStudents/SubmitPreferences") %>',
+        url: webServiceUrlToSubmit,
         data: paramString,
         beforeSend: beforeSubmit,
         success: onSubmitSuccess,
@@ -131,7 +140,7 @@ function beforeSubmit() {
 * @function JQuery AJAX event handler that is triggered after Ajax call is successfully completed. 
 * @see <a href="http://api.jquery.com/jQuery.ajax/">JQuery Ajax</a>
 */
-function onEmailSuccess(msg, event, xhr) {
+function onSubmitSuccess(msg, event, xhr) {
     $("#divWait").toggle();
     grayOut(false);
     alert("Your changes are successfully submitted & saved.");
@@ -145,7 +154,12 @@ function onEmailSuccess(msg, event, xhr) {
  */
 function onError(xhr, error) {
     grayOut(false);
-    $("#divUserErrors").html(xhr.status + ": " + xhr.statusText + " " + xhr.responseText);
+    // use xhr.responseText whenever the response text from the server is needed.
+    var ajaxErrorMessage = xhr.status + ": " + xhr.statusText;
+    var serverResponsePlainTextUrlEncoded = encodeURIComponent(xhr.responseText);
+    var ajaxErrorMessageURLEncoded = encodeURIComponent(ajaxErrorMessage);
+    var errorMessage = systemErrorMessage.format(projectId, projectGuid, ajaxErrorMessage);
+    $("#divUserErrors").html(errorMessage + ajaxErrorMessage);
     $("#divWait").toggle();
 }
 
@@ -199,8 +213,6 @@ function onSubmit() {
 * @see ProjectRankingDto
 */
 function buildProjectRankingDto() {
-    var projectId = parseInt($("#hfProjectId").val());
-    var projectGuid = $("#hfProjectGuid").val();
     var projectFeedback = $("#txtFeedback").val();
     var projectScoreDtoArray = new Array();
     var projectRejectDtoArray = new Array();
@@ -430,7 +442,7 @@ function addRejectReasonForStudent(studentId, fullName) {
  * @param {Integer} stduentId The id of the student for whom the reject reason textarea is to be removed.
  */
 function removeRejectReasonForStudent(studentId) {
-$("#liRejectReason_" + studentId).remove();
+    $("#liRejectReason_" + studentId).remove();
 }
 /**
 * @function Builds the list item that will have the text area to enter the reject reason for the selected student.

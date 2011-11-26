@@ -158,8 +158,8 @@
   <ItemGroup>
     <None Include="App_Data\MatchingDB.old" />
     <Content Include="Content\images\wait.gif" />
-    <Content Include="Content\jquery-ui-1.8.16.custom.min.js" />
-    <Content Include="Content\jquery-ui-1.8.7.custom.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.16.custom.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.7.custom.min.js" />
     <Content Include="Content\RankStudents.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\json.js" />

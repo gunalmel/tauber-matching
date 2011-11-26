@@ -105,7 +105,7 @@ namespace TauberMatching.Services
                 IDictionary<StudentDegree, int> degreeGroupedStudentCount = GetStudentsCountForProjectGroupedByDegree(project);
                 IDictionary<Student, string> projectRejects = project.ProjectRejects.ToDictionary(key =>key.Student, value => value.Reason);
                 string uiRules = GetJsVariables(scoreGroupedStudents);
-                model = new RankStudentsIndexModel(project.Id, project.Guid.ToString(), project.Name, scoreGroupedStudents, psscm, projectRejects, project.Feedback, degreeGroupedStudentCount,uiRules);
+                model = new RankStudentsIndexModel(project.Id, project.Guid.ToString(), project.Name, scoreGroupedStudents, psscm, projectRejects, project.Feedback, degreeGroupedStudentCount,uiRules, TAUBER_EMAIL, TAUBER_PHONE);
             }
             catch (ArgumentNullException ex)
             {
