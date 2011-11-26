@@ -26,7 +26,21 @@ namespace TauberMatching.Services
                 INVALID_URL_ERROR_MESSAGE = INVALID_URL_MESSAGE + "<br/><br/> Email: " + TAUBER_EMAIL + "<br/> PHONE:" + TAUBER_PHONE;
             }
         }
-
+        /// <summary>
+        /// Verifies the project identity by trying to fetch the project object corresponding to projectId and guid. If id and guid does not match method will return null indicating that project can not be verified.
+        /// </summary>
+        /// <param name="projectId">Project identifier</param>
+        /// <param name="projectGuid">Project access url identifier fro the project</param>
+        /// <returns></returns>
+        public static Project VerifyProjectIdentity(int projectId, string projectGuid)
+        {
+            Project project = null;
+            using (MatchingDB db = new MatchingDB())
+            {
+                project = db.Projects.Include("Matchings.Student").Include("ProjectRejects.Student").Where(p => p.Id == projectId && p.Guid == new Guid(projectGuid)).FirstOrDefault();
+            }
+            return project;
+        }
         /// <summary>
         /// Using nullable guid fetches the project object eager loading all of its properties
         /// </summary>

@@ -118,6 +118,7 @@
     <Compile Include="Controllers\AppConfigController.cs" />
     <Compile Include="Controllers\EmailController.cs" />
     <Compile Include="Controllers\FileUploadController.cs" />
+    <Compile Include="Models\PreferencesDto.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RankProjectsController.cs" />
@@ -158,6 +159,7 @@
   <ItemGroup>
     <None Include="App_Data\MatchingDB.old" />
     <Content Include="Content\images\wait.gif" />
+    <Content Include="Scripts\Helper.js" />
     <Content Include="Scripts\jquery-ui-1.8.16.custom.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.7.custom.min.js" />
     <Content Include="Content\RankStudents.css" />

@@ -102,7 +102,7 @@
             <div id="divFeedback">
                 <label id="lblFeedback" for="txtFeedback">Feedback:</label>
                 <span id="spnFeedback">Students frequently ask for feedback from interviewers. Please provide feedback that might be useful to the students in future interview sessions. Recruiter names and companies will not be given to the students. This feedback is intended only as an aid to current and future Tauber students.</span>
-                <textarea id="txtFeedback" cols="120" rows="5"></textarea>
+                <textarea id="txtFeedback" cols="120" rows="5"><%=Model.Feedback %></textarea>
             </div>
             <%} %>
 
