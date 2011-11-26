@@ -35,8 +35,9 @@ namespace TauberMatching.Controllers
                 project.Matchings.Where(m => m.Student.Id == pSDto.StudentId).FirstOrDefault().ProjectScore = pSDto.Score;
             }
             // Remove all rejects 
+            ICollection<ProjectReject> projectRejects = project.ProjectRejects.ToList();
             project.ProjectRejects.Clear();
-            foreach (ProjectReject reject in project.ProjectRejects)
+            foreach (ProjectReject reject in projectRejects)
             {
                 db.ProjectRejects.Remove(reject);
             }

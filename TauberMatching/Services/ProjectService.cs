@@ -53,7 +53,7 @@ namespace TauberMatching.Services
             Project project = null;
             using (MatchingDB db = new MatchingDB())
             {
-                project = db.Projects.Include("Matchings").Include("ProjectRejects").Include("Matchings.Student").FirstOrDefault(p => p.Guid == guid.Value);
+                project = db.Projects.Include("Matchings.Student").Include("ProjectRejects.Student").FirstOrDefault(p => p.Guid == guid.Value);
             }
             return project;
         }

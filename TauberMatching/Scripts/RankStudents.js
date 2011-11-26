@@ -36,6 +36,7 @@ var projectGuid;
 
 var systemErrorMessage = "We apologize for the unexpected system failure. We appreciate it if you inform Tauber Institute about the system error referencing the message below (Phone:" + AdminPhone + ", E-mail: <a href='mailto:" + AdminEmail + "?subject=Tauber Institute Matching Web Application Unexpected system Error&body=Project guid {0}, projectId {1} experienced an error with error message {2}'>"+AdminEmail+"</a>):<br/>";
 
+var divUserErrors;
 /**
  * Global variable to store all ranking buckets on the interface using JQuery 
  * @type JQuery object array
@@ -100,11 +101,12 @@ $(function () {
         receive: onReceived,
         remove: onRemoved
     }).disableSelection();
-   
+
     ScoreBuckets = $("ul.droptrue");
     StudentCount = getTotalStudentCountByDegree();
     projectId = parseInt($("#hfProjectId").val());
     projectGuid = $("#hfProjectGuid").val();
+    divUserErrors = $("#divUserErrors");
     $("#btnSubmit").click(onSubmit);
     $.ajaxSetup({ type: "POST", contentType: "application/json;charset=utf-8", dataType: "json", processData: false });
 });
@@ -131,7 +133,7 @@ function submitPreferences(dataToBeSubmitted) {
 * @see <a href="http://api.jquery.com/jQuery.ajax/">JQuery Ajax</a>
 */
 function beforeSubmit() {
-    $("#divUserErrors").html("");
+    divUserErrors.html("");
     grayOut(true);
     $("#divWait").toggle();
 }
@@ -159,7 +161,8 @@ function onError(xhr, error) {
     var serverResponsePlainTextUrlEncoded = encodeURIComponent(xhr.responseText);
     var ajaxErrorMessageURLEncoded = encodeURIComponent(ajaxErrorMessage);
     var errorMessage = systemErrorMessage.format(projectId, projectGuid, ajaxErrorMessage);
-    $("#divUserErrors").html(errorMessage + ajaxErrorMessage);
+    divUserErrors.html(errorMessage + ajaxErrorMessage);
+    divUserErrors.focus();
     $("#divWait").toggle();
 }
 
@@ -203,8 +206,10 @@ function onRemoved(event, ui) {
 * @returns {Boolean} Returns true if all UI validations pass.
 */
 function onSubmit() {
-    if (runAllValidations().isError)
+    if (runAllValidations().isError) {
+        divUserErrors.attr("tabindex", -1).focus(); // to be able to focus on div set tabindex to -1
         return false;
+    }
     submitPreferences(buildProjectRankingDto());
     return true;
 }
@@ -242,7 +247,7 @@ function buildProjectRankingDto() {
  * @returns {UIError}
  */
 function runAllValidations() {
-    $("#divUserErrors").html("");
+    divUserErrors.html("");
     var AError = checkForAStudentError();
     var isContinuousError = isRankingContinuous();
     var isRejectReasonEmptyError = validateRejectReason();
@@ -250,7 +255,7 @@ function runAllValidations() {
     var error = new UIError(AError.isError || isContinuousError.isError || isRejectReasonEmptyError.isError || areAllStudentsRanked.isError, "");
     error.errorMessage = AError.errorMessage + isContinuousError.errorMessage + isRejectReasonEmptyError.errorMessage + areAllStudentsRanked.errorMessage;
     error.errorMessage = error.errorMessage.replace(/\n/g, '<br/>').replace(/  ,/g, '<br/>');
-    $("#divUserErrors").html(error.errorMessage);
+    divUserErrors.html(error.errorMessage);
     return error;
 }
 
