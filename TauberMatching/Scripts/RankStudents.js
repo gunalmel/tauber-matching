@@ -62,31 +62,31 @@ function UIError(isThereAnyError, messageToDisplay) {
  * @see ProjectPreferenceDto
  */
 function ProjectScoreDto(studentId, score) {
-    this.studentId = studentId;
-    this.score = score;
+    this.StudentId = studentId;
+    this.Score = score;
 }
 /**
  * @class Data transfer object to transfer project rejects from UI to web service.
  * @see ProjectPreferenceDto
  */
 function ProjectRejectDto(studentId, reason) {
-    this.studentId = studentId;
-    this.reason = reason;
+    this.StudentId = studentId;
+    this.Reason = reason;
 }
 
 /**
  * @class Data transfer object to transfer all the data on the UI necessary to persist project preferences through web service call.
  * @param {Integer} projectId
  * @param {String} projectGuid Acts as a key for web service to accept the request together with projectId
- * @param projectPreferences Array of @see ProjectScoreDto objects
- * @param projectRejects Array of @see ProjectRejectDto objects
+ * @param projectPreferences Array of {@link ProjectScoreDto} objects
+ * @param projectRejects Array of {@link ProjectRejectDto} objects
  */
 function ProjectPreferenceDto(projectId, projectGuid, projectPreferences, projectRejects, feedback) {
-    this.projectId = projectId;
-    this.projectGuid = projectGuid;
-    this.projectPreferences = projectPreferences;
-    this.projectRejects = projectRejects;
-    this.feedback = feedback;
+    this.ProjectId = projectId;
+    this.ProjectGuid = projectGuid;
+    this.ProjectPreferences = projectPreferences;
+    this.ProjectRejects = projectRejects;
+    this.Feedback = feedback;
 }
 
 /**
