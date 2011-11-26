@@ -92,17 +92,67 @@ $(function () {
         items: "li:not(.list-heading)",
         receive: onReceived,
         remove: onRemoved
-    });
-    $(".droptrue").disableSelection(); // Do not let the draggable li items to be text selectable
+    }).disableSelection();
+   
     ScoreBuckets = $("ul.droptrue");
     StudentCount = getTotalStudentCountByDegree();
     $("#btnSubmit").click(onSubmit);
+    $.ajaxSetup({ type: "POST", contentType: "application/json;charset=utf-8", dataType: "json", processData: false });
 });
 
-/** 
- * @function Event handler function for JQuery sortable drag and drop UI. Whenever the droppable element receives a draggable element this function is triggered before the drop action is finalized. Handles the real time validation to decide if a selected student can be rejected also adds reject reason text areas whenever a student is rejected.
- * @see checkForRejectedStudentError
+/**
+ * @function Ajax submit call to submit project preferences to the web service controller
+ * @param {ProjectPreferenceDto} The data transfer object that will be submitted to the web service to persist rankings.
+ * @see <a href="http://api.jquery.com/jQuery.ajax/">JQuery Ajax</a>
  */
+function submitPreferences(dataToBeSubmitted) {
+    var paramString = $.toJSON({ preferencesDto: dataToBeSubmitted });
+    $.ajax({
+        url: '<%=ResolveUrl("~/RankStudents/SubmitPreferences") %>',
+        data: paramString,
+        beforeSend: beforeSubmit,
+        success: onSubmitSuccess,
+        error: onError,
+        async: false
+    });
+}
+
+/**
+* @function JQuery AJAX event handler that is triggered before AJAX call is made. 
+* @see <a href="http://api.jquery.com/jQuery.ajax/">JQuery Ajax</a>
+*/
+function beforeSubmit() {
+    $("#divUserErrors").html("");
+    grayOut(true);
+    $("#divWait").toggle();
+}
+
+/**
+* @function JQuery AJAX event handler that is triggered after Ajax call is successfully completed. 
+* @see <a href="http://api.jquery.com/jQuery.ajax/">JQuery Ajax</a>
+*/
+function onEmailSuccess(msg, event, xhr) {
+    $("#divWait").toggle();
+    grayOut(false);
+    alert("Your changes are successfully submitted & saved.");
+    // Reloads the page.
+    window.location = location.href;
+}
+
+/**
+ * @function JQuery AJAX event handler that is triggered whenever there is an AJAX call error. 
+ * @see <a href="http://api.jquery.com/jQuery.ajax/">JQuery Ajax</a>
+ */
+function onError(xhr, error) {
+    grayOut(false);
+    $("#divUserErrors").html(xhr.status + ": " + xhr.statusText + " " + xhr.responseText);
+    $("#divWait").toggle();
+}
+
+/** 
+* @function Event handler function for JQuery sortable drag and drop UI. Whenever the droppable element receives a draggable element this function is triggered before the drop action is finalized. Handles the real time validation to decide if a selected student can be rejected also adds reject reason text areas whenever a student is rejected.
+* @see checkForRejectedStudentError
+*/
 function onReceived(event, ui) {
     var receiver = ui.item.parent();
     if (receiver.attr("id") == "ul_Reject_Bucket") {
@@ -141,7 +191,7 @@ function onRemoved(event, ui) {
 function onSubmit() {
     if (runAllValidations().isError)
         return false;
-    var projectPreferenceDto = buildProjectRankingDto();
+    submitPreferences(buildProjectRankingDto());
     return true;
 }
 /**
