@@ -97,7 +97,6 @@
     <Compile Include="ConfigurationServiceTest.cs" />
     <Compile Include="EmailQueueServiceTest.cs" />
     <Compile Include="EmailServiceTest.cs" />
-    <Compile Include="ProjectScoreStudentMatrixTest.cs" />
     <Compile Include="ProjectServiceTest.cs" />
     <Compile Include="ScoreDetailTest.cs" />
     <Compile Include="Services\DataMigrationTest.cs" />

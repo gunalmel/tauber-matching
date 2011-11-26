@@ -81,20 +81,6 @@ namespace TauberMatching.Services
             return dict;
         }
 
-        private static ProjectScoreStudentCountMatrix GetStudentCountGroupedByDegreePerScore(IDictionary<ScoreDetail, IList<Student>> studentGroupedByScoreDict)
-        {
-            ProjectScoreStudentCountMatrix pssm = new ProjectScoreStudentCountMatrix();
-            foreach (var entry in studentGroupedByScoreDict)
-            {
-                var degreeCountDict = entry.Value.GroupBy(s => s.Degree).ToDictionary(key => (StudentDegree)Enum.Parse(typeof(StudentDegree), key.Key), value => value.Count());
-                foreach (var degreeCount in degreeCountDict)
-                {
-                    pssm[entry.Key.Score, degreeCount.Key] = degreeCount.Value;
-                }
-            }
-            return pssm;
-        }
-
         public static IDictionary<StudentDegree, int> GetStudentsCountForProjectGroupedByDegree(Project project)
         {
             if (project.Matchings == null || project.Matchings.Count == 0 || project.Matchings.Select(m => m.Student).Count() == 0)
@@ -112,14 +98,13 @@ namespace TauberMatching.Services
         {
             RankStudentsIndexModel model;
             try
-            {// TODO #43 get rid off ProjectScoreStudentCountMatrix and hidden fields on the view referencing the student count data grouped by score and degree
+            {
                 Project project = GetProjectWithFullDetailsByGuid(guid);
-                IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents = GetStudentsForProjectGroupedByScore(project);
-                ProjectScoreStudentCountMatrix psscm = GetStudentCountGroupedByDegreePerScore(scoreGroupedStudents);
+				IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents = GetStudentsForProjectGroupedByScore(project);
                 IDictionary<StudentDegree, int> degreeGroupedStudentCount = GetStudentsCountForProjectGroupedByDegree(project);
                 IDictionary<Student, string> projectRejects = project.ProjectRejects.ToDictionary(key =>key.Student, value => value.Reason);
-                string uiRules = GetJsVariables(scoreGroupedStudents);
-                model = new RankStudentsIndexModel(project.Id, project.Guid.ToString(), project.Name, scoreGroupedStudents, psscm, projectRejects, project.Feedback, degreeGroupedStudentCount,uiRules, TAUBER_EMAIL, TAUBER_PHONE);
+                string uiRules = GetJsVariables(ProjectScoreDetails);
+                model = new RankStudentsIndexModel(project.Id, project.Guid.ToString(), project.Name, scoreGroupedStudents, projectRejects, project.Feedback, degreeGroupedStudentCount, uiRules, TAUBER_EMAIL, TAUBER_PHONE);
             }
             catch (ArgumentNullException ex)
             {
@@ -130,12 +115,12 @@ namespace TauberMatching.Services
             }
             return model;
         }
-        public static string GetJsVariables(IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents)
+        public static string GetJsVariables(IList<ScoreDetail> projectScoreDetails)
         {
             StringBuilder jsVariables = new StringBuilder();
             string jsStringArrayElementTemplate = "\"{0}\",";
             jsVariables.Append("var scoreList = [");
-            foreach (ScoreDetail sd in scoreGroupedStudents.Keys)
+            foreach (ScoreDetail sd in projectScoreDetails)
             {
                 jsVariables.AppendFormat(jsStringArrayElementTemplate, sd.Score);
             }
