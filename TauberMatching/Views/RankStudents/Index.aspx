@@ -5,8 +5,10 @@
 	Tauber Matching Web Application - Rank Students
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
-    <link href="../../Content/RankStudents.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="../../Content/jquery-ui-1.8.16.custom.min.js"></script>
+    <link href='<%=ResolveUrl("~/Content/RankStudents.css")%>' rel="stylesheet" type="text/css" />
+    <script src='<%=ResolveUrl("~/Scripts/jquery-ui-1.8.16.custom.min.js")%>' type="text/javascript" ></script>
+    <script src='<%=ResolveUrl("~/Scripts/json.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveUrl("~/Scripts/UIFunctions.js")%>' type="text/javascript" defer="defer"></script>
     <% if (!Model.IsError)
     {%>     
         <script type="text/javascript">
@@ -35,7 +37,7 @@
                            <li class="disc"><b>A:</b> Students who would be <b>ideal</b> members of your project team. Please rate at least 1 engineering student and 1 business student in the 'A' category. </li>
                            <li class="disc"><b>B:</b> Students who would be <b>desired</b> members of your project team.</li>
                            <li class="disc"><b>C:</b> Students who would be <b>acceptable</b> members of your project.</li>
-                           <li class="disc"><b>X:</b> <i>Optional.</i> If you feel strongly that a candidate would be <b>unacceptable</b> on your team, place his or her name here. A maximum of one engineering student and one business student can be placed in the 'X' category. </li>
+                           <li class="disc"><b>Reject:</b> <i>Optional.</i> If you feel strongly that a candidate would be <b>unacceptable</b> on your team, place his or her name here. A maximum of one engineering student and one business student can be placed in the 'X' category. </li>
                        </ul>
                    </li>
                    <li class="inst">Engineering (Eng) students are those pursuing Masters degrees in any engineering discipline; Business (Bus) students are those pursuing MBAs (including dual degree students) and those students in the MSCM program.</li>
@@ -101,5 +103,5 @@
             <%} %>
 
             <input type="button" id="btnSubmit" value="Submit My Preferences" />
-            <span id="spnWait">Please Wait...<img src="../../Content/images/wait.gif"></img></span>
+            <div id="divWait">Please Wait...<img src="../../Content/images/wait.gif" alt="Please Wait..."></img></div>
 </asp:Content>
