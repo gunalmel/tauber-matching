@@ -38,18 +38,21 @@
                    <li class="inst">
                        Rank all of the candidates you interviewed using A,B,C, or X selections:
                        <ul id="ulRanks">
-                           <li class="disc"><b>A:</b> Students who would be <b>ideal</b> members of your project team. Please rate at least 1 engineering student and 1 business student in the 'A' category. </li>
+                           <li class="disc"><b>A:</b> Students who would be <b>ideal</b> members of your project team. Please rate at least <u><script type="text/javascript">document.write(MinAEngStudents);</script></u> engineering student and <u><script type="text/javascript">document.write(MinAEngStudents);</script></u> business student in the 'A' category. </li>
                            <li class="disc"><b>B:</b> Students who would be <b>desired</b> members of your project team.</li>
                            <li class="disc"><b>C:</b> Students who would be <b>acceptable</b> members of your project.</li>
-                           <li class="disc"><b>Reject:</b> <i>Optional.</i> If you feel strongly that a candidate would be <b>unacceptable</b> on your team, place his or her name here. A maximum of one engineering student and one business student can be placed in the 'X' category. </li>
+                           <li class="disc"><b>Reject:</b> <i>Optional.</i> If you feel strongly that a candidate would be <b>unacceptable</b> on your team, place his or her name here. A maximum of <u><script type="text/javascript">document.write(MaxRejectedEngStudents);</script></u> engineering student and <u><script type="text/javascript">document.write(MaxRejectedBusStudents);</script></u> business student can be placed in the 'Reject' category. </li>
                        </ul>
                    </li>
                    <li class="inst">Engineering (Eng) students are those pursuing Masters degrees in any engineering discipline; Business (Bus) students are those pursuing MBAs (including dual degree students) and those students in the MSCM program.</li>
-                   <li class="inst">You can assign more than one student to the same ranking category, however, your ranking list should be continuous (e.g., if you want to rank a student in the 'C' category, you must have already ranked students in the 'A' and 'B' category, otherwise you will receive an error message).</li>
+                   <script type="text/javascript">
+                        if(EnforceContinuousStudentRanking)
+                            document.write('<li class="inst">You can assign more than one student to the same ranking category, however, your ranking list should be continuous (e.g., if you want to rank a student in the \'C\' category, you must have already ranked students in the \'A\' and \'B\' category, otherwise you will receive an error message).</li>');
+                   </script>
                    <li class="inst">
                        Students with the same ranking will be given equal weight during the matching process. There is a significant difference between rankings.
                        <ul id="ulReject">
-                           <li class="disc">Note that if you reject a student (assign a rating of 'X'), a short note explaining the reasons would be appreciated in the box below.</li>
+                           <li class="disc">Note that if you reject a student (assign a rating of 'Reject'), a short note explaining the reasons would be appreciated in the box below.</li>
                        </ul>
                    </li>
                </ol>
@@ -92,7 +95,7 @@
                 <ul id="ulRejectReasons">
                 <% foreach (Student student in Model.Rejects.Keys)
                 {%>
-                    <li class="RejectReason">
+                    <li id="liRejectReason_<%=student.Id.ToString() %>" class="RejectReason">
                         <label id="lblReject_<%=student.Id.ToString() %>"  for="txtReject<%=student.Id.ToString() %>">Please enter the reason for rejecting <u><%=student.FullName %></u></label>
                         <textarea id="txtReject_<%=student.Id.ToString() %>" class="RejectReason" rows="4" cols="80"><%= Model.Rejects[student]%></textarea>
                     </li>
