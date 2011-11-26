@@ -25,7 +25,8 @@ var sparseRankingErrorMessage = "When you are ranking students, your ranking sch
 var minTotalStudentsToRejectViolationErrorMessage = "You should have interviewed at least " + RejectedStudentThreshold + " students to be able to reject any students\n";
 var maxEngStudentsToRejectViolationErrorMessage = "Maximum # of Engineering students you can reject is: " + MaxRejectedEngStudents+"\n";
 var maxBusStudentsToRejectViolationErrorMessage = "Maximum # of Business students you can reject is: " + MaxRejectedBusStudents+"\n";
-var maxTotalStudentsToRejectViolationErrorMessage = "Maximum # of students you can reject is: " + MaxRejectedStudents+"\n";
+var maxTotalStudentsToRejectViolationErrorMessage = "Maximum # of students you can reject is: " + MaxRejectedStudents + "\n";
+var notAllStudentsRankedErrorMessage = "There are students who are not ranked. All students should be ranked.\n";
 
 var rejectReasonErrorMessage = "You have to enter reason for every student rejected.\n";
 /**
@@ -49,11 +50,36 @@ function UIError(isThereAnyError, messageToDisplay) {
     this.isError = isThereAnyError;
     this.errorMessage = messageToDisplay;
 }
+/**
+ * @class Data transfer object to transfer project preferences from UI to web service
+ * @see ProjectPreferenceDto
+ */
+function ProjectScoreDto(studentId, score) {
+    this.studentId = studentId;
+    this.score = score;
+}
+/**
+ * @class Data transfer object to transfer project rejects from UI to web service.
+ * @see ProjectPreferenceDto
+ */
+function ProjectRejectDto(studentId, reason) {
+    this.studentId = studentId;
+    this.reason = reason;
+}
 
 /**
- * @function Submits the user perferences on the UI through web service to persist student rankings
+ * @class Data transfer object to transfer all the data on the UI necessary to persist project preferences through web service call.
+ * @param {Integer} projectId
+ * @param {String} projectGuid Acts as a key for web service to accept the request together with projectId
+ * @param projectPreferences Array of @see ProjectScoreDto objects
+ * @param projectRejects Array of @see ProjectRejectDto objects
  */
-function submit() {
+function ProjectPreferenceDto(projectId, projectGuid, projectPreferences, projectRejects, feedback) {
+    this.projectId = projectId;
+    this.projectGuid = projectGuid;
+    this.projectPreferences = projectPreferences;
+    this.projectRejects = projectRejects;
+    this.feedback = feedback;
 }
 
 /**
@@ -70,6 +96,7 @@ $(function () {
     $(".droptrue").disableSelection(); // Do not let the draggable li items to be text selectable
     ScoreBuckets = $("ul.droptrue");
     StudentCount = getTotalStudentCountByDegree();
+    $("#btnSubmit").click(onSubmit);
 });
 
 /** 
@@ -80,9 +107,7 @@ function onReceived(event, ui) {
     var receiver = ui.item.parent();
     if (receiver.attr("id") == "ul_Reject_Bucket") {
         var rejectError = checkForRejectedStudentError();
-        // The following line is just for testing
-        rejectError.isError = false;
-        
+
         if (rejectError.isError) {
             alert(rejectError.errorMessage);
             $(ui.sender).sortable("cancel");
@@ -108,6 +133,46 @@ function onRemoved(event, ui) {
         removeRejectReasonForStudent(studentId);
     }
 }
+
+/**
+* @function Triggered when submit button is clicked. Runs validations and transfers the user preferences to the web service.
+* @returns {Boolean} Returns true if all UI validations pass.
+*/
+function onSubmit() {
+    if (runAllValidations().isError)
+        return false;
+    var projectPreferenceDto = buildProjectRankingDto();
+    return true;
+}
+/**
+* @function Builds the ProjectRankingDto object from the dat on the UI.
+* @see ProjectRankingDto
+*/
+function buildProjectRankingDto() {
+    var projectId = parseInt($("#hfProjectId").val());
+    var projectGuid = $("#hfProjectGuid").val();
+    var projectFeedback = $("#txtFeedback").val();
+    var projectScoreDtoArray = new Array();
+    var projectRejectDtoArray = new Array();
+
+    // Get all ProjectScoreDto objects
+    var listIndexOffset = 0;
+    ScoreBuckets.filter(":not(#ul_NoScore_Bucket,#ulRejectReasons)").each(function (bucketIndex) {
+        var bucket = $(this);
+        var score = bucket.attr("id").split("_")[1];
+        bucket.find("li:not(.list-heading)").each(function (listIndex) {
+            projectScoreDtoArray[listIndexOffset+listIndex] = new ProjectScoreDto(this.id, score);
+        });
+        listIndexOffset = projectScoreDtoArray.length;
+    });
+
+    //Get all ProjectReject objects
+    $("#ulRejectReasons li textarea").each(function (index) {
+        projectRejectDtoArray[index] = new ProjectRejectDto(parseInt(this.id.split('_')[1]), this.value);
+    });
+
+    return new ProjectPreferenceDto(projectId, projectGuid, projectScoreDtoArray, projectRejectDtoArray, projectFeedback);
+}
 /* UI Validation Functions Starts Here.*/
 
 /**
@@ -119,13 +184,23 @@ function runAllValidations() {
     var AError = checkForAStudentError();
     var isContinuousError = isRankingContinuous();
     var isRejectReasonEmptyError = validateRejectReason();
-    var error = new UIError(AError.isError || isContinuousError.isError||isRejectReasonEmptyError.isError, "");
-    error.errorMessage = AError.errorMessage + isContinuousError.errorMessage + isRejectReasonEmptyError.errorMessage;
+    var areAllStudentsRanked = checkIfAllStudentsRanked();
+    var error = new UIError(AError.isError || isContinuousError.isError || isRejectReasonEmptyError.isError || areAllStudentsRanked.isError, "");
+    error.errorMessage = AError.errorMessage + isContinuousError.errorMessage + isRejectReasonEmptyError.errorMessage + areAllStudentsRanked.errorMessage;
     error.errorMessage = error.errorMessage.replace(/\n/g, '<br/>').replace(/  ,/g, '<br/>');
     $("#divUserErrors").html(error.errorMessage);
     return error;
 }
 
+/**
+ * @function Checks if the user has scored all the students
+ * @returns {UIError}
+ */
+function checkIfAllStudentsRanked() {
+    if ($("#ul_NoScore_Bucket li:not(.list-heading)").length > 0)
+        return new UIError(true, notAllStudentsRankedErrorMessage);
+    return new UIError(false, "");
+}
 /** 
 * @function Checks if more students than specified by configuration parameters have been rejected and returns UIError object accordingly
 * @returns {UIError} UIError object indicating if there's an error rejecting a student and  including error message accordingly.
@@ -211,7 +286,7 @@ function isRankingContinuous() {
     if (!EnforceContinuousStudentRanking)
         return new UIError(isContinuous, "");
     ScoreBuckets.filter(":not(#ul_NoScore_Bucket,#ul_Reject_Bucket)").each(function (index) {
-        var studentCountInTheBucket = $(this).find("li.:not(.list-heading)").length;
+        var studentCountInTheBucket = $(this).find("li:not(.list-heading)").length;
         positionOfTheNextBucketWithStudents = studentCountInTheBucket > 0 ? index : positionOfTheNextBucketWithStudents;
         if (studentCountInTheBucket > 0) {
             if ((positionOfTheNextBucketWithStudents - positionOfTheLastBucketWithStudents) > 1) {
@@ -315,7 +390,7 @@ $("#liRejectReason_" + studentId).remove();
 function getListElementForRejectReasonForStudent(studentId, fullName){
     var listItemHtmlString = '<li id="liRejectReason_' + studentId + '" class="RejectReason">\n';
     listItemHtmlString += '\t<label id="lblReject_' + studentId + '"  for="txtReject' + studentId + '">*Please enter the reason for rejecting' + fullName + '</label>\n';
-    listItemHtmlString += '\t<textarea id="txtReject_' + studentId + '" class="RejectReason"></textarea>\n';
+    listItemHtmlString += '\t<textarea id="txtReject_' + studentId + '" class="RejectReason" rows="4" cols="80"></textarea>\n';
     listItemHtmlString += '</li>';
     return listItemHtmlString;
 }

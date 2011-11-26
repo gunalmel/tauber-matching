@@ -50,6 +50,7 @@
            </div>
            <div id="divUserErrors" class="errorMessage"></div>
            <input id="hfProjectId" type="hidden" value="<%= Model.ProjectId %>"/>
+           <input id="hfProjectGuid" type="hidden" value="<%= Model.Guid %>"/>
            <% foreach (StudentDegree degree in Enum.GetValues(typeof(StudentDegree)))
            {%>
                 <!--Total Bus and Total Eng student count-->
@@ -87,7 +88,7 @@
                 {%>
                     <li class="RejectReason">
                         <label id="lblReject_<%=student.Id.ToString() %>"  for="txtReject<%=student.Id.ToString() %>">Please enter the reason for rejecting <u><%=student.FullName %></u></label>
-                        <textarea id="txtReject_<%=student.Id.ToString() %>" class="RejectReason"><%= Model.Rejects[student] %></textarea>
+                        <textarea id="txtReject_<%=student.Id.ToString() %>" class="RejectReason" rows="4" cols="80"><%= Model.Rejects[student]%></textarea>
                     </li>
                 <%} %>
                 </ul>
@@ -95,10 +96,10 @@
             <div id="divFeedback">
                 <label id="lblFeedback" for="txtFeedback">Feedback:</label>
                 <span id="spnFeedback">Students frequently ask for feedback from interviewers. Please provide feedback that might be useful to the students in future interview sessions. Recruiter names and companies will not be given to the students. This feedback is intended only as an aid to current and future Tauber students.</span>
-                <textarea id="txtFeedbaack" cols="120" rows="5"></textarea>
+                <textarea id="txtFeedback" cols="120" rows="5"></textarea>
             </div>
             <%} %>
 
-            <input type="button" id="btnSubmit" value="Submit My Preferences" onclick="runAllValidations();" />
+            <input type="button" id="btnSubmit" value="Submit My Preferences" />
             <span id="spnWait">Please Wait...<img src="../../Content/images/wait.gif"></img></span>
 </asp:Content>

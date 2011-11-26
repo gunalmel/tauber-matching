@@ -98,14 +98,14 @@ namespace TauberMatching.Services
         {
             RankStudentsIndexModel model;
             try
-            {
+            {// TODO #43 get rid off ProjectScoreStudentCountMatrix and hidden fields on the view referencing the student count data grouped by score and degree
                 Project project = GetProjectWithFullDetailsByGuid(guid);
                 IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents = GetStudentsForProjectGroupedByScore(project);
                 ProjectScoreStudentCountMatrix psscm = GetStudentCountGroupedByDegreePerScore(scoreGroupedStudents);
                 IDictionary<StudentDegree, int> degreeGroupedStudentCount = GetStudentsCountForProjectGroupedByDegree(project);
                 IDictionary<Student, string> projectRejects = project.ProjectRejects.ToDictionary(key =>key.Student, value => value.Reason);
                 string uiRules = GetJsVariables(scoreGroupedStudents);
-                model = new RankStudentsIndexModel(project.Id, project.Name, scoreGroupedStudents, psscm, projectRejects, project.Feedback, degreeGroupedStudentCount,uiRules);
+                model = new RankStudentsIndexModel(project.Id, project.Guid.ToString(), project.Name, scoreGroupedStudents, psscm, projectRejects, project.Feedback, degreeGroupedStudentCount,uiRules);
             }
             catch (ArgumentNullException ex)
             {
