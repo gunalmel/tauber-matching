@@ -20,12 +20,14 @@ var busStudentsErrorMessage = "You have to assign A to at least " + MinABusStude
 /** Error message to be displayed when the user rejects more students than the number specified by MinAStudents */
 var allStudentsErrorMessage = "You have to assign A to at least " + MinAStudents + " student" + (MinAStudents > 1 ? "s.\n" : ".\n");
 /** Error message to be displayed when ranking scheme is sparse */
-var sparseRankingErrorMessage = "When you are ranking students, your ranking scheme should not be sparse, e.g.: If there are students in A and C when there are no students in B that's an error.";
+var sparseRankingErrorMessage = "When you are ranking students, your ranking scheme should not be sparse, e.g.: If there are students in A and C when there are no students in B that's an error.\n";
 
-var minTotalStudentsToRejectViolationErrorMessage = "You should have interviewed at least " + RejectedStudentThreshold + " students to be able to reject any students";
-var maxEngStudentsToRejectViolationErrorMessage = "Maximum # of Engineering students you can reject is: " + MaxRejectedEngStudents;
-var maxBusStudentsToRejectViolationErrorMessage = "Maximum # of Business students you can reject is: " + MaxRejectedBusStudents;
-var maxTotalStudentsToRejectViolationErrorMessage = "Maximum # of students you can reject is: " + MaxRejectedStudents;
+var minTotalStudentsToRejectViolationErrorMessage = "You should have interviewed at least " + RejectedStudentThreshold + " students to be able to reject any students\n";
+var maxEngStudentsToRejectViolationErrorMessage = "Maximum # of Engineering students you can reject is: " + MaxRejectedEngStudents+"\n";
+var maxBusStudentsToRejectViolationErrorMessage = "Maximum # of Business students you can reject is: " + MaxRejectedBusStudents+"\n";
+var maxTotalStudentsToRejectViolationErrorMessage = "Maximum # of students you can reject is: " + MaxRejectedStudents+"\n";
+
+var rejectReasonErrorMessage = "You have to enter reason for every student rejected.\n";
 /**
  * Global variable to store all ranking buckets on the interface using JQuery 
  * @type JQuery object array
@@ -49,9 +51,15 @@ function UIError(isThereAnyError, messageToDisplay) {
 }
 
 /**
- * @function Equivalent of JQuery $(document).ready() function call. Makes Ranking buckets sortable drag and drop containers using JQuery UI plug-in.
- *           Initializes global variables to store ranking buckets and student counts grouped by degree on the interface
+ * @function Submits the user perferences on the UI through web service to persist student rankings
  */
+function submit() {
+}
+
+/**
+* @function Equivalent of JQuery $(document).ready() function call. Makes Ranking buckets sortable drag and drop containers using JQuery UI plug-in.
+*           Initializes global variables to store ranking buckets and student counts grouped by degree on the interface
+*/
 $(function () {
     $("ul.droptrue").sortable({
         connectWith: "ul.droptrue",
@@ -72,6 +80,9 @@ function onReceived(event, ui) {
     var receiver = ui.item.parent();
     if (receiver.attr("id") == "ul_Reject_Bucket") {
         var rejectError = checkForRejectedStudentError();
+        // The following line is just for testing
+        rejectError.isError = false;
+        
         if (rejectError.isError) {
             alert(rejectError.errorMessage);
             $(ui.sender).sortable("cancel");
@@ -82,6 +93,7 @@ function onReceived(event, ui) {
             addRejectReasonForStudent(studentId, fullName);
         }
         // alert("Eng:"+rejectedEngStudentCount+" Bus:"+rejectedBusStudentCount);
+       // alert(validateRejectReason().errorMessage);
     }
     //alert(isRankingContinuous().isError+" "+isRankingContinuous().errorMessage);
     //alert(checkForAStudentError().errorMessage);
@@ -106,8 +118,9 @@ function runAllValidations() {
     $("#divUserErrors").html("");
     var AError = checkForAStudentError();
     var isContinuousError = isRankingContinuous();
-    var error = new UIError(AError.isError || isContinuousError.isError, "");
-    error.errorMessage = (AError.isError ? AError.errorMessage : "") + (isContinuousError.isError ? isContinuousError.errorMessage : "");
+    var isRejectReasonEmptyError = validateRejectReason();
+    var error = new UIError(AError.isError || isContinuousError.isError||isRejectReasonEmptyError.isError, "");
+    error.errorMessage = AError.errorMessage + isContinuousError.errorMessage + isRejectReasonEmptyError.errorMessage;
     error.errorMessage = error.errorMessage.replace(/\n/g, '<br/>').replace(/  ,/g, '<br/>');
     $("#divUserErrors").html(error.errorMessage);
     return error;
@@ -148,9 +161,18 @@ function checkForRejectedStudentError() {
 }
 /**
  * @function Checks if the reject reason is entered when there are students who are rejected.
+ * @returns {UIError}
  */
 function validateRejectReason() {
-    
+    var rejectBoxes = $("#ulRejectReasons li textarea")
+    var error = new UIError(false, "");
+    rejectBoxes.each(function () {
+        if(this.value==""||$(this).val().trim()==""){
+            error.isError = true;
+            error.errorMessage = rejectReasonErrorMessage;
+        }
+    });
+    return error;
 }
 /**
 * @function Checks if the required min # of eng, bus and total students are assigned A

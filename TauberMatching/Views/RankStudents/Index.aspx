@@ -11,8 +11,6 @@
     {%>     
         <script type="text/javascript">
             <%=Model.UIJsStatements %>
-            function submit(){                
-            }
         </script>
         <script type="text/javascript" src="../../Scripts/RankStudents.js"></script>
     <%} %>
@@ -101,6 +99,6 @@
             </div>
             <%} %>
 
-            <input type="button" id="btnSubmit" value="Submit My Preferences" onclick="getStudentCountGroupedByScoreAndDegree();" />
+            <input type="button" id="btnSubmit" value="Submit My Preferences" onclick="runAllValidations();" />
             <span id="spnWait">Please Wait...<img src="../../Content/images/wait.gif"></img></span>
 </asp:Content>
