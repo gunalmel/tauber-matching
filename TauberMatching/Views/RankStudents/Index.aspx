@@ -23,15 +23,12 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-<% //TODO #32 Interaction js %>
 <% //TODO Externalize error messages in javascript %>
 
     <h2><%= Model.IsError?"":Model.ProjectName %></h2>
     <div id="divMessage" class="errorMessage"><%= Model.IsError?Model.ErrorMessage:"" %></div>
     <%  if (!Model.IsError)
-        {
-           string hiddenStudentCountIdTemplate = "hf_{0}_{1}_Count";
-    %>
+        {%>
            <div id="divInstructions">
                Click on the yellow box with a student's name and discipline and 'drag and drop' it under the appropriate heading (A,B,C or Reject)
                <ol>
@@ -68,17 +65,9 @@
            <div id="divRanking">
            <% foreach (ScoreDetail scoreDetail in Model.ScoreGroupedStudents.Keys)
             { %>
-                    <!--Student Ids in csv format in hidden fields for each score group-->
-                    <input id="hf_<%=scoreDetail.Score %>_Ids" type="hidden" value="<%=String.Join(",",Model.ScoreGroupedStudents[scoreDetail].Select(s=>s.Id.ToString()).ToArray()) %>"/>
                     <ul id="ul_<%=scoreDetail.Score %>_Bucket" class="droptrue <%=scoreDetail.Score %>">
                         <li class="list-heading">
                             <b><%=scoreDetail.ScoreTypeDisplay%></b>
-                            <% foreach (StudentDegree degree in Enum.GetValues(typeof(StudentDegree)))
-                               {
-                                   string hiddenStudentCountId = String.Format(hiddenStudentCountIdTemplate, scoreDetail.Score, degree.ToString());
-                                   %><!--Eng and Bus student count in each score bucket-->
-                                    <input id="<%=hiddenStudentCountId %>" type="hidden" value="<%= Model.ProjectScoreStudentCountMatrix[scoreDetail.Score,degree] %>" />
-                            <% } %>
                         </li>
                         <% 
                                if (Model.ScoreGroupedStudents.Keys.Contains(scoreDetail))

@@ -54,13 +54,6 @@ namespace TauberMatching.Models
             get { return _scoreGroupedStudents; }
             set { _scoreGroupedStudents = value; }
         }
-        private ProjectScoreStudentCountMatrix _projectScoreStudentCountMatrix;
-
-        public ProjectScoreStudentCountMatrix ProjectScoreStudentCountMatrix
-        {
-            get { return _projectScoreStudentCountMatrix; }
-            set { _projectScoreStudentCountMatrix = value; }
-        }
 
         private IDictionary<Student,string> _rejects;
 
@@ -107,14 +100,13 @@ namespace TauberMatching.Models
 
         public string AdminEmail { get; set; }
 
-        public RankStudentsIndexModel(int projectId,String guid,String projectName, IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents, ProjectScoreStudentCountMatrix projectScoreStudentCountMatrix, IDictionary<Student, string> projectRejects, string feedback, IDictionary<StudentDegree, int> studentCountDict, string uiRules, string adminEmail, string adminPhone)
+        public RankStudentsIndexModel(int projectId,String guid,String projectName, IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents,IDictionary<Student, string> projectRejects, string feedback, IDictionary<StudentDegree, int> studentCountDict, string uiRules, string adminEmail, string adminPhone)
         {
             ProjectId = projectId;
             Guid = guid;
             ProjectName = projectName;
             IsError = false;
-            ScoreGroupedStudents = scoreGroupedStudents;
-            ProjectScoreStudentCountMatrix = projectScoreStudentCountMatrix;
+			ScoreGroupedStudents = scoreGroupedStudents;
             Rejects=projectRejects;
             Feedback = feedback;
             StudentCountDict = studentCountDict;
