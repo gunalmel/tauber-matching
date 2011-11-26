@@ -85,22 +85,7 @@ namespace TauberMatching.Models
             set { _studentCountDict = value; }
         }
 
-        private string _uiJsStatements;
-
-        /// <summary>
-        /// Js variable assigment statements that will be injected into the veiw to be consumed by Js files
-        /// </summary>
-        public string UIJsStatements
-        {
-            get { return _uiJsStatements; }
-            set { _uiJsStatements = value; }
-        }
-
-        public string AdminPhone { get; set; }
-
-        public string AdminEmail { get; set; }
-
-        public RankStudentsIndexModel(int projectId,String guid,String projectName, IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents,IDictionary<Student, string> projectRejects, string feedback, IDictionary<StudentDegree, int> studentCountDict, string uiRules, string adminEmail, string adminPhone)
+        public RankStudentsIndexModel(int projectId,String guid,String projectName, IDictionary<ScoreDetail, IList<Student>> scoreGroupedStudents,IDictionary<Student, string> projectRejects, string feedback, IDictionary<StudentDegree, int> studentCountDict)
         {
             ProjectId = projectId;
             Guid = guid;
@@ -110,9 +95,6 @@ namespace TauberMatching.Models
             Rejects=projectRejects;
             Feedback = feedback;
             StudentCountDict = studentCountDict;
-            UIJsStatements = uiRules;
-            AdminPhone = adminPhone;
-            AdminEmail = adminEmail;
         }
         public RankStudentsIndexModel(bool isError, String errorMessage)
         {

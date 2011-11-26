@@ -151,6 +151,7 @@
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Models\RankProjectsIndexModel.cs" />
+    <Compile Include="Services\StudentDegreeService.cs" />
     <Compile Include="Services\StudentService.cs" />
     <Compile Include="Services\UIParamsAndMessages.cs" />
     <Compile Include="Services\UrlHelper.cs" />

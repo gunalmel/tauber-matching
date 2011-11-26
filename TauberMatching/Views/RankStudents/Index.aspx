@@ -1,4 +1,5 @@
 ﻿<%@ Import Namespace="TauberMatching.Models" %>
+<%@ Import Namespace="TauberMatching.Services" %>
 <%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<RankStudentsIndexModel>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
@@ -13,10 +14,10 @@
     <% if (!Model.IsError)
     {%>     
         <script type="text/javascript">
-            <%=Model.UIJsStatements %>
+            <%=UIParamsAndMessages.RANK_STUDENTS_INDEX_HEAD %>
             var webServiceUrlToSubmit = '<%=ResolveUrl("~/RankStudents/SubmitPreferences") %>';
-            var AdminPhone = '<%= Model.AdminPhone %>';
-            var AdminEmail = '<%= Model.AdminEmail %>';
+            var AdminPhone = '<%= UIParamsAndMessages.TAUBER_PHONE %>';
+            var AdminEmail = '<%= UIParamsAndMessages.TAUBER_EMAIL %>';
         </script>
         <script type="text/javascript" src="../../Scripts/RankStudents.js"></script>
     <%} %>

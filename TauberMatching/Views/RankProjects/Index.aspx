@@ -13,10 +13,10 @@
     <% if (!Model.IsError)
     {%>     
         <script type="text/javascript">
-            <%=Model.UIJsStatements %>
+            <%=UIParamsAndMessages.RANK_PROJECTS_INDEX_HEAD %>
             var webServiceUrlToSubmit = '<%=ResolveUrl("~/RankProjects/SubmitPreferences") %>';
-            var AdminPhone = '<%= Model.AdminPhone %>';
-            var AdminEmail = '<%= Model.AdminEmail %>';
+            var AdminPhone = '<%= UIParamsAndMessages.TAUBER_PHONE %>';
+            var AdminEmail = '<%= UIParamsAndMessages.TAUBER_EMAIL %>';
         </script>
         <script type="text/javascript" src="../../Scripts/RankProjects.js"></script>
     <%} %>
