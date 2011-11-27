@@ -63,7 +63,7 @@
                 <%: Html.TextBoxFor(model => model.MinAEngStudents) %>
                 <%: Html.ValidationMessageFor(model => model.MinAEngStudents) %>
             </div>
-            
+
             <div class="editor-label">
                 <%: Html.LabelFor(model => model.MinAStudents) %>
             </div>
@@ -102,6 +102,14 @@
             <div class="editor-field">
                 <%: Html.TextBoxFor(model => model.RejectedStudentThreshold) %>
                 <%: Html.ValidationMessageFor(model => model.RejectedStudentThreshold) %>
+            </div>
+
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.MinFirstProjects) %>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextBoxFor(model => model.MinFirstProjects)%>
+                <%: Html.ValidationMessageFor(model => model.MinFirstProjects)%>
             </div>
             
             <div class="editor-label">

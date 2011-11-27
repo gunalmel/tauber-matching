@@ -1,27 +1,18 @@
 ﻿/**
- * @fileOverview This file has functions, classes and variables related to implementing user interaction on RankStudents view.
- * @author <a href="mailto:gunalmel@yahoo.com">Melih Gunal</a> 11/25/2011
+ * @fileOverview This file has functions, classes and variables related to implementing user interaction on RankProjects view.
+ * @author <a href="mailto:gunalmel@yahoo.com">Melih Gunal</a> 11/27/2011
  * The following varibales are dynamically added as they are fetched from the db by the controller into the view. The values displayed below are for providing an example only. The actual values on the UI might be different.
- * var scoreList = ["NoScore","A","B","C","Reject"];
- * var degreeList = ["Bus","Eng"];
- * var MinABusStudents = 1; (-1 ignores associated validation rule)
- * var MinAEngStudents = 1; (-1 ignores associated validation rule)
- * var MinAStudents = 2; (-1 ignores associated validation rule)
- * var MaxRejectedBusStudents = 1; (-1 ignores associated validation rule)
- * var MaxRejectedEngStudents = 1; (-1 ignores associated validation rule)
- * var MaxRejectedStudents = 2; (-1 ignores associated validation rule)
- * var RejectedStudentThreshold = 5; (0 ignores associated validation rule)
- * var EnforceContinuousStudentRanking = true;
+ * var scoreList = ["NoScore","1","2","3","4","5","Reject"];
+ * var MaxRejectedProjects = 1;
+ * var RejectedProjectThreshold = 5;
+ * var EnforceContinuousProjectRanking = true;
+ * var MinFirstProjects = 1;
  * var webServiceUrlToSubmit, AdminPhone, AdminEmail is set in the view.
  */
 /** Error message to be displayed when the user rejects more engineering students than the number specified by MinAEngStudents */
 var engStudentsErrorMessage = "You have to assign A to at least " + MinAEngStudents + " engineering student" + (MinAEngStudents > 1 ? "s.\n" : ".\n");
-/** Error message to be displayed when the user rejects more business students than the number specified by MinABusStudents */
-var busStudentsErrorMessage = "You have to assign A to at least " + MinABusStudents + " business student" + (MinABusStudents > 1 ? "s.\n" : ".\n");
-/** Error message to be displayed when the user rejects more students than the number specified by MinAStudents */
-var allStudentsErrorMessage = "You have to assign A to at least " + MinAStudents + " student" + (MinAStudents > 1 ? "s.\n" : ".\n");
 /** Error message to be displayed when ranking scheme is sparse */
-var sparseRankingErrorMessage = "When you are ranking students, your ranking scheme should not be sparse, e.g.: If there are students in A and C when there are no students in B that's an error.\n";
+var sparseRankingErrorMessage = "When you are ranking projects, your ranking scheme should not be sparse, e.g.: If there are projects in First and Fourth when there are no projects in Second and Third that's an error.\n";
 
 var minTotalStudentsToRejectViolationErrorMessage = "You should have interviewed at least " + RejectedStudentThreshold + " students to be able to reject any students\n";
 var maxEngStudentsToRejectViolationErrorMessage = "Maximum # of Engineering students you can reject is: " + MaxRejectedEngStudents+"\n";

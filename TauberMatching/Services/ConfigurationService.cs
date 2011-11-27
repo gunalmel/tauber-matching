@@ -40,7 +40,7 @@ namespace TauberMatching.Services
                     break;
                 case ContactType.Student:
                     projectConfigParams= new string[]{
-                    ConfigEnum.EnforceContinuousProjectRanking.ToString(),ConfigEnum.MaxRejectedProjects.ToString(),ConfigEnum.RejectedProjectThreshold.ToString()
+                    ConfigEnum.EnforceContinuousProjectRanking.ToString(),ConfigEnum.MaxRejectedProjects.ToString(),ConfigEnum.RejectedProjectThreshold.ToString(), ConfigEnum.MinFirstProjects.ToString()
                     };
                     break;
                 default:

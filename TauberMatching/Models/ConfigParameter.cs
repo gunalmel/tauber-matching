@@ -139,6 +139,10 @@ namespace TauberMatching.Models
         /// </summary>
         RejectedStudentThreshold=55,
         /// <summary>
+        /// Minimum # of projects that needed to be pciked as the first preference
+        /// </summary>
+        MinFirstProjects=56,
+        /// <summary>
         /// Maximun number of projects that can be rejected by a student
         /// </summary>
         MaxRejectedProjects=60,

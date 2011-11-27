@@ -14,11 +14,11 @@
  * var EnforceContinuousStudentRanking = true;
  * var webServiceUrlToSubmit, AdminPhone, AdminEmail is set in the view.
  */
-/** Error message to be displayed when the user rejects more engineering students than the number specified by MinAEngStudents */
+/** Error message to be displayed when the user assigns A to a number of engineering students less  than the number specified by MinAEngStudents */
 var engStudentsErrorMessage = "You have to assign A to at least " + MinAEngStudents + " engineering student" + (MinAEngStudents > 1 ? "s.\n" : ".\n");
-/** Error message to be displayed when the user rejects more business students than the number specified by MinABusStudents */
+/** Error message to be displayed when the user the user assigns A to a number of business students less than the number specified by MinABusStudents */
 var busStudentsErrorMessage = "You have to assign A to at least " + MinABusStudents + " business student" + (MinABusStudents > 1 ? "s.\n" : ".\n");
-/** Error message to be displayed when the user rejects more students than the number specified by MinAStudents */
+/** Error message to be displayed when the the user assigns A to a number of students less than the number specified by MinAStudents */
 var allStudentsErrorMessage = "You have to assign A to at least " + MinAStudents + " student" + (MinAStudents > 1 ? "s.\n" : ".\n");
 /** Error message to be displayed when ranking scheme is sparse */
 var sparseRankingErrorMessage = "When you are ranking students, your ranking scheme should not be sparse, e.g.: If there are students in A and C when there are no students in B that's an error.\n";

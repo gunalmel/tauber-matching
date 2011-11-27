@@ -75,7 +75,7 @@
             <%for (int i = 1; i < 7; i++)
             {%>
             <li id="liPositiveFeedback_<%=i %>" class="feedback">
-                  <select id="ddlPositiveFeedback_<%=i %>" class="feedback">
+                  <%=i %>.<select id="ddlPositiveFeedback_<%=i %>" class="feedback">
                     <option value="0">--Select a project--</option>
                   <%foreach (Project p in Model.ProjectsNotInterviewed)
                     {%>
@@ -96,7 +96,7 @@
             <%for (int i = 1; i < 7; i++)
             {%>
             <li id="liConstructiveFeedback_<%=i %>" class="feedback">
-                  <select id="ddlConstructiveFeedback_<%=i %>" class="feedback">
+                  <%=i %>.<select id="ddlConstructiveFeedback_<%=i %>" class="feedback">
                     <option value="0">--Select a project--</option>
                   <%foreach (Project p in Model.ProjectsNotInterviewed)
                     {%>

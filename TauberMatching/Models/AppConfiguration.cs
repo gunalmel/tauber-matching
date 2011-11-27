@@ -26,6 +26,7 @@ namespace TauberMatching.Models
         private int _maxRejectedBusStudents;
         private int _maxRejectedEngStudents;
         private int _maxRejectedStudents;
+        private int _minFirstProjects;
         private int _maxRejectedProjects;
         private bool _enforceContinuousProjectRanking;
         private bool _enforceContinuousStudentRanking;
@@ -154,6 +155,15 @@ namespace TauberMatching.Models
         {
             get { return _minAStudents; }
             set { _minAStudents = value; }
+        }
+        /// <summary>
+        /// Minimum number of projects that needed to be picked as th first choice by the students
+        /// </summary>
+        [DisplayName("Min # of Projects required to be picked as the first preference by the students:")]
+        public int MinFirstProjects
+        {
+            get { return _minFirstProjects; }
+            set { _minFirstProjects = value; }
         }
         /// <summary>
         /// Maximum number of business students who can be rejected
