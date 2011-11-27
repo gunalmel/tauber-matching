@@ -74,7 +74,7 @@
             </li>
             <%for (int i = 1; i < 7; i++)
             {%>
-            <li id="liPositiveFeedback_<%=i %>" class="feedback">
+            <li id="liPositiveFeedback_<%=i %>" class="feedback choice">
                   <%=i %>.<select id="ddlPositiveFeedback_<%=i %>" class="feedback">
                     <option value="0">--Select a project--</option>
                   <%foreach (Project p in Model.ProjectsNotInterviewed)
@@ -95,7 +95,7 @@
             </li>
             <%for (int i = 1; i < 7; i++)
             {%>
-            <li id="liConstructiveFeedback_<%=i %>" class="feedback">
+            <li id="liConstructiveFeedback_<%=i %>" class="feedback choice">
                   <%=i %>.<select id="ddlConstructiveFeedback_<%=i %>" class="feedback">
                     <option value="0">--Select a project--</option>
                   <%foreach (Project p in Model.ProjectsNotInterviewed)
@@ -109,8 +109,8 @@
         </ul>
     </div>
     <div id="divComments">
-        <label id="lblComments" for="txtComments">Other Comments:</label>
-        <textarea id="txtComments" cols="120" rows="5"><%=Model.OtherComments %></textarea>
+        <label id="lblOtherComments" for="txtOtherComments">Other Comments:</label>
+        <textarea id="txtOtherComments" cols="120" rows="5"><%=Model.OtherComments %></textarea>
     </div>
     <input type="button" id="btnSubmit" value="Submit My Preferences" />
     <div id="divWait"><img src="../../Content/images/wait.gif" alt="Please Wait..."></img></div>

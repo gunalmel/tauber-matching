@@ -10,7 +10,7 @@
  * var webServiceUrlToSubmit, AdminPhone, AdminEmail is set in the view.
  */
 /** Error message to be displayed when the user rejects more engineering students than the number specified by MinAEngStudents */
-var minFirstProjectsErrorMessage = "You have to select at least " + MinFirstProjects + " project" + (MinFirstProjects > 1 ? "s" : "")+ " as your first preference.";
+var minFirstProjectsErrorMessage = "You have to select at least " + MinFirstProjects + " project" + (MinFirstProjects > 1 ? "s" : "")+ " as your first preference.\n";
 /** If EnforceContinuousProjectRanking then the error message to be displayed when ranking scheme is sparse */
 var sparseRankingErrorMessage = "When you are ranking projects, your ranking scheme should not be sparse, e.g.: If there are projects in First and Fourth when there are no projects in Second and Third that's an error.\n";
 /** If the student tries to reject a project when in total there are less than RejectedProjectThreshold projects */
@@ -72,11 +72,10 @@ function StudentFeedbackDto(projectId, type, feedbackScore) {
  * @param otherComments {String} Student comments.
  */
 function StudentPreferenceDto(studentId, studentGuid, studentPreferences, studentFeedback, otherComments) {
-    this.ProjectId = projectId;
-    this.ProjectGuid = projectGuid;
-    this.ProjectPreferences = projectPreferences;
+    this.StudentId = studentId;
+    this.StudentGuid = studentGuid;
+    this.StudentPreferences = studentPreferences;
     this.StudentFeedback = studentFeedback;
-    this.Feedback = feedback;
     this.OtherComments = otherComments;
 }
 
@@ -94,7 +93,7 @@ $(function () {
     ScoreBuckets = $("ul.droptrue");
     ProjectCount = getTotalProjectCount();
     studentId = parseInt($("#hfStudentId").val());
-    projectGuid = $("#hfStudentGuid").val();
+    studentGuid = $("#hfStudentGuid").val();
     divUserErrors = $("#divUserErrors");
     $("#btnSubmit").click(onSubmit);
     $.ajaxSetup({ type: "POST", contentType: "application/json;charset=utf-8", dataType: "json", processData: false });
@@ -103,7 +102,7 @@ $(function () {
         $("#ul_Reject_Bucket").hide();
 });
 
-/* Helper Functions Start Here */
+/******* HELPER FUNCTIONS START */
 
 /**
 * @function Returns the total number of projects on the UI
@@ -120,9 +119,50 @@ function getProjectCountForScore(score) {
     return ScoreBuckets.filter("." + score).find("li:not(.list-heading)").length;
 }
 
-/* Helper Functions End Here */
+/**
+* @function Builds the StudentPreferenceDto object from the data on the UI.
+* @see StudentPreferenceDto
+*/
+function buildStudentRankingDto() {
+    var studentOtherComments = $("#txtOtherComments").val();
+    var studentScoreDtoArray = new Array();
+    var studentFeedbackDtoArray = new Array();
 
-/* Drag and Drop Handling Starts Here */
+    // Get all StudentScoreDto objects
+    var listIndexOffset = 0;
+    ScoreBuckets.filter(":not(#ul_NoScore_Bucket)").each(function (bucketIndex) {
+        var bucket = $(this);
+        var score = bucket.attr("id").split("_")[1];
+        bucket.find("li:not(.list-heading)").each(function (listIndex) {
+            studentScoreDtoArray[listIndexOffset + listIndex] = new StudentScoreDto(this.id, score);
+        });
+        listIndexOffset = studentScoreDtoArray.length;
+    });
+
+    //Get all StudentFeedbackDto objects
+    $("#ulPositiveFeedback li select").each(function (index) {
+        var positiveFeedbackProjectId = parseInt($(this).val());
+        if (positiveFeedbackProjectId != 0) {
+            var positiveFeedbackScore = (index + 1);
+            studentFeedbackDtoArray[index] = new StudentFeedbackDto(positiveFeedbackProjectId, "P", positiveFeedbackScore);
+        }
+    });
+
+    var feedbackIndexStart = studentFeedbackDtoArray.length;
+    $("#ulConstructiveFeedback li select").each(function (index) {
+        var positiveFeedbackProjectId = parseInt($(this).val()); 
+        if (positiveFeedbackProjectId != 0) {
+            var positiveFeedbackScore = (index + 1);
+            studentFeedbackDtoArray[feedbackIndexStart++] = new StudentFeedbackDto(positiveFeedbackProjectId, "C", positiveFeedbackScore);
+        }
+    });
+
+    return new StudentPreferenceDto(studentId, studentGuid, studentScoreDtoArray, studentFeedbackDtoArray, studentOtherComments);
+}
+
+/******* HELPER FUNCTIONS END */
+
+/******* DRAG & DROP HANDLING STARTS */
 
 /** 
 * @function Event handler function for JQuery sortable drag and drop UI. Whenever the droppable element receives a draggable element this function is triggered before the drop action is finalized. Handles the real time validation to decide if a selected project can be rejected.
@@ -138,7 +178,19 @@ function onReceived(event, ui) {
         }
     }
 }
-/* Drag and Drop Handling Ends Here */
+/********** DRAG & DROP HANDLING STOPS */
+
+/**
+* @function Triggered when submit button is clicked. Runs validations and transfers the user preferences to the web service.
+* @returns {Boolean} Returns true if all UI validations pass.
+*/
+function onSubmit() {
+    if (runAllValidations().isError) {
+        divUserErrors.attr("tabindex", -1).focus(); // to be able to focus on div set tabindex to -1
+        return false;
+    }
+    submitPreferences(buildStudentRankingDto());
+}
 
 /********* VALIDATIONS START ***************/
 /**
@@ -147,7 +199,7 @@ function onReceived(event, ui) {
 */
 function runAllValidations() {
     divUserErrors.html("");
-    var FirstProjectError = checkForAStudentError();
+    var FirstProjectError = checkForFirstChoiceProjectError();
     var isContinuousError = isRankingContinuous();
     var areAllProjectsRanked = checkIfAllProjectsRanked();
     var error = new UIError(FirstProjectError.isError || isContinuousError.isError || areAllProjectsRanked.isError, "");
@@ -232,14 +284,11 @@ function checkForFirstChoiceProjectError() {
     }
     return new UIError(isError, errorMessage);
 }
-
-
-
 /*****VALIDATIONS END*********/
 
 /**
- * @function Ajax submit call to submit project preferences to the web service controller
- * @param {ProjectPreferenceDto} The data transfer object that will be submitted to the web service to persist rankings.
+ * @function Ajax submit call to submit student preferences to the web service controller
+ * @param {StudentPreferenceDto} dataToBeSubmitted The data transfer object that will be submitted to the web service to persist rankings.
  * @see <a href="http://api.jquery.com/jQuery.ajax/">JQuery Ajax</a>
  */
 function submitPreferences(dataToBeSubmitted) {
@@ -254,6 +303,7 @@ function submitPreferences(dataToBeSubmitted) {
     });
 }
 
+/******* AJAX Web Service Call STARTS*/
 /**
 * @function JQuery AJAX event handler that is triggered before AJAX call is made. 
 * @see <a href="http://api.jquery.com/jQuery.ajax/">JQuery Ajax</a>
@@ -291,44 +341,4 @@ function onError(xhr, error) {
     divUserErrors.focus();
     $("#divWait").toggle();
 }
-
-/**
-* @function Triggered when submit button is clicked. Runs validations and transfers the user preferences to the web service.
-* @returns {Boolean} Returns true if all UI validations pass.
-*/
-function onSubmit() {
-    if (runAllValidations().isError) {
-        divUserErrors.attr("tabindex", -1).focus(); // to be able to focus on div set tabindex to -1
-        return false;
-    }
-    submitPreferences(buildProjectRankingDto());
-    return true;
-}
-/**
-* @function Builds the ProjectRankingDto object from the dat on the UI.
-* @see ProjectRankingDto
-*/
-function buildProjectRankingDto() {
-    var projectFeedback = $("#txtFeedback").val();
-    var projectScoreDtoArray = new Array();
-    var projectRejectDtoArray = new Array();
-
-    // Get all ProjectScoreDto objects
-    var listIndexOffset = 0;
-    ScoreBuckets.filter(":not(#ul_NoScore_Bucket,#ulRejectReasons)").each(function (bucketIndex) {
-        var bucket = $(this);
-        var score = bucket.attr("id").split("_")[1];
-        bucket.find("li:not(.list-heading)").each(function (listIndex) {
-            projectScoreDtoArray[listIndexOffset+listIndex] = new ProjectScoreDto(this.id, score);
-        });
-        listIndexOffset = projectScoreDtoArray.length;
-    });
-
-    //Get all ProjectReject objects
-    $("#ulRejectReasons li textarea").each(function (index) {
-        projectRejectDtoArray[index] = new ProjectRejectDto(parseInt(this.id.split('_')[1]), this.value);
-    });
-
-    return new ProjectPreferenceDto(projectId, projectGuid, projectScoreDtoArray, projectRejectDtoArray, projectFeedback);
-}
-
+/******* AJAX Web Service Call ENDS*/

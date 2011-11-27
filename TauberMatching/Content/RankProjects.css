@@ -3,7 +3,7 @@
     font-family:Verdana;
     font-size:10pt;
 }
-span#error
+.errorMessage
 {
     color:Red;
     font-weight:bold;

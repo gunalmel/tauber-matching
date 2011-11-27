@@ -216,8 +216,8 @@ function onSubmit() {
     return true;
 }
 /**
-* @function Builds the ProjectRankingDto object from the dat on the UI.
-* @see ProjectRankingDto
+* @function Builds the ProjectPreferenceDto object from the dat on the UI.
+* @see ProjectPreferenceDto
 */
 function buildProjectRankingDto() {
     var projectFeedback = $("#txtFeedback").val();
