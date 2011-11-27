@@ -46,10 +46,10 @@
     <div id="divUserErrors" class="errorMessage"></div>
     <div id="divRanking">
         <input type="hidden" id="hfStudentId" value="<%=Model.StudentId %>" />
-        <input type="hidden" id="hfStduentGuid" value="<%=Model.Guid %>" />
+        <input type="hidden" id="hfStudentGuid" value="<%=Model.Guid %>" />
         <%foreach(ScoreDetail scoreDetail in Model.ScoreGroupedProjects.Keys)
         { %>
-        <ul id="ul_<%=scoreDetail.Score %>_Bucket" class="droptrue">
+        <ul id="ul_<%=scoreDetail.Score %>_Bucket" class="droptrue <%=scoreDetail.Score %>">
             <li class="list-heading">
                 <%=scoreDetail.ScoreTypeDisplay %>
             </li>

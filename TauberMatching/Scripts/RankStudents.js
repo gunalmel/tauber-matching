@@ -20,10 +20,10 @@ var engStudentsErrorMessage = "You have to assign A to at least " + MinAEngStude
 var busStudentsErrorMessage = "You have to assign A to at least " + MinABusStudents + " business student" + (MinABusStudents > 1 ? "s.\n" : ".\n");
 /** Error message to be displayed when the the user assigns A to a number of students less than the number specified by MinAStudents */
 var allStudentsErrorMessage = "You have to assign A to at least " + MinAStudents + " student" + (MinAStudents > 1 ? "s.\n" : ".\n");
-/** Error message to be displayed when ranking scheme is sparse */
+/** If EnforceContinuousStudentRanking then the Error message to be displayed when ranking scheme is sparse */
 var sparseRankingErrorMessage = "When you are ranking students, your ranking scheme should not be sparse, e.g.: If there are students in A and C when there are no students in B that's an error.\n";
 
-var minTotalStudentsToRejectViolationErrorMessage = "You should have interviewed at least " + RejectedStudentThreshold + " students to be able to reject any students\n";
+var minTotalStudentsToRejectViolationErrorMessage = "You should have interviewed at least " + RejectedStudentThreshold + " students to be able to reject a student\n";
 var maxEngStudentsToRejectViolationErrorMessage = "Maximum # of Engineering students you can reject is: " + MaxRejectedEngStudents+"\n";
 var maxBusStudentsToRejectViolationErrorMessage = "Maximum # of Business students you can reject is: " + MaxRejectedBusStudents+"\n";
 var maxTotalStudentsToRejectViolationErrorMessage = "Maximum # of students you can reject is: " + MaxRejectedStudents + "\n";
@@ -109,7 +109,7 @@ $(function () {
     divUserErrors = $("#divUserErrors");
     $("#btnSubmit").click(onSubmit);
     $.ajaxSetup({ type: "POST", contentType: "application/json;charset=utf-8", dataType: "json", processData: false });
-    if (RejectedStudentThreshold != 0 && StudentCount.All < RejectedStudentThreshold)
+    if (RejectedStudentThreshold != -1 && StudentCount.All < RejectedStudentThreshold)
         $("#ul_Reject_Bucket").hide();
 });
 
@@ -281,7 +281,7 @@ function checkForRejectedStudentError() {
     var rejectedTotalStudentCount = rejectedEngStudentCount + rejectedBusStudentCount;
 
     var error = new UIError();
-    if (rejectedTotalStudentCount != -1 && StudentCount.All < RejectedStudentThreshold && rejectedTotalStudentCount > 0) { //Projects can reject students only when they interviewed more than certain # of students
+    if (RejectedStudentThreshold != -1 && StudentCount.All < RejectedStudentThreshold && rejectedTotalStudentCount > 0) { //Projects can reject students only when they interviewed more than certain # of students
         error.isError = true;
         error.errorMessage = minTotalStudentsToRejectViolationErrorMessage;
     }
@@ -376,7 +376,7 @@ function isRankingContinuous() {
  * @param {String} degree The degree towards the student is studying. Eng(Engineering)|Bus(Business)
  */
 function getStudentCountForScoreForDegree(score, degree) {
-    return ScoreBuckets.filter("." + score).find("li." + degree + ":not(.list-heading)").length; //$("#ul_"+score+"_Bucket li."+degree+":not(.list-heading)").length;
+    return ScoreBuckets.filter("." + score).find("li." + degree + ":not(.list-heading)").length;
 }
 
 /**

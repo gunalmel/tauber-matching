@@ -18,9 +18,16 @@ String.prototype.format = function () {
 };
 
 /**
- * @function Strips html from a given string
- * @see <a href="http://css-tricks.com/snippets/javascript/strip-html-tags-in-javascript/">Strip HTML Tags at css-tricks.com</a>
+ * @function String prototype function to replace newline character with another sring specified by function parameter
+ * @ param {String} replacementString String to replace newline characters
  */
+String.prototype.replaceNewLineWith = function (replacementString) {
+    return this.replace(/\n/g, replacementString).replace(/  ,/g, replacementString);
+}
+/**
+* @function Strips html from a given string
+* @see <a href="http://css-tricks.com/snippets/javascript/strip-html-tags-in-javascript/">Strip HTML Tags at css-tricks.com</a>
+*/
 function stripHtmlUsingRegex(inputString) {
     inputString.replace(/(<([^>]+)>)/ig, "");
     // or try .replace(/<(?:.|\n)*?>/gm, '');
