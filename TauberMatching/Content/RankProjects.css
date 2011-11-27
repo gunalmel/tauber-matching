@@ -10,6 +10,7 @@ span#error
     clear:both;
     display:block;
 }
+/*
 #divStudentTitle
 {
     font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -18,6 +19,19 @@ span#error
 	font-weight:bold;
 	background-color:#000084 ;
 	width:100%;
+}
+*/
+#divWait
+{
+    font-size:medium; 
+    font-weight:bold; 
+    color:Red; 
+    display:none;
+    position:fixed;
+    top:32%;
+    left:42%;
+ /*   background-color:white;*/
+    z-index:100;
 }
 #divInstructions
 {
@@ -43,6 +57,8 @@ li.list-heading
     background-color: #D7C2CC;
     font-size: 10pt;
     color: #452A38;
+    text-align:center;
+    font-weight:bold;
 }
 li.project
 {
@@ -80,6 +96,7 @@ span.explanation
     clear:both;
     width:67%;
 }
+/*
 #tPositiveFeedback th, #tConstructiveFeedback th
 {
 	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -97,15 +114,37 @@ span.explanation
 	color:#000000;
 	background-color:#EAF2D3;
 }
-#divSection2
+*/
+#divFeedback
 {
     display:block;
-    clear:left;
-    float:left;
-    padding-right:25px;
+    clear:both;
 }
-#divSection3
+#divComments
 {
     display:block;
+}
+#ul_Reject_Bucket
+{
+    clear:both;
+    margin-top:8px;
+}
+ul.feedback
+{
+    padding-left:0;
     float:left;
+    width:25%;
+    padding-right:20px;
+}
+li.feedback
+{
+    list-style-type:none;
+}
+select.feedback
+{
+    width:100%;
+}
+#txtComments
+{
+    width:100%;
 }

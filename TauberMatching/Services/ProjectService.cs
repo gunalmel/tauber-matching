@@ -62,7 +62,7 @@ namespace TauberMatching.Services
             }
             return dict;
         }
-        public static RankStudentsIndexModel BuildRankStudentsIndexModelForProject(Guid? guid)
+        public static RankStudentsIndexModel GetRankStudentsIndexModelForProject(Guid? guid)
         {
             RankStudentsIndexModel model;
             try
@@ -81,6 +81,21 @@ namespace TauberMatching.Services
                     throw ex;
             }
             return model;
+        }
+
+        /// <summary>
+        /// Returns the list of projects which id not interview with the student as specified by the student identifier.
+        /// </summary>
+        /// <param name="studentId">Student identifier in the db</param>
+        /// <returns>List of projects which did not interview the selected student</returns>
+        public static IList<Project> GetProjectsNotMatchingStudent(int studentId)
+        {
+            IList<Project> projects = null;
+            using (MatchingDB db = new MatchingDB())
+            {
+               projects = db.Matchings.Where(m => m.Student.Id != studentId).Select(m => m.Project).Distinct().ToList();
+            }
+            return projects;
         }
     }
 }

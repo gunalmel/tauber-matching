@@ -21,7 +21,7 @@ namespace TauberMatching.Services
             Student student = null;
             using (MatchingDB db = new MatchingDB())
             {
-                student = db.Students.Include("Matchings.Project").Include("StudentFeedback.Project").FirstOrDefault(s => s.Guid == guid.Value);
+                student = db.Students.Include("Matchings.Project").Include("StudentFeedbacks.Project").FirstOrDefault(s => s.Guid == guid.Value);
             }
             return student;
         }
@@ -44,14 +44,15 @@ namespace TauberMatching.Services
             return dict;
         }
 
-        public static RankProjectsIndexModel BuildRankProjectsIndexModelForProject(Guid? guid)
+        public static RankProjectsIndexModel GetRankProjectsIndexModelForStudent(Guid? guid)
         {
             RankProjectsIndexModel model;
             try
             {
                 Student student = GetStudentWithFullDetailsByGuid(guid);
                 IDictionary<ScoreDetail, IList<Project>> scoreGroupedProjects = GetProjectsForStudentGroupedByScore(student);
-                model = new RankProjectsIndexModel(student.FullName, scoreGroupedProjects);
+                IList<Project> projectsNotInterviewed = ProjectService.GetProjectsNotMatchingStudent(student.Id);
+                model = new RankProjectsIndexModel(student.Id, student.Guid.ToString(), student.FullName, scoreGroupedProjects, student.OtherComments, projectsNotInterviewed);
             }
             catch (ArgumentNullException ex)
             {
@@ -62,6 +63,5 @@ namespace TauberMatching.Services
             }
             return model;
         }
-
     }
 }

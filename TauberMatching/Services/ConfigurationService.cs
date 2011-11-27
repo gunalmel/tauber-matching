@@ -63,7 +63,7 @@ namespace TauberMatching.Services
 
             #region Build js statements to set js variable that keep ui business rules parameters.
             String jsConfigVarTemplate = "var {0} = {1};";
-            IList<ConfigParameter> uiRules = ConfigurationService.GetBusinessRulesConfigParametersFor(ContactType.Project);
+            IList<ConfigParameter> uiRules = ConfigurationService.GetBusinessRulesConfigParametersFor(cType);
             foreach (ConfigParameter param in uiRules)
             {
                 jsVariables.AppendFormat(jsConfigVarTemplate, param.Name, param.JsValue).AppendLine();

@@ -36,11 +36,23 @@ namespace TauberMatching.Models
             set { _errorMessage = value; }
         }
 
-        public RankProjectsIndexModel(string studentName, IDictionary<ScoreDetail, IList<Project>> scoreGroupedProjects)
+        public int StudentId { get; set; }
+
+        public string Guid { get; set; }
+
+        public string OtherComments { get; set; }
+
+        public IList<Project> ProjectsNotInterviewed { get; set; }
+
+        public RankProjectsIndexModel(int studentId, string guid, string studentName, IDictionary<ScoreDetail, IList<Project>> scoreGroupedProjects, string otherComments, IList<Project> projectsNotInterviewed)
         {
+            this.StudentId = studentId;
+            this.Guid = guid;
             this._studentName = studentName;
             this.IsError = false;
             this.scoreGroupedProjects = scoreGroupedProjects;
+            this.OtherComments = otherComments;
+            this.ProjectsNotInterviewed = projectsNotInterviewed;
         }
 
         public RankProjectsIndexModel(bool isError, string errorMessage)

@@ -120,6 +120,28 @@ namespace TauberMatching.Models
                 return (ContactFirst != null || ContactLast != null) ? (ContactFirst + " " + ContactLast) : "";
             }
         }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int result = Id.GetHashCode();
+                result = (result * 397);
+                return result;
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+                throw new NullReferenceException("obj is null");
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof(Project)) return false;
+            var proj = (Project)obj;
+            if (proj.Id == this.Id || proj.Name == this.Name)
+                return true;
+            return false;
+        } 
     }
     public class ProjectDTO
     {

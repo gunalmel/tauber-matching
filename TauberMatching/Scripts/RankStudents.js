@@ -109,6 +109,8 @@ $(function () {
     divUserErrors = $("#divUserErrors");
     $("#btnSubmit").click(onSubmit);
     $.ajaxSetup({ type: "POST", contentType: "application/json;charset=utf-8", dataType: "json", processData: false });
+    if (RejectedStudentThreshold != 0 && StudentCount.All < RejectedStudentThreshold)
+        $("#ul_Reject_Bucket").hide();
 });
 
 /**

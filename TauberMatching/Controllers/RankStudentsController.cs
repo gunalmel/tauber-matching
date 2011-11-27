@@ -8,12 +8,11 @@ using TauberMatching.Services;
 
 namespace TauberMatching.Controllers
 {
-    // TODO #25, #33, #34
     public class RankStudentsController : Controller
     {
         public ActionResult Index(Guid? id)
         {
-            return View(ProjectService.BuildRankStudentsIndexModelForProject(id));
+            return View(ProjectService.GetRankStudentsIndexModelForProject(id));
         }
 
         [HttpPost]

@@ -13,13 +13,13 @@
     <script src='<%=ResolveUrl("~/Scripts/Helper.js")%>' type="text/javascript"></script>
     <% if (!Model.IsError)
     {%>     
-        <script type="text/javascript">
-            <%=UIParamsAndMessages.RANK_STUDENTS_INDEX_HEAD %>
-            var webServiceUrlToSubmit = '<%=ResolveUrl("~/RankStudents/SubmitPreferences") %>';
-            var AdminPhone = '<%= UIParamsAndMessages.TAUBER_PHONE %>';
-            var AdminEmail = '<%= UIParamsAndMessages.TAUBER_EMAIL %>';
-        </script>
-        <script type="text/javascript" src="../../Scripts/RankStudents.js"></script>
+    <script type="text/javascript">
+        <%=UIParamsAndMessages.RANK_STUDENTS_INDEX_HEAD %>
+        var webServiceUrlToSubmit = '<%=ResolveUrl("~/RankStudents/SubmitPreferences") %>';
+        var AdminPhone = '<%= UIParamsAndMessages.TAUBER_PHONE %>';
+        var AdminEmail = '<%= UIParamsAndMessages.TAUBER_EMAIL %>';
+    </script>
+    <script type="text/javascript" src="../../Scripts/RankStudents.js"></script>
     <%} %>
 </asp:Content>
 
