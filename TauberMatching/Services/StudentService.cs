@@ -35,7 +35,10 @@ namespace TauberMatching.Services
             if (student.Matchings == null || student.Matchings.Count == 0 || student.Matchings.Select(m => m.Student).Count() == 0)
                 throw new ArgumentException("student", "There are no matching projects for the student. Make sure all properties of your student was eagerly loaded before it was passed as parameter.");
 
-            var dict = student.Matchings.GroupBy(m => UIParamsAndMessages.StudentScoreDetails.Where(sd => sd.Score == m.StudentScore).FirstOrDefault()).ToDictionary(key => key.Key, value => value.Select(m => m.Project).ToList() as IList<Project>);
+            var unsortedDict = student.Matchings.GroupBy(m => UIParamsAndMessages.StudentScoreDetails.Where(sd => sd.Score == m.StudentScore).FirstOrDefault()).ToDictionary(key => key.Key, value => value.Select(m => m.Project).ToList() as IList<Project>);
+            
+            System.Collections.Generic.SortedDictionary<ScoreDetail, IList<Project>> dict = new System.Collections.Generic.SortedDictionary<ScoreDetail, IList<Project>>(unsortedDict);
+            
             foreach (ScoreDetail sd in UIParamsAndMessages.StudentScoreDetails)
             {
                 if (!dict.Keys.Contains(sd))
@@ -52,7 +55,11 @@ namespace TauberMatching.Services
                 Student student = GetStudentWithFullDetailsByGuid(guid);
                 IDictionary<ScoreDetail, IList<Project>> scoreGroupedProjects = GetProjectsForStudentGroupedByScore(student);
                 IList<Project> projectsNotInterviewed = ProjectService.GetProjectsNotMatchingStudent(student.Id);
-                model = new RankProjectsIndexModel(student.Id, student.Guid.ToString(), student.FullName, scoreGroupedProjects, student.OtherComments, projectsNotInterviewed);
+                var positiveTypeName = StudentFeedbackType.Positive.ToString();
+                var constructiveTypeName = StudentFeedbackType.Constructive.ToString();
+                IDictionary<int,int> positiveFeedbacks = student.StudentFeedbacks.Where(sf => sf.Type == positiveTypeName).ToDictionary(key=>key.Project.Id,value=>value.FeedbackScore);
+                IDictionary<int, int> constructiveFeedbacks = student.StudentFeedbacks.Where(sf => sf.Type == constructiveTypeName).ToList().ToDictionary(key => key.Project.Id, value => value.FeedbackScore);
+                model = new RankProjectsIndexModel(student.Id, student.Guid.ToString(), student.FullName, scoreGroupedProjects, student.OtherComments, projectsNotInterviewed, positiveFeedbacks, constructiveFeedbacks);
             }
             catch (ArgumentNullException ex)
             {

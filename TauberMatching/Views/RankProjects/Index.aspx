@@ -79,7 +79,7 @@
                     <option value="0">--Select a project--</option>
                   <%foreach (Project p in Model.ProjectsNotInterviewed)
                     {%>
-                    <option value="<%=p.Id %>"><%=p.Name %></option>
+                    <option value="<%=p.Id %>" <%=Model.PositiveFeedbacks.Keys.Contains(p.Id)?(Model.PositiveFeedbacks[p.Id]==i?"selected=\"selected\"":""):"" %>><%=p.Name %></option>
                     <%} %>
                   </select>
                
@@ -100,7 +100,7 @@
                     <option value="0">--Select a project--</option>
                   <%foreach (Project p in Model.ProjectsNotInterviewed)
                     {%>
-                    <option value="<%=p.Id %>"><%=p.Name %></option>
+                    <option value="<%=p.Id %>" <%=Model.ConstructiveFeedbacks.Keys.Contains(p.Id)?(Model.ConstructiveFeedbacks[p.Id]==i?"selected=\"selected\"":""):"" %>><%=p.Name %></option>
                     <%} %>
                   </select>
                

@@ -9,7 +9,7 @@
  * var MinFirstProjects = 1;
  * var webServiceUrlToSubmit, AdminPhone, AdminEmail is set in the view.
  */
-/** Error message to be displayed when the user rejects more engineering students than the number specified by MinAEngStudents */
+/** Error message to be displayed when the user rejects more engineering students than the number specified by MinFirstProjects */
 var minFirstProjectsErrorMessage = "You have to select at least " + MinFirstProjects + " project" + (MinFirstProjects > 1 ? "s" : "")+ " as your first preference.\n";
 /** If EnforceContinuousProjectRanking then the error message to be displayed when ranking scheme is sparse */
 var sparseRankingErrorMessage = "When you are ranking projects, your ranking scheme should not be sparse, e.g.: If there are projects in First and Fourth when there are no projects in Second and Third that's an error.\n";
@@ -148,7 +148,7 @@ function buildStudentRankingDto() {
         var positiveFeedbackProjectId = parseInt($(this).val());
         if (positiveFeedbackProjectId != 0) {
             var positiveFeedbackScore = (index + 1);
-            studentFeedbackDtoArray[index] = new StudentFeedbackDto(positiveFeedbackProjectId, "P", positiveFeedbackScore);
+            studentFeedbackDtoArray[index] = new StudentFeedbackDto(positiveFeedbackProjectId, "Positive", positiveFeedbackScore);
         }
     });
 
@@ -157,7 +157,7 @@ function buildStudentRankingDto() {
         var positiveFeedbackProjectId = parseInt($(this).val()); 
         if (positiveFeedbackProjectId != 0) {
             var positiveFeedbackScore = (index + 1);
-            studentFeedbackDtoArray[feedbackIndexStart++] = new StudentFeedbackDto(positiveFeedbackProjectId, "C", positiveFeedbackScore);
+            studentFeedbackDtoArray[feedbackIndexStart++] = new StudentFeedbackDto(positiveFeedbackProjectId, "Constructive", positiveFeedbackScore);
         }
     });
 

@@ -41,10 +41,20 @@ namespace TauberMatching.Models
         public string Guid { get; set; }
 
         public string OtherComments { get; set; }
-
+        /// <summary>
+        /// The list of projects with which student did nt interviewed. Used to populate the lookup list for student feedback.
+        /// </summary>
         public IList<Project> ProjectsNotInterviewed { get; set; }
+        /// <summary>
+        /// Key is the projectId value is the score
+        /// </summary>
+        public IDictionary<int, int> PositiveFeedbacks { get; set; }
+        /// <summary>
+        /// Key is the projectId value is the score
+        /// </summary>
+        public IDictionary<int, int> ConstructiveFeedbacks { get; set; }
 
-        public RankProjectsIndexModel(int studentId, string guid, string studentName, IDictionary<ScoreDetail, IList<Project>> scoreGroupedProjects, string otherComments, IList<Project> projectsNotInterviewed)
+        public RankProjectsIndexModel(int studentId, string guid, string studentName, IDictionary<ScoreDetail, IList<Project>> scoreGroupedProjects, string otherComments, IList<Project> projectsNotInterviewed, IDictionary<int, int> positiveFeedbacks, IDictionary<int, int> constructiveFeedbacks)
         {
             this.StudentId = studentId;
             this.Guid = guid;
@@ -53,6 +63,8 @@ namespace TauberMatching.Models
             this.scoreGroupedProjects = scoreGroupedProjects;
             this.OtherComments = otherComments;
             this.ProjectsNotInterviewed = projectsNotInterviewed;
+            this.PositiveFeedbacks = positiveFeedbacks;
+            this.ConstructiveFeedbacks = constructiveFeedbacks;
         }
 
         public RankProjectsIndexModel(bool isError, string errorMessage)
