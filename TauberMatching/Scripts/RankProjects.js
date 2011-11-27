@@ -21,7 +21,8 @@ var notAllProjectsRankedErrorMessage = "There are projects which are not ranked.
 var studentId; 
 var studentGuid;
 
-var systemErrorMessage = "We apologize for the unexpected system failure. We appreciate it if you inform Tauber Institute about the system error referencing the message below (Phone:" + AdminPhone + ", E-mail: <a href='mailto:" + AdminEmail + "?subject=Tauber Institute Matching Web Application Unexpected system Error&body=Project guid {0}, projectId {1} experienced an error with error message {2}'>"+AdminEmail+"</a>):<br/>";
+var systemErrorMessage = "We apologize for the unexpected system failure. We appreciate it if you inform Tauber Institute about the system error referencing the message below (Phone:" + AdminPhone + ", E-mail: <a href='mailto:" + AdminEmail + "?subject=Tauber Institute Matching Web Application Unexpected system Error&body=Student with guid {0}, studentId {1} experienced an error with error message {2}'>"+AdminEmail+"</a>):<br/>";
+var submissionSuccessMessage = "Your changes are successfully submitted & saved.";
 
 var divUserErrors;
 /**
@@ -36,11 +37,13 @@ var ScoreBuckets;
  */
 var ProjectCount;
 
+/**** CLASS DECLARATIONS STARTS */
+
 /**
- * @class Used to transfer error status and associated error message to be displayed between functions.
- * @param {Boolean} isError Represents if the object has been created due to an error. When false errorMessage will be empty string.
- * @param {String} errorMessage The message that will be displayed to user if this object has been created as a result of UI error, otherwise will be empty string.
- */
+* @class Used to transfer error status and associated error message to be displayed between functions.
+* @param {Boolean} isError Represents if the object has been created due to an error. When false errorMessage will be empty string.
+* @param {String} errorMessage The message that will be displayed to user if this object has been created as a result of UI error, otherwise will be empty string.
+*/
 function UIError(isThereAnyError, messageToDisplay) {
     this.isError = isThereAnyError;
     this.errorMessage = messageToDisplay;
@@ -49,16 +52,16 @@ function UIError(isThereAnyError, messageToDisplay) {
  * @class Data transfer object to transfer student preferences from UI to web service
  * @see StudentPreferenceDto
  */
-function StudentScoreDto(projectId, score) {
-    this.ProjectId = projectId;
+function StudentScoreDto(studentId, score) {
+    this.ProjectId = studentId;
     this.Score = score;
 }
 /**
  * @class Data transfer object to transfer student feedback from UI to web service.
  * @see StudentPreferenceDto
  */
-function StudentFeedbackDto(projectId, type, feedbackScore) {
-    this.ProjectId = projectId;
+function StudentFeedbackDto(studentId, type, feedbackScore) {
+    this.ProjectId = studentId;
     this.Type = type;
     this.FeedbackScore = feedbackScore;
 }
@@ -78,6 +81,7 @@ function StudentPreferenceDto(studentId, studentGuid, studentPreferences, studen
     this.StudentFeedback = studentFeedback;
     this.OtherComments = otherComments;
 }
+/**** CLASS DECLARATIONS ENDS */
 
 /**
 * @function Equivalent of JQuery $(document).ready() function call. Makes Ranking buckets sortable drag and drop containers using JQuery UI plug-in.
@@ -321,9 +325,15 @@ function beforeSubmit() {
 function onSubmitSuccess(msg, event, xhr) {
     $("#divWait").toggle();
     grayOut(false);
-    alert("Your changes are successfully submitted & saved.");
-    // Reloads the page.
-    window.location = location.href;
+    if (msg == "Success") {
+        alert(submissionSuccessMessage);
+        // Reloads the page.
+        window.location = location.href;
+    }
+    else {
+        divUserErrors.html(systemErrorMessage.format(studentId, studentGuid, msg)+msg);
+        divUserErrors.attr("tabindex", -1).focus();
+    }        
 }
 
 /**
@@ -336,9 +346,9 @@ function onError(xhr, error) {
     var ajaxErrorMessage = xhr.status + ": " + xhr.statusText;
     var serverResponsePlainTextUrlEncoded = encodeURIComponent(xhr.responseText);
     var ajaxErrorMessageURLEncoded = encodeURIComponent(ajaxErrorMessage);
-    var errorMessage = systemErrorMessage.format(projectId, projectGuid, ajaxErrorMessage);
+    var errorMessage = systemErrorMessage.format(studentId, studentGuid, ajaxErrorMessage);
     divUserErrors.html(errorMessage + ajaxErrorMessage);
-    divUserErrors.focus();
+    divUserErrors.attr("tabindex", -1).focus();
     $("#divWait").toggle();
 }
 /******* AJAX Web Service Call ENDS*/

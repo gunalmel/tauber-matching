@@ -30,6 +30,7 @@ var maxTotalStudentsToRejectViolationErrorMessage = "Maximum # of students you c
 var notAllStudentsRankedErrorMessage = "There are students who are not ranked. All students should be ranked.\n";
 
 var rejectReasonErrorMessage = "You have to enter reason for every student rejected.\n";
+var submissionSuccessMessage = "Your changes are successfully submitted & saved.";
 
 var projectId; 
 var projectGuid;
@@ -147,9 +148,14 @@ function beforeSubmit() {
 function onSubmitSuccess(msg, event, xhr) {
     $("#divWait").toggle();
     grayOut(false);
-    alert("Your changes are successfully submitted & saved.");
-    // Reloads the page.
-    window.location = location.href;
+    if (msg == "Success") {
+        alert(submissionSuccessMessage);
+        // Reloads the page.
+        window.location = location.href;
+    } else {
+        divUserErrors.html(systemErrorMessage.format(projectId, projectGuid, msg)+msg);
+        divUserErrors.attr("tabindex", -1).focus();
+    }
 }
 
 /**
@@ -164,7 +170,7 @@ function onError(xhr, error) {
     var ajaxErrorMessageURLEncoded = encodeURIComponent(ajaxErrorMessage);
     var errorMessage = systemErrorMessage.format(projectId, projectGuid, ajaxErrorMessage);
     divUserErrors.html(errorMessage + ajaxErrorMessage);
-    divUserErrors.focus();
+    divUserErrors.attr("tabindex", -1).focus();
     $("#divWait").toggle();
 }
 

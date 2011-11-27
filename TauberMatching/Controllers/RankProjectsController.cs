@@ -14,5 +14,21 @@ namespace TauberMatching.Controllers
         {
             return View(StudentService.GetRankProjectsIndexModelForStudent(id));
         }
+
+        [HttpPost]
+        public JsonResult SubmitPreferences(StudentPreferencesDto preferencesDto)
+        {
+            MatchingDB db = new MatchingDB();
+            Student project = db.Students.Include("Matchings.Project").Include("StudentFeedbacks.Project").Where(s => s.Id == preferencesDto.StudentId && s.Guid == new Guid(preferencesDto.StudentGuid)).FirstOrDefault();
+
+            string message = project == null ? "Authentication failure: Student can not be identified." : "Success";
+            var jsonResult = new JsonResult();
+            jsonResult.Data = message;
+
+            if (project == null)
+                return jsonResult;
+
+            return jsonResult;
+        }
     }
 }

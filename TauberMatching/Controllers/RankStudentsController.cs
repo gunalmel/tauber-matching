@@ -16,7 +16,7 @@ namespace TauberMatching.Controllers
         }
 
         [HttpPost]
-        public JsonResult SubmitPreferences(PreferencesDto preferencesDto)
+        public JsonResult SubmitPreferences(ProjectPreferencesDto preferencesDto)
         {
             MatchingDB db = new MatchingDB();
             Project project = db.Projects.Include("Matchings.Student").Include("ProjectRejects.Student").Where(p => p.Id == preferencesDto.ProjectId && p.Guid == new Guid(preferencesDto.ProjectGuid)).FirstOrDefault();
