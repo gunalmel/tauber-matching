@@ -70,7 +70,14 @@ namespace TauberMatching.Services
                         db.EmailQueueMessages.Remove(m);
                     i++;
                 }
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    log.Info("An error has happened while trying to persist the log info after e-mail has been sent and emaillog has been generated but before queue message has been deleted. Exception is:",ex);
+                }
             }
             if(i>0)
                 log.Info("The number of emails successfully sent: "+i.ToString()+" at "+DateTime.Now.ToString());

@@ -43,7 +43,7 @@ namespace TauberMatching.Services
         /// <returns></returns>
         public static string GetAccessUrlForTheUser(Guid guid, UrlType type)
         {
-            var controller = (type == UrlType.Project ? RANK_PROJECT_CONTROLLER : RANK_STUDENT_CONTROLLER);
+            var controller = (type == UrlType.Project ? RANK_STUDENT_CONTROLLER : RANK_PROJECT_CONTROLLER);
             string url = GetApplicationRoot()+controller+"/"+guid;
             return url;
         }

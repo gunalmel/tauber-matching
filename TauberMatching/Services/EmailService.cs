@@ -77,9 +77,9 @@ namespace TauberMatching.Services
 
         private void ProductionLevelMailSetup()
         {
-            _mailServer = new SmtpClient(MAIL_SERVER);
+            _mailServer = new SmtpClient(MAIL_SERVER, MAIL_PORT);
+            _mailServer.DeliveryMethod = SmtpDeliveryMethod.Network;
             _mailServer.Credentials = new System.Net.NetworkCredential(MAIL_ACCOUNT, MAIL_PWD);
-            _mailServer.Port = MAIL_PORT;
             _mailServer.EnableSsl = ENABLE_SSL;
         }
         public String SendMessage()
@@ -92,7 +92,8 @@ namespace TauberMatching.Services
             }
             catch (Exception ex)
             {
-                log.Error("Error while sending email using SmtpClient ", ex);
+                Exception e = ex.InnerException == null ? ex : ex.InnerException;
+                log.Error("Error while sending email using SmtpClient ", e);
             }
             return status;
         }

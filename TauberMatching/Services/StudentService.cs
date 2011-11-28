@@ -17,12 +17,14 @@ namespace TauberMatching.Services
         public static Student GetStudentWithFullDetailsByGuid(Guid? guid)
         {
             if (guid == null)
-                throw new ArgumentNullException("guid", "Student access url unique identifier is null no project can be fetched");
+                throw new ArgumentNullException("guid", "Student access url unique identifier is null or does not correspond to a valid Guid.");
             Student student = null;
             using (MatchingDB db = new MatchingDB())
             {
                 student = db.Students.Include("Matchings.Project").Include("StudentFeedbacks.Project").FirstOrDefault(s => s.Guid == guid.Value);
             }
+            if (student == null)
+                throw new ArgumentNullException("guid", "For the specified student access url unique identifier, no student can be fetched");
             return student;
         }
         /// <summary>
