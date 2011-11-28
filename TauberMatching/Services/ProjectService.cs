@@ -99,5 +99,19 @@ namespace TauberMatching.Services
             }
             return projects;
         }
+        /// <summary>
+        /// Returns the model that will be returned to the details view that is returned by projects controller's details action method
+        /// </summary>
+        /// <param name="projectId">Project Identifier</param>
+        /// <returns><see cref="ProjectDetailsModel"/></returns>
+        public static ProjectDetailsModel GetProjectDetailsModelForProject(int projectId)
+        {
+            Project project = null;
+            using (MatchingDB db = new MatchingDB())
+            {
+                project=db.Projects.Where(p => p.Id == projectId).FirstOrDefault();
+            }
+            return new ProjectDetailsModel(project.Id,project.Name,StudentService.GetStudentDtoNotMatchingProject(projectId), StudentService.GetStudentDtoForProject(projectId));
+        }
     }
 }

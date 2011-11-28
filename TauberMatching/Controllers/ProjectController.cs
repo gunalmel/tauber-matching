@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using TauberMatching.Models;
+using TauberMatching.Services;
 
 namespace TauberMatching.Controllers
 {
@@ -57,7 +58,7 @@ namespace TauberMatching.Controllers
         //TODO #19 Display project-student matchings and let admin user add new project matching
         public ActionResult Details(int id)
         {
-            return View();
+            return View(ProjectService.GetProjectDetailsModelForProject(id));
         }
 
 

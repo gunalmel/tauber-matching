@@ -51,3 +51,5 @@ visual-studio git
 
 #Exclude Nuget downloaded dlls
 packages/
+#Exclude deployable assemblies
+TauberMatching/_bin_deployableAssemblies/

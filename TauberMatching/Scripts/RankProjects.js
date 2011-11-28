@@ -101,7 +101,6 @@ $(function () {
     divUserErrors = $("#divUserErrors");
     $("#btnSubmit").click(onSubmit);
     $.ajaxSetup({ type: "POST", contentType: "application/json;charset=utf-8", dataType: "json", processData: false });
-    RejectedProjectThreshold = -1;//Remove this line in production
     if (RejectedProjectThreshold != -1 && ProjectCount < RejectedProjectThreshold)
         $("#ul_Reject_Bucket").hide();
 });

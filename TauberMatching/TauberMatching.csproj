@@ -132,6 +132,7 @@
     <Compile Include="Models\ConfigParameter.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\EmailQueueMessage.cs" />
+    <Compile Include="Models\ProjectDetailsModel.cs" />
     <Compile Include="Models\RankStudentsIndexModel.cs" />
     <Compile Include="Models\Score.cs" />
     <Compile Include="Services\ScoreService.cs" />
@@ -157,8 +158,31 @@
     <Compile Include="Services\UrlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
+    <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\msvcr90.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlcese40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceqp40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceme40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceer40EN.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlcecompact40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceca40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\Microsoft.VC90.CRT\README_ENU.txt" />
+    <None Include="_bin_deployableAssemblies\x86\Microsoft.VC90.CRT\msvcr90.dll" />
+    <None Include="_bin_deployableAssemblies\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
+    <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceer40EN.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlcecompact40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceca40.dll" />
+    <None Include="_bin_deployableAssemblies\System.Data.SqlServerCe.Entity\System.Data.SqlServerCe.Entity.dll" />
+    <None Include="_bin_deployableAssemblies\EN\System.Data.SqlServerCe.xml" />
+    <None Include="_bin_deployableAssemblies\System.Data.SqlServerCe.dll" />
+    <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="App_Data\MatchingDB.old" />
     <Content Include="Content\images\wait.gif" />
+    <Content Include="Content\ProjectDetails.css" />
     <Content Include="Content\RankProjects.css" />
     <Content Include="Scripts\RankProjects.js" />
     <Content Include="Scripts\Helper.js" />
@@ -173,6 +197,7 @@
     <Content Include="Views\AppConfig\Edit.aspx" />
     <Content Include="Views\FileUpload\UploadMatchingFile.aspx" />
     <Content Include="Views\Project\Create.aspx" />
+    <Content Include="Views\Project\Details.aspx" />
     <Content Include="Views\Project\Edit.aspx" />
     <Content Include="Views\Project\Index.aspx" />
     <Content Include="Views\RankProjects\Index.aspx" />

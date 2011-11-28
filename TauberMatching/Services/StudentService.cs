@@ -72,5 +72,24 @@ namespace TauberMatching.Services
             }
             return model;
         }
+
+        public static IList<StudentDto> GetStudentDtoForProject(int projectId)
+        {
+            IList<StudentDto> students=null;
+            using(MatchingDB db = new MatchingDB())
+            {
+                students = db.Students.Where(s => s.Matchings.Select(m => m.Project.Id).Contains(projectId)).OrderBy(s => s.FirstName).ThenBy(s => s.LastName).Select(s => new StudentDto() { Id = s.Id, FirstName = s.FirstName, LastName = s.LastName, Degree = s.Degree }).ToList();
+            }
+            return students;
+        }
+        public static IList<StudentDto> GetStudentDtoNotMatchingProject(int projectId)
+        {
+            IList<StudentDto> students = null;
+            using (MatchingDB db = new MatchingDB())
+            {
+                students = db.Students.Where(s => !s.Matchings.Select(m => m.Project.Id).Contains(projectId)).OrderBy(s => s.FirstName).ThenBy(s=>s.LastName).Select(s => new StudentDto() { Id = s.Id, FirstName = s.FirstName, LastName = s.LastName, Degree = s.Degree }).ToList();
+            }
+            return students;
+        }
     }
 }
