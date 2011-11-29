@@ -3,23 +3,57 @@
     font-family:Verdana;
     font-size:10pt;
 }
-
-.notinterviewed, .interviewed
+label.matching
 {
     float:left;
+    font-weight:bold;
+    color:Black;
+    width:100%;
+    text-align:center;
+}
+ul.matching
+{
+    list-style-type:none;
+    float:left;
+    padding: 0 0 0 0;
+    vertical-align:middle;
+}
+#ulTransferButtons
+{
+    position:relative;
+    top:150px;
+}
+ul.matching li
+{
+    clear:both;
     display:block;
-    margin-right:25px;
+}
+.notinterviewed, .interviewed
+{
     height: 300px;
+}
+
+#divMatching
+{
+    vertical-align:middle;
 }
 
 /*To fix he problem that div can not adjust its height when elements inside the div are floated. See http://swiftthemes.com/2009/12/css-tips-and-hacks/problem-with-height-of-div-containing-floats-and-inline-lists/ */
 .clearfix:after {
- visibility: hidden;
- display: block;
- font-size: 0;
- content: " ";
- clear: both;
- height: 0;
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
 }
 
 .clearfix {display: inline-block;}
+
+.errorMessage
+{
+    color:Red;
+    font-weight:bold;
+    clear:both;
+    display:block;
+}

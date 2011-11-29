@@ -113,5 +113,42 @@ namespace TauberMatching.Services
             }
             return new ProjectDetailsModel(project.Id,project.Name,StudentService.GetStudentDtoNotMatchingProject(projectId), StudentService.GetStudentDtoForProject(projectId));
         }
+        /// <summary>
+        /// Deletes all matching objects for a given project from the database.
+        /// </summary>
+        /// <param name="projectId">Project identifier</param>
+        public static void DeleteMatchingsForProject(int projectId)
+        {
+            using (MatchingDB db = new MatchingDB())
+            {
+                Project project = db.Projects.Where(p => p.Id == projectId).FirstOrDefault();
+                var existingMatchings = project.Matchings.ToList();
+                project.Matchings.Clear();
+                foreach (Matching m in existingMatchings)
+                    db.Matchings.Remove(m);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Replaces all the matching students within the list of matching objects of a project with the students specified by student id array provided as argument.
+        /// </summary>
+        /// <param name="studentIdsToAdd">List of student identifiers that will constitute the new matching list of th given project</param>
+        public static void ReplaceMatchingsForProjectWith(int projectId, int[] studentIdsToAdd)
+        {
+            using (MatchingDB db = new MatchingDB())
+            {
+                Project project = db.Projects.Where(p => p.Id == projectId).FirstOrDefault();
+                ICollection<Matching> matchings = new List<Matching>();
+                foreach (int studentId in studentIdsToAdd)
+                {
+                    Student st = db.Students.Where(s => s.Id == studentId).FirstOrDefault();
+                    Matching m = new Matching() { Project = project, Student = st };
+                    matchings.Add(m);
+                }
+                project.Matchings = matchings;
+                db.SaveChanges();
+            }
+        }
     }
 }

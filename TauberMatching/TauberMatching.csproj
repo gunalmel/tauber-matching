@@ -184,6 +184,7 @@
     <Content Include="Content\images\wait.gif" />
     <Content Include="Content\ProjectDetails.css" />
     <Content Include="Content\RankProjects.css" />
+    <Content Include="Scripts\ProjectDetails.js" />
     <Content Include="Scripts\RankProjects.js" />
     <Content Include="Scripts\Helper.js" />
     <Content Include="Scripts\jquery-ui-1.8.16.custom.min.js" />
