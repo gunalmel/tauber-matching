@@ -153,6 +153,7 @@
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Models\RankProjectsIndexModel.cs" />
     <Compile Include="Services\StudentDegreeService.cs" />
+    <Compile Include="Models\StudentDetailsModel.cs" />
     <Compile Include="Services\StudentService.cs" />
     <Compile Include="Services\UIParamsAndMessages.cs" />
     <Compile Include="Services\UrlHelper.cs" />
@@ -182,9 +183,9 @@
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="App_Data\MatchingDB.old" />
     <Content Include="Content\images\wait.gif" />
-    <Content Include="Content\ProjectDetails.css" />
+    <Content Include="Content\ProjectAndStudentDetails.css" />
     <Content Include="Content\RankProjects.css" />
-    <Content Include="Scripts\ProjectDetails.js" />
+    <Content Include="Scripts\ProjectAndStudentDetails.js" />
     <Content Include="Scripts\RankProjects.js" />
     <Content Include="Scripts\Helper.js" />
     <Content Include="Scripts\jquery-ui-1.8.16.custom.min.js" />
@@ -204,6 +205,7 @@
     <Content Include="Views\RankProjects\Index.aspx" />
     <Content Include="Views\RankStudents\Index.aspx" />
     <Content Include="Views\Student\Create.aspx" />
+    <Content Include="Views\Student\Details.aspx" />
     <Content Include="Views\Student\Edit.aspx" />
     <Content Include="Views\Student\Index.aspx" />
     <Content Include="Web.config">

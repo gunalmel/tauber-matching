@@ -1,8 +1,8 @@
 ﻿<%@ Import Namespace="TauberMatching.Models" %>
-<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<TauberMatching.Models.ProjectDetailsModel>" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<TauberMatching.Models.StudentDetailsModel>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-	Tauber Matching Web Application - Match Students with The Project <%=Model.ProjectName %>
+	Tauber Matching Web Application - Match Projects with The Student <%=Model.FullName %>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
     <link href='<%=ResolveUrl("~/Content/ProjectAndStudentDetails.css")%>' rel="stylesheet" type="text/css" />
@@ -10,12 +10,12 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2><%=Model.ProjectName %></h2>
+    <h2><%=Model.FullName %></h2>
     <div id="divMessage" <% if(TempData["error"]!=null) {%>class="errorMessage"<%} %>>
         <% =ViewContext.TempData["message"] %>
     </div>
     <% using (Html.BeginForm()) {%>
-    <input type="hidden" id="hfProjectId" value="<%=Model.ProjectId %>" />
+    <input type="hidden" id="hfStudentId" value="<%=Model.StudentId %>" />
     <div id="divMatching" class="clearfix">
         <ul id="ulNotInterviewed" class="matching">
             <li>
@@ -23,19 +23,19 @@
             </li>
             <li>
                 <select id="selectNotInterviewed" name="selectNotInterviewed" class="notinterviewed" multiple="">
-                <%foreach (StudentDto sDto in Model.NotInterviewed)
+                <%foreach (ProjectDto pDto in Model.NotInterviewed)
                   {%>
-                  <option value="<%=sDto.Id %>"><%=sDto.FullName %></option>
+                  <option value="<%=pDto.Id %>"><%=pDto.Name%></option>
                 <%} %>
                 </select>
             </li>
         </ul>   
         <ul id="ulTransferButtons" class="matching">
             <li>
-                <input id="btnMoveFromNotInterviewed" type="button" value="--&gt;" title="Move selected student from not interviewed to interviewed."></input>
+                <input id="btnMoveFromNotInterviewed" type="button" value="--&gt;" title="Move selected project from not interviewed to interviewed."></input>
             </li>
             <li>
-                <input id="btnMoveFromInterviewed" type="button" value="&lt;--" title="Move selected student from interviewed to not interviewed."></input>
+                <input id="btnMoveFromInterviewed" type="button" value="&lt;--" title="Move selected project from interviewed to not interviewed."></input>
             </li>
             <li>
                 <input id="btnClearInterviewed" type="button" value="&lt;&lt;" title="Move all from interviewed to not interviewed."></input>
@@ -47,9 +47,9 @@
             </li>
             <li>
                 <select id="selectInterviewed" name="selectInterviewed" class="interviewed" multiple="">
-                <%foreach (StudentDto sDto in Model.Interviewed)
+                <%foreach (ProjectDto pDto in Model.Interviewed)
                   {%>
-                  <option value="<%=sDto.Id %>"><%=sDto.FullName %></option>
+                  <option value="<%=pDto.Id %>"><%=pDto.Name%></option>
                 <%} %>
                 </select>
             </li>
@@ -64,3 +64,5 @@
     </div>
 
 </asp:Content>
+
+

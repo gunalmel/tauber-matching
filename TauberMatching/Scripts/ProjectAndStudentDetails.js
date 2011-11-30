@@ -1,5 +1,5 @@
 ﻿/**
-* @fileOverview Js file to help user interaction on Project Details page to let user match students with a project.
+* @fileOverview Js file to help user interaction on Project and Student Details page to let user match students with a project.
 * @author Melih Gunal 11/28/2011
 */
 var selInterviewed;

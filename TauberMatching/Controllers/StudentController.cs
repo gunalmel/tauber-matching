@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TauberMatching.Models;
+using TauberMatching.Services;
 
 namespace TauberMatching.Controllers
 {
@@ -23,9 +24,36 @@ namespace TauberMatching.Controllers
         //
         // GET: /Student/Details/5
         //TODO #19 Display project-student matchings and let admin user add new student matching
+        [HttpGet]
         public ActionResult Details(int id)
         {
-            return View();
+            return View(StudentService.GetStudentDetailsModelForStudent(id));
+        }
+        [HttpPost]
+        public ActionResult Details(int id, FormCollection form)
+        {
+            int[] projectIdsToAdd = null;
+            string formInput;
+            try
+            {
+                if ((formInput = form["selectInterviewed"]) != null)
+                {
+                    projectIdsToAdd = formInput.Split(',').Select(s => Convert.ToInt32(s)).ToArray();
+                    StudentService.ReplaceMatchingsForStudentWith(id, projectIdsToAdd);
+                }
+                else
+                {
+                    StudentService.DeleteMatchingsForStudent(id);
+                }
+                TempData["message"] = "Your changes are saved.";
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error during updating the project list for a student with id: " + id.ToString(), ex.InnerException != null ? ex.InnerException : ex);
+                TempData["error"] = true;
+                TempData["message"] = "An error occured while updating the student. Contact your system administrator with the following info: Student id:" + id.ToString() + " Timestamp of the incident: " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt");
+            }
+            return RedirectToAction("Details", new { id = id });
         }
 
         //

@@ -81,7 +81,7 @@ namespace TauberMatching.Controllers
             }
             catch (Exception ex)
             {
-                log.Info("Error during updating the student list for a project with id: " + id.ToString(), ex.InnerException!=null?ex.InnerException:ex);
+                log.Error("Error during updating the student list for a project with id: " + id.ToString(), ex.InnerException!=null?ex.InnerException:ex);
                 TempData["error"] = true;
                 TempData["message"] = "An error occured while updating the project. Contact your system administrator with the following info: Project id:"+id.ToString()+" Timestamp of the incident: "+DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt");
             }

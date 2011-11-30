@@ -121,11 +121,20 @@ namespace TauberMatching.Services
         {
             using (MatchingDB db = new MatchingDB())
             {
-                Project project = db.Projects.Where(p => p.Id == projectId).FirstOrDefault();
+                Project project = db.Projects.Include("Matchings.Student").Where(p => p.Id == projectId).FirstOrDefault();
                 var existingMatchings = project.Matchings.ToList();
+                // Find the children collection of students that used be matching the project but will not be matching following the deletion.
+                var studentsRemovedFromProject = existingMatchings.Select(m => m.Student.Id).ToList();
+                var studentFeedbacksToBeDeleted = db.StudentFeedbacks.Where(sf => sf.Project.Id == projectId && studentsRemovedFromProject.Contains(sf.Student.Id)).ToList();
+                
                 project.Matchings.Clear();
                 foreach (Matching m in existingMatchings)
                     db.Matchings.Remove(m);
+
+                #region Clear the collection for the students deleted off the db.
+                foreach (StudentFeedback sf in studentFeedbacksToBeDeleted)
+                    db.StudentFeedbacks.Remove(sf);
+                #endregion
                 db.SaveChanges();
             }
         }
@@ -133,22 +142,51 @@ namespace TauberMatching.Services
         /// <summary>
         /// Replaces all the matching students within the list of matching objects of a project with the students specified by student id array provided as argument.
         /// </summary>
-        /// <param name="studentIdsToAdd">List of student identifiers that will constitute the new matching list of th given project</param>
+        /// <param name="studentIdsToAdd">List of student identifiers that will constitute the new matching list of the given project</param>
         public static void ReplaceMatchingsForProjectWith(int projectId, int[] studentIdsToAdd)
         {
             using (MatchingDB db = new MatchingDB())
             {
-                Project project = db.Projects.Where(p => p.Id == projectId).FirstOrDefault();
+                Project project = db.Projects.Include("Matchings.Student").Where(p => p.Id == projectId).FirstOrDefault();
                 ICollection<Matching> matchings = new List<Matching>();
+                // Find the children collection of students that used be matching the project but will not be matching following the replacement.
+                var studentsRemovedFromProject = db.Matchings.Include("Student.StudentFeedbacks").Where(m=>m.Project.Id==projectId&&!studentIdsToAdd.Contains(m.Student.Id)).Select(m=>m.Student.Id);
+                var studentFeedbacksToBeDeleted = db.StudentFeedbacks.Where(sf => sf.Project.Id == projectId && studentsRemovedFromProject.Contains(sf.Student.Id));
+                
                 foreach (int studentId in studentIdsToAdd)
                 {
                     Student st = db.Students.Where(s => s.Id == studentId).FirstOrDefault();
-                    Matching m = new Matching() { Project = project, Student = st };
+                    Matching m = new Matching() { Project = project, Student = st,ProjectScore=ProjectScore.NoScore.ToString(), StudentScore=StudentScore.NoScore.ToString() };
                     matchings.Add(m);
                 }
+                #region Clear the collection for the students replaced off the db.
+                foreach (StudentFeedback sf in studentFeedbacksToBeDeleted)
+                    db.StudentFeedbacks.Remove(sf);
+                #endregion
+
                 project.Matchings = matchings;
                 db.SaveChanges();
             }
+        }
+
+        public static IList<ProjectDto> GetProjecDtoNotMatchingStudent(int studentId)
+        {
+            IList<ProjectDto> projects = null;
+            using (MatchingDB db = new MatchingDB())
+            {
+                projects = db.Projects.Where(s => !s.Matchings.Select(m => m.Student.Id).Contains(studentId)).OrderBy(p => p.Name).Select(p => new ProjectDto() { Id = p.Id, Name = p.Name }).ToList();
+            }
+            return projects;
+        }
+
+        public static IList<ProjectDto> GetProjectDtoForStudent(int studentId)
+        {
+            IList<ProjectDto> projects = null;
+            using (MatchingDB db = new MatchingDB())
+            {
+                projects = db.Projects.Where(s => s.Matchings.Select(m => m.Student.Id).Contains(studentId)).OrderBy(p => p.Name).Select(p => new ProjectDto() { Id = p.Id, Name = p.Name }).ToList();
+            }
+            return projects;
         }
     }
 }

@@ -91,5 +91,73 @@ namespace TauberMatching.Services
             }
             return students;
         }
+        /// <summary>
+        /// Deletes all matching objects for a given student from the database.
+        /// </summary>
+        /// <param name="studentId">Student identifier</param>
+        public static void DeleteMatchingsForStudent(int studentId)
+        {
+            using (MatchingDB db = new MatchingDB())
+            {
+                Student student = db.Students.Include("Matchings.Project").Where(s => s.Id == studentId).FirstOrDefault();
+                var existingMatchings = student.Matchings.ToList();
+                // Find the studentfeedbacks for the projects that appears in the matchings to be deleted and delete them.
+                var projectsRemovedFromStudent = existingMatchings.Select(m => m.Project.Id).ToList();
+                var studentFeedbacksToBeDeleted = db.StudentFeedbacks.Where(sf => projectsRemovedFromStudent.Contains(sf.Project.Id) && sf.Student.Id==studentId).ToList();
+
+                student.Matchings.Clear();
+                foreach (Matching m in existingMatchings)
+                    db.Matchings.Remove(m);
+
+                #region Delete the student feedbacks of the student for the projects that appeared in the matchings deleted.
+                foreach (StudentFeedback sf in studentFeedbacksToBeDeleted)
+                    db.StudentFeedbacks.Remove(sf);
+                #endregion
+                db.SaveChanges();
+            }
+        }
+        /// <summary>
+        /// Replaces all the matching students within the list of matching objects of a student with the projects specified by project id array provided as argument.
+        /// </summary>
+        /// <param name="projectIdsToAdd">List of project identifiers that will constitute the new matching list of the given student</param>
+        public static void ReplaceMatchingsForStudentWith(int studentId, int[] projectIdsToAdd)
+        {
+            using (MatchingDB db = new MatchingDB())
+            {
+                Student student = db.Students.Include("Matchings.Project").Where(s => s.Id == studentId).FirstOrDefault();
+                ICollection<Matching> matchings = new List<Matching>();
+                var projectsRemovedFromStudent = db.Matchings.Where(m => m.Student.Id == studentId && !projectIdsToAdd.Contains(m.Project.Id)).Select(m => m.Project.Id).ToList();
+                var studentFeedbacksToBeDeleted = db.StudentFeedbacks.Where(sf => projectsRemovedFromStudent.Contains(sf.Project.Id) && sf.Student.Id == studentId).ToList();
+
+                foreach (int projectId in projectIdsToAdd)
+                {
+                    Project project = db.Projects.Where(p => p.Id == projectId).FirstOrDefault();
+                    Matching m = new Matching() { Student = student, Project = project, ProjectScore = ProjectScore.NoScore.ToString(), StudentScore = StudentScore.NoScore.ToString() };
+                    matchings.Add(m);
+                }
+
+                #region Delete the student feedbacks of the student for the projects that appeared in the matchings that were replaced
+                foreach (StudentFeedback sf in studentFeedbacksToBeDeleted)
+                    db.StudentFeedbacks.Remove(sf);
+                #endregion
+                student.Matchings = matchings;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Returns the model that will be returned to the details view that is returned by projects controller's details action method
+        /// </summary>
+        /// <param name="studentId">Project Identifier</param>
+        /// <returns><see cref="StudentDetailsModel"/></returns>
+        public static StudentDetailsModel GetStudentDetailsModelForStudent(int studentId)
+        {
+            Student student = null;
+            using (MatchingDB db = new MatchingDB())
+            {
+                student = db.Students.Where(s => s.Id == studentId).FirstOrDefault();
+            }
+            return new StudentDetailsModel(student.Id, student.FullName, ProjectService.GetProjecDtoNotMatchingStudent(studentId), ProjectService.GetProjectDtoForStudent(studentId));
+        }
     }
 }
