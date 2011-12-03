@@ -222,8 +222,12 @@ namespace TauberMatching.Services
             using (MatchingDB db = new MatchingDB())
             {
                 var projectRejectsToDelete = db.Projects.Where(p => projectIds.Contains(p.Id)).Select(p => p.ProjectRejects.Where(pr=>pr.Student.Id==studentId).FirstOrDefault());
+
                 foreach (ProjectReject pr in projectRejectsToDelete)
-                    db.ProjectRejects.Remove(pr);
+                {
+                    if (pr != null) // The projection above would insert null into projectRejectsToDelete list for the studentId when the project has not rejected that student.
+                        db.ProjectRejects.Remove(pr);
+                }
                 db.SaveChanges();
             }
         }

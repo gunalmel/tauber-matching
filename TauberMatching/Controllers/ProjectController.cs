@@ -16,8 +16,7 @@ namespace TauberMatching.Controllers
         public ActionResult Index()
         {
             MatchingDB db = new MatchingDB();
-            var projects = db.Projects.ToList();
-            Project p = projects.FirstOrDefault();
+            var projects = db.Projects.Include("Matchings").OrderBy(pr=>pr.Name).ToList();
             db.Dispose();
             return View(projects);
         }

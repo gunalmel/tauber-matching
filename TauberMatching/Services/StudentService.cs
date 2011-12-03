@@ -130,6 +130,7 @@ namespace TauberMatching.Services
             {
                 Student student = db.Students.Include("Matchings.Project").Where(s => s.Id == studentId).FirstOrDefault();
                 ICollection<Matching> matchings = new List<Matching>();
+                var existingMatchingsToBeReplaced = db.Matchings.ToList();
                 var projectsRemovedFromStudent = db.Matchings.Where(m => m.Student.Id == studentId && !projectIdsToAdd.Contains(m.Project.Id)).Select(m => m.Project.Id).ToArray();
                 var studentFeedbacksToBeDeleted = db.StudentFeedbacks.Where(sf => projectsRemovedFromStudent.Contains(sf.Project.Id) && sf.Student.Id == studentId).ToList();
 
@@ -140,9 +141,11 @@ namespace TauberMatching.Services
                     matchings.Add(m);
                 }
 
-                #region Delete the student feedbacks of the student for the projects that appeared in the matchings that were replaced
+                #region Delete the student feedbacks and matchings to be removed of the student for the projects that appeared in the matchings that were replaced
                 foreach (StudentFeedback sf in studentFeedbacksToBeDeleted)
                     db.StudentFeedbacks.Remove(sf);
+                foreach (Matching m in existingMatchingsToBeReplaced)
+                    db.Matchings.Remove(m);
                 #endregion
                 student.Matchings = matchings;
                 db.SaveChanges();

@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<IEnumerable<TauberMatching.Models.Project>>" %>
+﻿<%@ Import Namespace="TauberMatching.Services" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<IEnumerable<TauberMatching.Models.Project>>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Tauber Matching - Projects
@@ -98,6 +99,7 @@
             <th>Contact Email</th>
             <th>URL Emailed?</th>
             <th>Contact Phone</th>
+            <th>Access Link</th>
             <th>Comments</th>
         </tr>
 
@@ -119,6 +121,17 @@
             <td><%: item.ContactEmail %></td>
             <td align="center"><%: Html.CheckBox("chkEmailed_"+item.Id, item.Emailed, new { disabled = "disabled" })%></td>
             <td><%: item.ContactPhone %></td>
+                        <td>
+                <% if (item.Matchings != null && item.Matchings.Count != 0)
+                   {%>
+                <a id="hl_<%: item.Id %>" href="<%=TauberMatching.Services.UrlHelper.GetAccessUrlForTheUser(item.Guid,UrlType.Project) %>">Rank Students</a>
+                <%}
+                   else
+                   {%>
+                <b>Click on details to match with students first</b>
+                <%} %>
+                
+            </td>
             <td><%: item.Comments %></td>
         </tr>
     <% } %>
