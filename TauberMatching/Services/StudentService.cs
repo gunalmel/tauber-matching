@@ -102,18 +102,22 @@ namespace TauberMatching.Services
                 Student student = db.Students.Include("Matchings.Project").Where(s => s.Id == studentId).FirstOrDefault();
                 var existingMatchings = student.Matchings.ToList();
                 // Find the studentfeedbacks for the projects that appears in the matchings to be deleted and delete them.
-                var projectsRemovedFromStudent = existingMatchings.Select(m => m.Project.Id).ToList();
-                var studentFeedbacksToBeDeleted = db.StudentFeedbacks.Where(sf => projectsRemovedFromStudent.Contains(sf.Project.Id) && sf.Student.Id==studentId).ToList();
+                var studentFeedbacksToBeDeleted = db.StudentFeedbacks.Where(sf => sf.Student.Id==studentId).ToList();
+                var userType=ContactType.Student.ToString();
+                var userErrorsToBeDeleted = db.UserErrors.Where(ue => ue.UserId == studentId && ue.UserType == userType).ToList();
 
                 student.Matchings.Clear();
                 foreach (Matching m in existingMatchings)
                     db.Matchings.Remove(m);
 
-                #region Delete the student feedbacks of the student for the projects that appeared in the matchings deleted.
+                #region Delete the student feedbacks and user error logs of the student for the projects that appeared in the matchings deleted.
                 foreach (StudentFeedback sf in studentFeedbacksToBeDeleted)
                     db.StudentFeedbacks.Remove(sf);
+                foreach (UserError ue in userErrorsToBeDeleted)
+                    db.UserErrors.Remove(ue);
                 #endregion
                 db.SaveChanges();
+                ProjectService.DeleteProjectRejectsReferencingStudent(studentId);
             }
         }
         /// <summary>
@@ -126,7 +130,7 @@ namespace TauberMatching.Services
             {
                 Student student = db.Students.Include("Matchings.Project").Where(s => s.Id == studentId).FirstOrDefault();
                 ICollection<Matching> matchings = new List<Matching>();
-                var projectsRemovedFromStudent = db.Matchings.Where(m => m.Student.Id == studentId && !projectIdsToAdd.Contains(m.Project.Id)).Select(m => m.Project.Id).ToList();
+                var projectsRemovedFromStudent = db.Matchings.Where(m => m.Student.Id == studentId && !projectIdsToAdd.Contains(m.Project.Id)).Select(m => m.Project.Id).ToArray();
                 var studentFeedbacksToBeDeleted = db.StudentFeedbacks.Where(sf => projectsRemovedFromStudent.Contains(sf.Project.Id) && sf.Student.Id == studentId).ToList();
 
                 foreach (int projectId in projectIdsToAdd)
@@ -142,6 +146,7 @@ namespace TauberMatching.Services
                 #endregion
                 student.Matchings = matchings;
                 db.SaveChanges();
+                ProjectService.DeleteProjectRejectsReferencingStudentForProjects(studentId, projectsRemovedFromStudent);
             }
         }
 
@@ -158,6 +163,19 @@ namespace TauberMatching.Services
                 student = db.Students.Where(s => s.Id == studentId).FirstOrDefault();
             }
             return new StudentDetailsModel(student.Id, student.FullName, ProjectService.GetProjecDtoNotMatchingStudent(studentId), ProjectService.GetProjectDtoForStudent(studentId));
+        }
+
+        public static Student DeleteStudent(int studentId)
+        {
+            Student s = null;
+            DeleteMatchingsForStudent(studentId);
+            using (MatchingDB db = new MatchingDB())
+            {
+                s = db.Students.SingleOrDefault(st => st.Id == studentId);
+                db.Students.Remove(s);
+                db.SaveChanges();
+            }
+            return s;
         }
     }
 }

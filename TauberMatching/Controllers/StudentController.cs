@@ -10,13 +10,13 @@ namespace TauberMatching.Controllers
 {
     public class StudentController : Controller
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ProjectController));
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(StudentController));
         private String uniqueNameErrorMsg = "There's already an existing student with the unique name you specified.";
 
         public ActionResult Index()
         {
             MatchingDB db = new MatchingDB();
-            var students = db.Students.ToList();
+            var students = db.Students.Include("Matchings").OrderBy(s=>s.FirstName).ThenBy(s=>s.LastName).ToList();
             db.Dispose();
             return View(students);
         }
@@ -127,12 +127,19 @@ namespace TauberMatching.Controllers
  
         public ActionResult Delete(int id)
         {
-            MatchingDB db = new MatchingDB();
-            Student s = db.Students.SingleOrDefault(st => st.Id == id);
-            db.Students.Remove(s);
-            db.SaveChanges();
-            TempData["message"] = "Student \"" + s.FirstName+" "+s.LastName + "\" is deleted.";
-            db.Dispose();
+            Student s;
+            string message = "";
+            try
+            {
+                s=StudentService.DeleteStudent(id);
+                message = "Student record for "+s.FullName+" is deleted.";
+            }
+            catch (Exception ex)
+            {
+                log.Error("Unexpected error while deleting student with id: " + id.ToString(), ex.InnerException??ex);
+                message = "Unexpected error while deleting the student with id: "+id.ToString()+" Contact support with this id, date and time of the error.";
+            }
+            TempData["message"] = message;
             return RedirectToAction("Index");
         }
 

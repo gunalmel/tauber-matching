@@ -23,6 +23,5 @@ namespace TauberMatching.Models
         {
             Database.SetInitializer<MatchingDB>(new DropCreateDatabaseIfModelChanges<MatchingDB>());
         }
-        
     }
 }

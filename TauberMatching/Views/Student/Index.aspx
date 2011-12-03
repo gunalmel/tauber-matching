@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<IEnumerable<TauberMatching.Models.Student>>" %>
+﻿<%@ Import Namespace="TauberMatching.Services" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<IEnumerable<TauberMatching.Models.Student>>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Index
@@ -98,6 +99,7 @@
             <th>Degree</th>
             <th>Email</th>
             <th>URL Emailed?</th>
+            <th>Access Url</th>
             <th>Comments</th>
         </tr>
 
@@ -119,6 +121,17 @@
             <td><%: item.Degree %></td>
             <td><%: item.Email %></td>
             <td align="center"><%: Html.CheckBox("chkEmailed_"+item.Id, item.Emailed, new { disabled = "disabled" })%></td>
+            <td>
+                <% if (item.Matchings != null && item.Matchings.Count != 0)
+                   {%>
+                <a id="hl_<%: item.Id %>" href="<%=TauberMatching.Services.UrlHelper.GetAccessUrlForTheUser(item.Guid,UrlType.Student) %>">Rank Projects</a>
+                <%}
+                   else
+                   {%>
+                <b>Click on details to match with projects first</b>
+                <%} %>
+                
+            </td>
             <td><%: item.Comments %></td>
         </tr>
     <% } %>

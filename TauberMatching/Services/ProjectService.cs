@@ -126,6 +126,8 @@ namespace TauberMatching.Services
                 // Find the children collection of students that used be matching the project but will not be matching following the deletion.
                 var studentsRemovedFromProject = existingMatchings.Select(m => m.Student.Id).ToList();
                 var studentFeedbacksToBeDeleted = db.StudentFeedbacks.Where(sf => sf.Project.Id == projectId && studentsRemovedFromProject.Contains(sf.Student.Id)).ToList();
+                var userType = ContactType.Student.ToString();
+                var userErrorsToBeDeleted = db.UserErrors.Where(ue => ue.UserId == projectId && ue.UserType == userType).ToList();
                 
                 project.Matchings.Clear();
                 foreach (Matching m in existingMatchings)
@@ -134,6 +136,8 @@ namespace TauberMatching.Services
                 #region Clear the collection for the students deleted off the db.
                 foreach (StudentFeedback sf in studentFeedbacksToBeDeleted)
                     db.StudentFeedbacks.Remove(sf);
+                foreach (UserError ue in userErrorsToBeDeleted)
+                    db.UserErrors.Remove(ue);
                 #endregion
                 db.SaveChanges();
             }
@@ -187,6 +191,41 @@ namespace TauberMatching.Services
                 projects = db.Projects.Where(s => s.Matchings.Select(m => m.Student.Id).Contains(studentId)).OrderBy(p => p.Name).Select(p => new ProjectDto() { Id = p.Id, Name = p.Name }).ToList();
             }
             return projects;
+        }
+
+        public static Project DeleteProject(int projectId)
+        {
+            Project p = null;
+            DeleteMatchingsForProject(projectId);
+            using (MatchingDB db = new MatchingDB())
+            {
+                p = db.Projects.SingleOrDefault(pr => pr.Id == projectId);
+                db.Projects.Remove(p);
+                db.SaveChanges();
+            }
+            return p;
+        }
+
+        public static void DeleteProjectRejectsReferencingStudent(int studentId)
+        {
+            using(MatchingDB db = new MatchingDB())
+            {
+                var projectRejectsToDelete = db.ProjectRejects.Where(pr => pr.Student.Id == studentId).ToList();
+                foreach (ProjectReject pr in projectRejectsToDelete)
+                    db.ProjectRejects.Remove(pr);
+                db.SaveChanges();
+            }
+        }
+
+        public static void DeleteProjectRejectsReferencingStudentForProjects(int studentId, params int[] projectIds)
+        {
+            using (MatchingDB db = new MatchingDB())
+            {
+                var projectRejectsToDelete = db.Projects.Where(p => projectIds.Contains(p.Id)).Select(p => p.ProjectRejects.Where(pr=>pr.Student.Id==studentId).FirstOrDefault());
+                foreach (ProjectReject pr in projectRejectsToDelete)
+                    db.ProjectRejects.Remove(pr);
+                db.SaveChanges();
+            }
         }
     }
 }
