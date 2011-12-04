@@ -43,8 +43,9 @@ namespace TauberMatching.Controllers
                 InsertIntoTempTableUsingEF(ReadUploadedExcelFile(path));
                 DataMigrationService dm = new DataMigrationService();
                 dm.MigrateFromUploadedEntities();
+                TempData["message"] = "File is uploaded.";
             }
-            return View();
+            return RedirectToAction("UploadMatchingFile");
         }
         /// <summary>
         /// Reads uploaded Excel file mapping columns to object properties by reading the first row as the header line.

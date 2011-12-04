@@ -103,7 +103,6 @@ namespace TauberMatching.Models
         public Guid Guid { get; set; }
         public virtual ICollection<Matching> Matchings { get; set; }
         public virtual ICollection<EmailLog> EmailLogs { get; set; }
-        public virtual ICollection<UserError> UserErrorLogs { get; set; }
         public virtual ICollection<StudentFeedback> StudentFeedbacks { get; set; }
         /// <summary>
         /// Comments provided by the student at the time when the student is submitting preferences.

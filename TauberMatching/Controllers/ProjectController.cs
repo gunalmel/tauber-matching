@@ -89,12 +89,19 @@ namespace TauberMatching.Controllers
 
         public ActionResult Delete(int id)
         {
-            MatchingDB db = new MatchingDB();
-            Project p = db.Projects.SingleOrDefault(pr => pr.Id == id);
-            db.Projects.Remove(p);
-            db.SaveChanges();
-            TempData["message"] = "Project \"" + p.Name + "\" is deleted.";
-            db.Dispose();
+            Project p;
+            string message = "";
+            try
+            {
+                p = ProjectService.DeleteProject(id);
+                message = "Project " + p.Name + " is deleted.";
+            }
+            catch (Exception ex)
+            {
+                log.Error("Unexpected error while deleting project with id: " + id.ToString(), ex.InnerException ?? ex);
+                message = "Unexpected error while deleting the project with id: " + id.ToString() + " Contact support with the error messge, project id, date and time of the error.";
+            }
+            TempData["message"] = message;
             return RedirectToAction("Index");
         }
 

@@ -15,7 +15,7 @@ namespace TauberMatching.Models
         public ContactType ContactType { get; set; }
         public string Email { get; set; }
         public Guid Guid{get;set;}
-        public Contact() { this.ContactType = ContactType.Project; }
+        public Contact() { }
         public Contact(int id, Guid guid, string email, string firtName, string lastName,ContactType cType)
         {
             Id = id; Guid = guid; Email = email; FirstName = FirstName; LastName = lastName; ContactType = cType;

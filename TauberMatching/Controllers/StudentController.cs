@@ -137,7 +137,7 @@ namespace TauberMatching.Controllers
             catch (Exception ex)
             {
                 log.Error("Unexpected error while deleting student with id: " + id.ToString(), ex.InnerException??ex);
-                message = "Unexpected error while deleting the student with id: "+id.ToString()+" Contact support with this id, date and time of the error.";
+                message = "Unexpected error while deleting the student with id: "+id.ToString()+" Contact support with error message, student id, date and time of the error.";
             }
             TempData["message"] = message;
             return RedirectToAction("Index");

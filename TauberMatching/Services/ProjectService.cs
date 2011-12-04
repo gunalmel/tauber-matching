@@ -121,25 +121,22 @@ namespace TauberMatching.Services
         {
             using (MatchingDB db = new MatchingDB())
             {
-                Project project = db.Projects.Include("Matchings.Student").Where(p => p.Id == projectId).FirstOrDefault();
+                Project project = db.Projects.Include("Matchings.Student").Include("ProjectRejects").Where(p => p.Id == projectId).FirstOrDefault();
                 var existingMatchings = project.Matchings.ToList();
                 // Find the children collection of students that used be matching the project but will not be matching following the deletion.
-                var studentsRemovedFromProject = existingMatchings.Select(m => m.Student.Id).ToList();
-                var studentFeedbacksToBeDeleted = db.StudentFeedbacks.Where(sf => sf.Project.Id == projectId && studentsRemovedFromProject.Contains(sf.Student.Id)).ToList();
-                var userType = ContactType.Student.ToString();
-                var userErrorsToBeDeleted = db.UserErrors.Where(ue => ue.UserId == projectId && ue.UserType == userType).ToList();
+                var studentsRemovedFromProject = existingMatchings.Select(m => m.Student.Id).ToArray();
+                var projectRejectsToRemove =project.ProjectRejects.Where(pr=>studentsRemovedFromProject.Contains(pr.Student.Id)).ToList();
                 
                 project.Matchings.Clear();
                 foreach (Matching m in existingMatchings)
                     db.Matchings.Remove(m);
 
                 #region Clear the collection for the students deleted off the db.
-                foreach (StudentFeedback sf in studentFeedbacksToBeDeleted)
-                    db.StudentFeedbacks.Remove(sf);
-                foreach (UserError ue in userErrorsToBeDeleted)
-                    db.UserErrors.Remove(ue);
+                foreach (ProjectReject pr in projectRejectsToRemove)
+                    db.ProjectRejects.Remove(pr);
                 #endregion
                 db.SaveChanges();
+                StudentService.DeleteStudentFeedbacksReferencingProject(projectId);
             }
         }
 
@@ -151,12 +148,13 @@ namespace TauberMatching.Services
         {
             using (MatchingDB db = new MatchingDB())
             {
-                Project project = db.Projects.Include("Matchings.Student").Where(p => p.Id == projectId).FirstOrDefault();
+                Project project = db.Projects.Include("Matchings.Student").Include("ProjectRejects").Where(p => p.Id == projectId).FirstOrDefault();
                 ICollection<Matching> matchings = new List<Matching>();
+                var existingMatchingsToBeReplaced = db.Matchings.Where(m=>m.Project.Id==projectId).ToList();
                 // Find the children collection of students that used be matching the project but will not be matching following the replacement.
-                var studentsRemovedFromProject = db.Matchings.Include("Student.StudentFeedbacks").Where(m=>m.Project.Id==projectId&&!studentIdsToAdd.Contains(m.Student.Id)).Select(m=>m.Student.Id);
-                var studentFeedbacksToBeDeleted = db.StudentFeedbacks.Where(sf => sf.Project.Id == projectId && studentsRemovedFromProject.Contains(sf.Student.Id));
-                
+                var studentsRemovedFromProject = db.Matchings.Include("Student.StudentFeedbacks").Where(m=>m.Project.Id==projectId&&!studentIdsToAdd.Contains(m.Student.Id)).Select(m=>m.Student.Id).ToArray();
+                var projectRejectsToRemove = project.ProjectRejects.Where(pr => studentsRemovedFromProject.Contains(pr.Student.Id)).ToList();
+
                 foreach (int studentId in studentIdsToAdd)
                 {
                     Student st = db.Students.Where(s => s.Id == studentId).FirstOrDefault();
@@ -164,12 +162,15 @@ namespace TauberMatching.Services
                     matchings.Add(m);
                 }
                 #region Clear the collection for the students replaced off the db.
-                foreach (StudentFeedback sf in studentFeedbacksToBeDeleted)
-                    db.StudentFeedbacks.Remove(sf);
+                foreach (ProjectReject pr in projectRejectsToRemove)
+                    db.ProjectRejects.Remove(pr);
+                foreach (Matching m in existingMatchingsToBeReplaced)
+                    db.Matchings.Remove(m);
                 #endregion
 
                 project.Matchings = matchings;
                 db.SaveChanges();
+                StudentService.DeleteStudentFeedbacksReferencingProjectForStudents(projectId, studentsRemovedFromProject);
             }
         }
 
@@ -231,5 +232,6 @@ namespace TauberMatching.Services
                 db.SaveChanges();
             }
         }
+
     }
 }

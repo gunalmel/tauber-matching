@@ -92,7 +92,6 @@ namespace TauberMatching.Models
         public string ContactPhone { get; set; }
         public virtual ICollection<Matching> Matchings { get; set; }
         public virtual ICollection<EmailLog> EmailLogs { get; set; }
-        public virtual ICollection<UserError> UserErrorLogs { get; set; }
         public virtual ICollection<ProjectReject> ProjectRejects { get; set; }
         /// <summary>
         /// Feedback provided by the project owner as owner submitted student preferences

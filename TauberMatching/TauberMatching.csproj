@@ -185,6 +185,7 @@
     <Content Include="Content\images\wait.gif" />
     <Content Include="Content\ProjectAndStudentDetails.css" />
     <Content Include="Content\RankProjects.css" />
+    <Content Include="Scripts\AdminContactIndex.js" />
     <Content Include="Scripts\ProjectAndStudentDetails.js" />
     <Content Include="Scripts\RankProjects.js" />
     <Content Include="Scripts\Helper.js" />
