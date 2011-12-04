@@ -15,7 +15,7 @@
         var duplicateSendEmail = false;
         $(document).ready(function () {
             // Make the header checkbox select all checkbox
-            $("[id=chkAll]").live("click", function () { $("input[type=checkbox][id*=chkSelect]").attr('checked', $(this).attr("checked")); });
+            $("#chkAll").live("click", function () { var checked = this.checked; $("input[type=checkbox][id*=chkSelect]").attr('checked', checked); });
             $.ajaxSetup({ type: "POST", contentType: "application/json;charset=utf-8", dataType: "json", processData: false });
         });
         function sendMail() {
