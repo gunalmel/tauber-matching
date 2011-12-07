@@ -126,7 +126,7 @@ namespace TauberMatching.Services
             {
                 Student student = db.Students.Include("Matchings.Project").Include("StudentFeedbacks").Where(s => s.Id == studentId).FirstOrDefault();
                 ICollection<Matching> matchings = new List<Matching>();
-                var existingMatchingsToBeReplaced = db.Matchings.Where(s=>s.Id==studentId).ToList();
+                var existingMatchingsToBeReplaced = db.Matchings.Where(m=>m.Student.Id==studentId).ToList();
                 var projectsRemovedFromStudent = db.Matchings.Where(m => m.Student.Id == studentId && !projectIdsToAdd.Contains(m.Project.Id)).Select(m => m.Project.Id).ToArray();
                 var studentFeedbacksToBeDeleted = student.StudentFeedbacks.Where(sf => projectsRemovedFromStudent.Contains(sf.Project.Id)).ToList();//db.StudentFeedbacks.Where(sf => projectsRemovedFromStudent.Contains(sf.Project.Id) && sf.Student.Id == studentId).ToList();
 

@@ -95,7 +95,7 @@ namespace TauberMatching.Services
             IList<Project> projects = null;
             using (MatchingDB db = new MatchingDB())
             {
-               projects = db.Matchings.Where(m => m.Student.Id != studentId).Select(m => m.Project).Distinct().ToList();
+                projects = db.Projects.Where(p => !p.Matchings.Select(m=>m.Student.Id).Contains(studentId)).ToList();
             }
             return projects;
         }
@@ -136,7 +136,7 @@ namespace TauberMatching.Services
                     db.ProjectRejects.Remove(pr);
                 #endregion
                 db.SaveChanges();
-                StudentService.DeleteStudentFeedbacksReferencingProject(projectId);
+             // Not needed because only non-matching students should be providing Positive|Constructive Feedback StudentService.DeleteStudentFeedbacksReferencingProjectForStudents(projectId, studentsRemovedFromProject);
             }
         }
 
@@ -170,7 +170,7 @@ namespace TauberMatching.Services
 
                 project.Matchings = matchings;
                 db.SaveChanges();
-                StudentService.DeleteStudentFeedbacksReferencingProjectForStudents(projectId, studentsRemovedFromProject);
+                // Not needed because only non-matching students should be providing Positive|Constructive Feedback StudentService.DeleteStudentFeedbacksReferencingProjectForStudents(projectId, studentsRemovedFromProject);
             }
         }
 

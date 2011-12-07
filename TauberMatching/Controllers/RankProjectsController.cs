@@ -47,6 +47,7 @@ namespace TauberMatching.Controllers
             {
                 foreach (StudentFeedbackDto sfDto in preferencesDto.StudentFeedback)
                 {
+                    // TODO If a project is assigned multiple feedback scores find and clean it here.
                     StudentFeedback sf = new StudentFeedback() { Student=student, Type = sfDto.Type };
                     sf.Project = db.Projects.Where(p => p.Id == sfDto.ProjectId).FirstOrDefault();
                     sf.FeedbackScore = Int16.Parse(sfDto.FeedbackScore);
