@@ -101,14 +101,13 @@ namespace TauberMatching.Services
             {
                 Student student = db.Students.Include("Matchings.Project").Include("StudentFeedbacks").Where(s => s.Id == studentId).FirstOrDefault();
                 var existingMatchings = student.Matchings.ToList();
-                // Find the studentfeedbacks for the projects that appears in the matchings to be deleted and delete them.
-                var studentFeedbacksToBeDeleted = student.StudentFeedbacks.Where(sf => sf.Student.Id==studentId).ToList();
+                var studentFeedbacksToBeDeleted = student.StudentFeedbacks.ToList();
 
                 student.Matchings.Clear();
                 foreach (Matching m in existingMatchings)
                     db.Matchings.Remove(m);
 
-                #region Delete the student feedbacks and user error logs of the student for the projects that appeared in the matchings deleted.
+                #region Delete the student feedbacks of the student for the projects that appeared in the matchings deleted.
                 foreach (StudentFeedback sf in studentFeedbacksToBeDeleted)
                     db.StudentFeedbacks.Remove(sf);
                 #endregion
@@ -128,7 +127,7 @@ namespace TauberMatching.Services
                 ICollection<Matching> matchings = new List<Matching>();
                 var existingMatchingsToBeReplaced = db.Matchings.Where(m=>m.Student.Id==studentId).ToList();
                 var projectsRemovedFromStudent = db.Matchings.Where(m => m.Student.Id == studentId && !projectIdsToAdd.Contains(m.Project.Id)).Select(m => m.Project.Id).ToArray();
-                var studentFeedbacksToBeDeleted = student.StudentFeedbacks.Where(sf => projectsRemovedFromStudent.Contains(sf.Project.Id)).ToList();//db.StudentFeedbacks.Where(sf => projectsRemovedFromStudent.Contains(sf.Project.Id) && sf.Student.Id == studentId).ToList();
+                var studentFeedbacksToBeDeleted = student.StudentFeedbacks.ToList();//db.StudentFeedbacks.Where(sf => projectsRemovedFromStudent.Contains(sf.Project.Id) && sf.Student.Id == studentId).ToList();
 
                 foreach (int projectId in projectIdsToAdd)
                 {

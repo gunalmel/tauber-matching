@@ -204,6 +204,7 @@ namespace TauberMatching.Services
                 db.Projects.Remove(p);
                 db.SaveChanges();
             }
+            StudentService.DeleteStudentFeedbacksReferencingProject(projectId);
             return p;
         }
 
