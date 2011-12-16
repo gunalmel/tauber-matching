@@ -182,6 +182,7 @@
     <None Include="_bin_deployableAssemblies\System.Data.SqlServerCe.dll" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
     <None Include="App_Data\MatchingDB.old" />
+    <Content Include="App_Data\MatchingDB.sdf" />
     <Content Include="Content\images\wait.gif" />
     <Content Include="Content\ProjectAndStudentDetails.css" />
     <Content Include="Content\RankProjects.css" />

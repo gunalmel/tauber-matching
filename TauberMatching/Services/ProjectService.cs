@@ -198,13 +198,13 @@ namespace TauberMatching.Services
         {
             Project p = null;
             DeleteMatchingsForProject(projectId);
+            StudentService.DeleteStudentFeedbacksReferencingProject(projectId);
             using (MatchingDB db = new MatchingDB())
             {
                 p = db.Projects.SingleOrDefault(pr => pr.Id == projectId);
                 db.Projects.Remove(p);
                 db.SaveChanges();
             }
-            StudentService.DeleteStudentFeedbacksReferencingProject(projectId);
             return p;
         }
 
