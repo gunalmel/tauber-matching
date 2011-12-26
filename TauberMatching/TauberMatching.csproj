@@ -43,6 +43,13 @@
     <Reference Include="Common.Logging.Log4Net">
       <HintPath>..\packages\Common.Logging.Log4Net.2.0.0\lib\2.0\Common.Logging.Log4Net.dll</HintPath>
     </Reference>
+    <Reference Include="DocumentFormat.OpenXml">
+      <HintPath>..\packages\DocumentFormat.OpenXml.1.0\lib\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml.Extensions, Version=2.1.3551.36646, Culture=neutral, PublicKeyToken=bebd372c505097f2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DocumentFormat.OpenXml.1.0\lib\DocumentFormat.OpenXml.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.4.1.10715.0\lib\EntityFramework.dll</HintPath>
     </Reference>
@@ -112,12 +119,15 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AppConfigController.cs" />
     <Compile Include="Controllers\EmailController.cs" />
+    <Compile Include="Controllers\ExcelControllerExtension.cs" />
     <Compile Include="Controllers\FileUploadController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Models\PreferencesDto.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -206,6 +216,7 @@
     <Content Include="Views\Project\Index.aspx" />
     <Content Include="Views\RankProjects\Index.aspx" />
     <Content Include="Views\RankStudents\Index.aspx" />
+    <Content Include="Views\Reports\Index.aspx" />
     <Content Include="Views\Student\Create.aspx" />
     <Content Include="Views\Student\Details.aspx" />
     <Content Include="Views\Student\Edit.aspx" />

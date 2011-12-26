@@ -35,6 +35,7 @@
             <th>Student Name</th>
             <th>Degree</th>
             <th>Email</th>
+            <th>Ranked</th>
             <th>URL Emailed?</th>
             <th>Access Url</th>
             <th>Comments</th>
@@ -59,6 +60,7 @@
             <td><%: item.Degree %></td>
             <td><%: item.Email %></td>
             <td align="center"><%: Html.CheckBox("chkEmailed_"+item.Id, item.Emailed, new { disabled = "disabled" })%></td>
+            <td align="center"><%: Html.CheckBox("chkRanked_"+item.Id, item.ScoreDate!=null, new { disabled = "disabled" })%></td>
             <td>
                 <% if (item.Matchings != null && item.Matchings.Count != 0)
                    {%>

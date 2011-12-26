@@ -58,6 +58,8 @@
                         <%: Html.ActionLink("Students", "Index", "Student")%></li>
                     <li>
                         <%: Html.ActionLink("Upload Matching File", "UploadMatchingFile", "FileUpload")%></li>
+                    <li>
+                        <%: Html.ActionLink("Reports", "Index", "Reports")%></li>
                 </ul>
             </div>
         </div>

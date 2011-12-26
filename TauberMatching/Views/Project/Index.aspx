@@ -36,6 +36,7 @@
             <th>Contact Name</th>
             <th>Contact Email</th>
             <th>URL Emailed?</th>
+            <th>Ranked</th>
             <th>Contact Phone</th>
             <th>Access Link</th>
             <th>Comments</th>
@@ -59,6 +60,7 @@
             <td><%: item.ContactFullName %></td>
             <td><%: item.ContactEmail %></td>
             <td align="center"><%: Html.CheckBox("chkEmailed_"+item.Id, item.Emailed, new { disabled = "disabled" })%></td>
+            <td align="center"><%: Html.CheckBox("chkRanked_"+item.Id, item.ScoreDate!=null, new { disabled = "disabled" })%></td>
             <td><%: item.ContactPhone %></td>
                         <td>
                 <% if (item.Matchings != null && item.Matchings.Count != 0)

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Mvc;
 using TauberMatching.Models;
 using TauberMatching.Services;
-using System.Collections.Generic;
 
 namespace TauberMatching.Controllers
 {
@@ -11,12 +10,12 @@ namespace TauberMatching.Controllers
     public class ProjectController : Controller
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ProjectController));
-        private String uniqueProjectNameErrorMsg="You have to pick a unique project name. There's already an existing project with the name you have specified.";
+        private String uniqueProjectNameErrorMsg = "You have to pick a unique project name. There's already an existing project with the name you have specified.";
 
         public ActionResult Index()
         {
             MatchingDB db = new MatchingDB();
-            var projects = db.Projects.Include("Matchings").OrderBy(pr=>pr.Name).ToList();
+            var projects = db.Projects.Include("Matchings").OrderBy(pr => pr.Name).ToList();
             db.Dispose();
             return View(projects);
         }
@@ -80,11 +79,11 @@ namespace TauberMatching.Controllers
             }
             catch (Exception ex)
             {
-                log.Error("Error during updating the student list for a project with id: " + id.ToString(), ex.InnerException!=null?ex.InnerException:ex);
+                log.Error("Error during updating the student list for a project with id: " + id.ToString(), ex.InnerException != null ? ex.InnerException : ex);
                 TempData["error"] = true;
-                TempData["message"] = "An error occured while updating the project. Contact your system administrator with the following info: Project id:"+id.ToString()+" Timestamp of the incident: "+DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt");
+                TempData["message"] = "An error occured while updating the project. Contact your system administrator with the following info: Project id:" + id.ToString() + " Timestamp of the incident: " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt");
             }
-            return RedirectToAction("Details", new {id=id});
+            return RedirectToAction("Details", new { id = id });
         }
 
         public ActionResult Delete(int id)
@@ -115,7 +114,7 @@ namespace TauberMatching.Controllers
         {
             if (!ValidateProject(p))
                 this.ModelState.AddModelError("Name", uniqueProjectNameErrorMsg);
-         
+
             if (ModelState.IsValid)
             {
                 MatchingDB db = new MatchingDB();
@@ -131,7 +130,7 @@ namespace TauberMatching.Controllers
         private int GetProjectCountByName(String name)
         {
             MatchingDB db = new MatchingDB();
-            int count =  db.Projects.Where(p => p.Name.ToLower() == name.ToLower()).Count();
+            int count = db.Projects.Where(p => p.Name.ToLower() == name.ToLower()).Count();
             db.Dispose();
             return count;
         }
