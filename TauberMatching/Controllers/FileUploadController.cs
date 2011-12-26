@@ -11,6 +11,7 @@ using TauberMatching.Services;
 
 namespace TauberMatching.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class FileUploadController : Controller
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ProjectController));

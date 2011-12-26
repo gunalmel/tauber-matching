@@ -8,6 +8,7 @@ using TauberMatching.Models;
 
 namespace TauberMatching.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class ReportsController : Controller
     {
         [HttpGet]

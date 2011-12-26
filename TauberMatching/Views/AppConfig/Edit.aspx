@@ -7,8 +7,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <% Html.EnableClientValidation(); %>
     <h2>Edit Application Configuration</h2>
-
-    <p>You can lter the business rules that are being nforced upon projects and students when submitting their prefrences for each other.</p>
+    <p><%: Html.ActionLink("Change Admin Password", "ChangePassword", "Account")%></p>
+    <p>You can alter the business rules that are being nforced upon projects and students when submitting their prefrences for each other.</p>
     <% =ViewContext.TempData["message"] %>
     <% using (Html.BeginForm()) {%>
         <%--<%: Html.ValidationSummary(true) %>--%>

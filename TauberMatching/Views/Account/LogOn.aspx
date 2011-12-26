@@ -1,14 +1,21 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<TauberMatching.Models.LogOnModel>" %>
 
 <asp:Content ID="loginTitle" ContentPlaceHolderID="TitleContent" runat="server">
-    Log On
+    Tauber Matching Web Application - LogOn
 </asp:Content>
-
+<asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
+    <script type="text/javascript">
+        $(function () {
+            $("#menu").hide();
+            $("#logindisplay").hide();
+        });
+    </script>
+</asp:Content>
 <asp:Content ID="loginContent" ContentPlaceHolderID="MainContent" runat="server">
     <h2>Log On</h2>
-    <p>
+<%--    <p>
         Please enter your username and password. <%: Html.ActionLink("Register", "Register") %> if you don't have an account.
-    </p>
+    </p>--%>
 
     <% using (Html.BeginForm()) { %>
         <%: Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.") %>

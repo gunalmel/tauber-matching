@@ -7,13 +7,11 @@ using System.Web.Mvc;
 namespace TauberMatching.Controllers
 {
     [HandleError]
+    [Authorize(Roles = "Administrator")]
     public class HomeController : Controller
     {
-        [Authorize(Roles = "Administrator")]
         public ActionResult Index()
         {
-            ViewData["Message"] = "Welcome to ASP.NET MVC!";
-
             return View();
         }
 

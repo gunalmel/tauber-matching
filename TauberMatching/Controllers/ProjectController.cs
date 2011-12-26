@@ -7,6 +7,7 @@ using TauberMatching.Services;
 namespace TauberMatching.Controllers
 {
     [HandleError]
+    [Authorize(Roles = "Administrator")]
     public class ProjectController : Controller
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ProjectController));

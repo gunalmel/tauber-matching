@@ -5,6 +5,7 @@ using TauberMatching.Services;
 
 namespace TauberMatching.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class EmailController : Controller
     {
         [HttpPost]

@@ -21,6 +21,15 @@
         </script>
         <script type="text/javascript" src="../../Scripts/RankProjects.js"></script>
     <%} %>
+    <%  if(!this.Request.IsAuthenticated)
+    {%>
+        <script type="text/javascript">
+            $(function () {
+                $("#menu").remove();
+                $("#logindisplay").remove();
+            });
+        </script>
+    <%}%>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">

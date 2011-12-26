@@ -5,6 +5,7 @@ using TauberMatching.Services;
 
 namespace TauberMatching.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class AppConfigController : Controller
     {
         private const string _updateMessage = "Configuration changes have been saved.";
@@ -26,6 +27,7 @@ namespace TauberMatching.Controllers
             {
                 ConfigurationService.UpdateConfigParameters(appConfig);
                 TempData["message"] = _updateMessage;
+                System.Web.HttpRuntime.UnloadAppDomain();
                 return View();
             }
             catch(Exception ex)
