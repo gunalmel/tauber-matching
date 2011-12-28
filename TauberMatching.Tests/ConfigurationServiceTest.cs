@@ -1,6 +1,7 @@
 ﻿using TauberMatching.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TauberMatching.Services;
+using System;
 
 namespace TauberMatching.Tests
 {
@@ -80,6 +81,20 @@ namespace TauberMatching.Tests
             AppConfiguration updated = ConfigurationService.GetConfigParameters();
             Assert.AreEqual(true,updated.EnforceContinuousProjectRanking);
             Assert.AreEqual(10, updated.MaxRejectedBusStudents);
+        }
+
+        [TestMethod()]
+        public void GetEmailConfigParametersTest()
+        {
+            EmailConfiguration expected = null;
+            EmailConfiguration actual;
+            actual = ConfigurationService.GetEmailConfigParameters();
+            Assert.AreNotEqual(expected, actual);
+            var enumerator = actual.GetConfigParameters().GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                Console.WriteLine(enumerator.Current);
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ using TauberMatching.Models;
 namespace TauberMatching.Controllers
 {
 
-    [HandleError]
+   // [HandleError]
     public class AccountController : Controller
     {
 

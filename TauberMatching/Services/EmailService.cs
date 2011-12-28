@@ -13,12 +13,12 @@ namespace TauberMatching.Services
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(EmailService));
 
         private static readonly string MAIL_SERVER;
-        private static readonly int MAIL_PORT;// = 587;
-        private static readonly string MAIL_ACCOUNT;// = "gunalmel@gmail.com";
-        private static readonly string MAIL_PWD;// = "smooth1022";
+        private static readonly int MAIL_PORT;
+        private static readonly string MAIL_ACCOUNT;
+        private static readonly string MAIL_PWD;
         private static readonly string MAIL_FROM;
-        private static readonly bool ENABLE_SSL;// = true;
-        private static readonly bool IS_MAIL_HTML;// = true;
+        private static readonly bool ENABLE_SSL;
+        private static readonly bool IS_MAIL_HTML;
         private static readonly bool IS_TESTING;
         private static readonly string PICKUP_DIR;
         private MailMessage _mail = new MailMessage();
@@ -50,6 +50,20 @@ namespace TauberMatching.Services
         {
             CreateMessage(to, subject, body);
             InitializeSmtpServer();
+        }
+        public EmailService(string subject, string body, params string[] to)
+        {
+            CreateMessage(subject, body, to);
+            InitializeSmtpServer();
+        }
+        private void CreateMessage(string subject, string body, params string[] to)
+        {
+            _mail.From = new MailAddress(MAIL_FROM);
+            foreach (string receiver in to)
+                _mail.To.Add(receiver);
+            _mail.Subject = subject;
+            _mail.Body = body;
+            _mail.IsBodyHtml = IS_MAIL_HTML;
         }
         private void CreateMessage(string to, string subject, string body)
         {

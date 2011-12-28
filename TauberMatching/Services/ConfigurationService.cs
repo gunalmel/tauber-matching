@@ -15,15 +15,25 @@ namespace TauberMatching.Services
         /// <summary>
         /// Retrieves all application settings in AppConfiguration object
         /// </summary>
-        /// <returns>AppConfiguration object that encapsulates all named application configuration parameters.</returns>
+        /// <returns>AppConfiguration object that encapsulates all named application configuration parameters which are not relted to notification e-mail configuration.</returns>
         public static AppConfiguration GetConfigParameters()
         {
             AppConfiguration appConfig;
             using (MatchingDB db = new MatchingDB())
-                appConfig = new AppConfiguration(db.ConfigParameters);
+                appConfig = new AppConfiguration(db.ConfigParameters.Where(c=>c.Id<80));
             return appConfig;
         }
-        //TODO Cache the config parameters instead of fetching them from the db all the time
+        /// <summary>
+        /// Retrieves e-mail notification related configuration parameters
+        /// </summary>
+        /// <returns>EmailConfiguration object that encapsulates all config parameters related to emails</returns>
+        public static EmailConfiguration GetEmailConfigParameters()
+        {
+            EmailConfiguration emailConfig;
+            using (MatchingDB db = new MatchingDB())
+                emailConfig = new EmailConfiguration(db.ConfigParameters.Where(c => c.Id >= 80));
+            return emailConfig;
+        }
         /// <summary>
         /// Gets the list of config parameters that are related to business rules governing ui interaction for ranking
         /// </summary>

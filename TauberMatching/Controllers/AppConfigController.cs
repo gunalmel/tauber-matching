@@ -9,7 +9,7 @@ namespace TauberMatching.Controllers
     public class AppConfigController : Controller
     {
         private const string _updateMessage = "Configuration changes have been saved.";
-        private const string _errorMessage = "There has been an error saving configuration cahnges. Copy the whole error message and send it to your application developer";
+        private const string _errorMessage = "There has been an error saving configuration changes. Copy the whole error message and send it to your application developer";
         // GET: /AppSetup/Edit
  
         public ActionResult Edit()

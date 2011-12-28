@@ -145,6 +145,7 @@
     <Compile Include="Models\ProjectDetailsModel.cs" />
     <Compile Include="Models\RankStudentsIndexModel.cs" />
     <Compile Include="Models\Score.cs" />
+    <Compile Include="Models\EmailConfiguration.cs" />
     <Compile Include="Services\ScoreService.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Services\CustomExtensions.cs" />

@@ -46,7 +46,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Value set for the application parameter specified by Name property
         /// </summary>
-        [MaxLength(256, ErrorMessage = "Application configuration parameter value can be at most 256 characters long.")]
+        [MaxLength(2048, ErrorMessage = "Application configuration parameter value can be at most 2048 characters long.")]
         public String Value { get { return _value; } set { this._value = value; } }
 
         /// <summary>
@@ -158,5 +158,26 @@ namespace TauberMatching.Models
         /// Decides whether projects should rank students in a continuum. If there are students in A and D category then there should be students in B and C category as well.
         /// </summary>
         EnforceContinuousStudentRanking=75,
+    }
+    public enum EmailConfigEnum
+    {
+        MailServer=80,
+        MailServerPort=85,
+        IsSSLEnabled=90,
+        IsMailBodyHtml=95,
+        MailAccount=100,
+        MailPassword=105,
+        IsTesting=110,
+        ProjectAccessUrlSubject=115,
+        StudentAccessUrlSubject=120,
+        ProjectAccessUrlEmailBody=125,
+        StudentAccessUrlEmailBody=130,
+        AccessUrlEmailHeader=135,
+        AccessUrlEmailFooter=140,
+        InvalidAccessUrlMessage=145,
+        MailPickupDirectory=150,
+        RankProjectsController=155,
+        RankStudentsController=160,
+        ConfirmationEmailReceivers=165
     }
 }
