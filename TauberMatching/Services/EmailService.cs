@@ -26,16 +26,16 @@ namespace TauberMatching.Services
 
         static EmailService()
         {
-            MAIL_SERVER = System.Configuration.ConfigurationManager.AppSettings["MailServer"];
-            MAIL_ACCOUNT = System.Configuration.ConfigurationManager.AppSettings["MailAccount"];
-            MAIL_PWD = System.Configuration.ConfigurationManager.AppSettings["MailPassword"];
-            MAIL_PORT = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["MailServerPort"]);
-            ENABLE_SSL = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["SSLEnabled"]);
-            IS_MAIL_HTML = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["IsMailBodyHtml"]);
-            IS_TESTING = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["IsTesting"]);
+            EmailConfiguration emailConfig = ConfigurationService.GetEmailConfigParameters();
+            MAIL_SERVER = emailConfig.MailServer;//System.Configuration.ConfigurationManager.AppSettings["MailServer"];
+            MAIL_ACCOUNT = emailConfig.MailAccount;//System.Configuration.ConfigurationManager.AppSettings["MailAccount"];
+            MAIL_PWD = emailConfig.MailPassword;//System.Configuration.ConfigurationManager.AppSettings["MailPassword"];
+            MAIL_PORT = emailConfig.MailServerPort;//Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["MailServerPort"]);
+            ENABLE_SSL = emailConfig.IsSSLEnabled;//Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["SSLEnabled"]);
+            IS_MAIL_HTML = emailConfig.IsMailBodyHtml;//Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["IsMailBodyHtml"]);
+            IS_TESTING = emailConfig.IsTesting;//Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["IsTesting"]);
             MAIL_FROM = new MatchingDB().ConfigParameters.First(c => c.Id == ((int)ConfigEnum.SiteMasterEmail)).Value;
 
-            //TODO Quartz.NET does not have access to HttpContext.Current #13
             if(System.Web.HttpContext.Current==null)
                 PICKUP_DIR = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName);
             else

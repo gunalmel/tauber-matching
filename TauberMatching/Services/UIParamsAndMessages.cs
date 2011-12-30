@@ -59,7 +59,7 @@ namespace TauberMatching.Services
                 TAUBER_ADMIN_NAME=db.ConfigParameters.Where(cp=>cp.Id==(int)ConfigEnum.SiteMasterFirstName).FirstOrDefault().Value+" "+db.ConfigParameters.Where(cp=>cp.Id==(int)ConfigEnum.SiteMasterLastName).FirstOrDefault().Value;
                 TAUBER_EMAIL=db.ConfigParameters.Where(cp=>cp.Id==(int)ConfigEnum.SiteMasterEmail).FirstOrDefault().Value;
                 TAUBER_PHONE=db.ConfigParameters.Where(cp=>cp.Id==(int)ConfigEnum.SiteMasterPhone).FirstOrDefault().Value;
-                INVALID_URL_ERROR_MESSAGE = String.Format(System.Configuration.ConfigurationManager.AppSettings["ProjectAccessUrlSubject"], TAUBER_EMAIL, TAUBER_PHONE);
+                INVALID_URL_ERROR_MESSAGE = String.Format(ConfigurationService.GetEmailConfigParameters().InvalidAccessUrlMessage/*System.Configuration.ConfigurationManager.AppSettings["ProjectAccessUrlSubject"]*/, TAUBER_EMAIL, TAUBER_PHONE);
 
                 ProjectScoreDetails = ScoreService.GetScoreDetailsFor(ContactType.Project);
                 StudentScoreDetails = ScoreService.GetScoreDetailsFor(ContactType.Student);

@@ -24,7 +24,6 @@ namespace TauberMatching.Controllers
 
         //
         // GET: /Student/Details/5
-        //TODO #19 Display project-student matchings and let admin user add new student matching
         [HttpGet]
         public ActionResult Details(int id)
         {

@@ -10,11 +10,11 @@ namespace TauberMatching.Services
         /// <summary>
         /// Controller name for student users to assign scores to the projects, that will be used to build the access Url that will be sent to the students
         /// </summary>
-        private static readonly string RANK_PROJECT_CONTROLLER = System.Configuration.ConfigurationManager.AppSettings["RankProjectsController"];
+        private static readonly string RANK_PROJECT_CONTROLLER = ConfigurationService.GetEmailConfigParameters().RankProjectsController;//System.Configuration.ConfigurationManager.AppSettings["RankProjectsController"];
         /// <summary>
         /// Controller name for project contacts to assign scores to the students, that will be used to build the access Url that will be sent to the project contacts
         /// </summary>
-        private static readonly string RANK_STUDENT_CONTROLLER = System.Configuration.ConfigurationManager.AppSettings["RankStudentsController"];
+        private static readonly string RANK_STUDENT_CONTROLLER = ConfigurationService.GetEmailConfigParameters().RankStudentsController;//System.Configuration.ConfigurationManager.AppSettings["RankStudentsController"];
 
         public static string GetApplicationRoot()
         {

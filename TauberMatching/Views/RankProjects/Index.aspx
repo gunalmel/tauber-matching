@@ -71,7 +71,6 @@
             <%} %>
         </ul>
             <%} %>
-    <%} %>
     </div>
     <div id="divFeedback">
         <ul id="ulPositiveFeedback" class="feedback">
@@ -122,5 +121,6 @@
         <textarea id="txtOtherComments" cols="120" rows="5"><%=Model.OtherComments %></textarea>
     </div>
     <input type="button" id="btnSubmit" value="Submit My Preferences" />
+    <%} %>
     <div id="divWait"><img src="../../Content/images/wait.gif" alt="Please Wait..."></img></div>
 </asp:Content>

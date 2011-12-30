@@ -16,19 +16,19 @@ namespace TauberMatching.Models
         /// <summary>
         /// The subject line of the notification e-mail that is sent to the project contacts to inform them how to access the application.
         /// </summary>
-        private static readonly string PROJECT_URL_EMAIL_SUBJECT = System.Configuration.ConfigurationManager.AppSettings["ProjectAccessUrlSubject"];
+        private static readonly string PROJECT_URL_EMAIL_SUBJECT;// = System.Configuration.ConfigurationManager.AppSettings["ProjectAccessUrlSubject"];
         /// <summary>
         /// The subject line of the notification e-mail that is sent to the students to inform them how to access the application.
         /// </summary>
-        private static readonly string STUDENT_URL_EMAIL_SUBJECT = System.Configuration.ConfigurationManager.AppSettings["StudentAccessUrlSubject"];
+        private static readonly string STUDENT_URL_EMAIL_SUBJECT;// = System.Configuration.ConfigurationManager.AppSettings["StudentAccessUrlSubject"];
         /// <summary>
         /// Notification e-mail body template that will be sent to the project contacts to inform them of Tauber Matching Web Application access url
         /// </summary>
-        private static readonly string PROJECT_URL_EMAIL_BODY = System.Configuration.ConfigurationManager.AppSettings["ProjectAccessUrlBody"];
+        private static readonly string PROJECT_URL_EMAIL_BODY;// = System.Configuration.ConfigurationManager.AppSettings["ProjectAccessUrlBody"];
         /// <summary>
         /// Notification e-mail body template that will be sent to the students to inform them of Tauber Matching Web Application access url
         /// </summary>
-        private static readonly string STUDENT_URL_EMAIL_BODY = System.Configuration.ConfigurationManager.AppSettings["StudentAccessUrlBody"];
+        private static readonly string STUDENT_URL_EMAIL_BODY;// = System.Configuration.ConfigurationManager.AppSettings["StudentAccessUrlBody"];
         /// <summary>
         /// Dicitonary that holds ConfigParameters that are related to site admin information (name, email, phone)
         /// </summary>
@@ -36,11 +36,11 @@ namespace TauberMatching.Models
         /// <summary>
         /// The variables in the header in order are: ContactFullName.
         /// </summary>
-        private static readonly string _emailHeaderTemplate = System.Configuration.ConfigurationManager.AppSettings["NotificationEmailHeader"];
+        private static readonly string _emailHeaderTemplate;// = System.Configuration.ConfigurationManager.AppSettings["NotificationEmailHeader"];
         /// <summary>
         /// The variables in the footer in order are:  SiteAdminFullName, SiteAdminEmail, UserFullName,SiteAdminPhone
         /// </summary>
-        private static readonly string _emailFooterTemplate = System.Configuration.ConfigurationManager.AppSettings["NotificationEmailFooter"]; 
+        private static readonly string _emailFooterTemplate;// = System.Configuration.ConfigurationManager.AppSettings["NotificationEmailFooter"]; 
         #endregion
         #region Properties
         public int Id { get; set; }
@@ -59,6 +59,13 @@ namespace TauberMatching.Models
         #endregion
         static EmailQueueMessage()
         {
+            EmailConfiguration emailConfig = ConfigurationService.GetEmailConfigParameters();
+            PROJECT_URL_EMAIL_SUBJECT=emailConfig.ProjectAccessUrlEmailSubject;
+            STUDENT_URL_EMAIL_SUBJECT=emailConfig.StudentAccessUrlEmailSubject;
+            PROJECT_URL_EMAIL_BODY=emailConfig.ProjectAccessUrlEmailBody;
+            STUDENT_URL_EMAIL_BODY=emailConfig.StudentAccessUrlEmailBody;
+            _emailHeaderTemplate=emailConfig.AccessUrlEmailHeader;
+            _emailFooterTemplate = emailConfig.AccessUrlEmailFooter;
             using (var db = new MatchingDB())
             {
                 _siteAdminInfoDict = db.ConfigParameters
