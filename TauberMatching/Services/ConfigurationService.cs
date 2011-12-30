@@ -20,7 +20,7 @@ namespace TauberMatching.Services
         {
             AppConfiguration appConfig;
             using (MatchingDB db = new MatchingDB())
-                appConfig = new AppConfiguration(db.ConfigParameters.Where(c=>c.Id<80));
+                appConfig = new AppConfiguration(db.ConfigParameters.Where(c=>c.Id<100));
             return appConfig;
         }
         /// <summary>
@@ -31,7 +31,7 @@ namespace TauberMatching.Services
         {
             EmailConfiguration emailConfig;
             using (MatchingDB db = new MatchingDB())
-                emailConfig = new EmailConfiguration(db.ConfigParameters.Where(c => c.Id >= 80));
+                emailConfig = new EmailConfiguration(db.ConfigParameters.Where(c => c.Id >= 100));
             return emailConfig;
         }
         /// <summary>
@@ -86,6 +86,23 @@ namespace TauberMatching.Services
         /// </summary>
         /// <param name="config">AppConfiguration object encapsulating application configuration parameters to be set in the db.</param>
         public static void UpdateConfigParameters(AppConfiguration config)
+        {
+            using (MatchingDB db = new MatchingDB())
+            {
+                IEnumerable<ConfigParameter> parameters = config.GetConfigParameters();
+                foreach (var param in parameters)
+                {
+                    var pm = db.ConfigParameters.FirstOrDefault(p => p.Id == param.Id);
+                    if (pm == null)
+                        db.ConfigParameters.Add(param);
+                    else
+                        pm.Value = param.Value;
+                }
+                db.SaveChanges();
+            }
+        }
+
+        public static void UpdateEmailConfigParameters(EmailConfiguration config)
         {
             using (MatchingDB db = new MatchingDB())
             {

@@ -48,10 +48,13 @@
             </div>
             <div id="menucontainer">
                 <ul id="menu">
+                    <li><%: Html.ActionLink("Change Admin Password", "ChangePassword", "Account")%></li>
                     <%--                    <li><%: Html.ActionLink("Home", "Index", "Home")%></li>
                     <li><%: Html.ActionLink("About", "About", "Home")%></li>--%>
                     <li>
-                        <%: Html.ActionLink("Setup", "Edit", "AppConfig")%></li>
+                        <%: Html.ActionLink("App Setup", "Edit", "AppConfig")%></li>
+                    <li>
+                        <%: Html.ActionLink("Email Configuration", "Edit", "EmailConfig")%></li>
                     <li>
                         <%: Html.ActionLink("Projects", "Index", "Project")%></li>
                     <li>

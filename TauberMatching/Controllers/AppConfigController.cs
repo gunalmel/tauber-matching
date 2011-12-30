@@ -39,4 +39,36 @@ namespace TauberMatching.Controllers
             }
         }
     }
+
+    [Authorize(Roles = "Administrator")]
+    public class EmailConfigController : Controller
+    {
+        private const string _updateMessage = "Configuration changes have been saved.";
+        private const string _errorMessage = "There has been an error saving configuration changes. Copy the whole error message and send it to your application developer";
+        
+        public ActionResult Edit()
+        {
+            return View(ConfigurationService.GetEmailConfigParameters());
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult Edit(EmailConfiguration emailConfig)
+        {
+            try
+            {
+                ConfigurationService.UpdateEmailConfigParameters(emailConfig);
+                TempData["message"] = _updateMessage;
+                System.Web.HttpRuntime.UnloadAppDomain();
+                return View(ConfigurationService.GetEmailConfigParameters());
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = _errorMessage + ex.Message;
+                if (ex.InnerException != null)
+                    TempData["message"] = _errorMessage + ex.Message + " Inner Exception: " + ex.InnerException.Message;
+                return View();
+            }
+        }
+    }
 }

@@ -21,6 +21,16 @@ namespace TauberMatching.Models
             this.Id = (int)name;
             this.Name = Enum.GetName(typeof(ConfigEnum), name);
         }
+        public ConfigParameter(EmailConfigEnum name)
+        {
+            this.Id = (int)name;
+            this.Name = Enum.GetName(typeof(EmailConfigEnum), name);
+        }
+        public ConfigParameter(EmailConfigEnum name, String value)
+            : this(name)
+        {
+            this.Value = value;
+        }
         public ConfigParameter(ConfigEnum name, String value):this(name)
         {
             this.Value = value;
@@ -161,23 +171,23 @@ namespace TauberMatching.Models
     }
     public enum EmailConfigEnum
     {
-        MailServer=80,
-        MailServerPort=85,
-        IsSSLEnabled=90,
-        IsMailBodyHtml=95,
-        MailAccount=100,
-        MailPassword=105,
-        IsTesting=110,
-        ProjectAccessUrlSubject=115,
-        StudentAccessUrlSubject=120,
-        ProjectAccessUrlEmailBody=125,
-        StudentAccessUrlEmailBody=130,
-        AccessUrlEmailHeader=135,
-        AccessUrlEmailFooter=140,
-        InvalidAccessUrlMessage=145,
-        MailPickupDirectory=150,
-        RankProjectsController=155,
-        RankStudentsController=160,
-        ConfirmationEmailReceivers=165
+        MailServer=100,
+        MailServerPort=105,
+        IsSSLEnabled=110,
+        IsMailBodyHtml=115,
+        MailAccount=120,
+        MailPassword=125,
+        IsTesting=130,
+        MailPickupDirectory=135,
+        RankProjectsController=140,
+        RankStudentsController=145,
+        InvalidAccessUrlMessage=150,
+        ProjectAccessUrlEmailSubject=155,
+        ProjectAccessUrlEmailBody=160,
+        StudentAccessUrlEmailSubject=165,
+        StudentAccessUrlEmailBody=170,
+        AccessUrlEmailHeader=175,
+        AccessUrlEmailFooter=180,
+        ConfirmationEmailReceivers=185
     }
 }

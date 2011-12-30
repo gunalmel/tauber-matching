@@ -4,9 +4,7 @@ using TauberMatching.Services;
 using System;
 
 namespace TauberMatching.Tests
-{
-    
-    
+{      
     /// <summary>
     ///This is a test class for ConfigurationServiceTest and is intended
     ///to contain all ConfigurationServiceTest Unit Tests
@@ -93,7 +91,7 @@ namespace TauberMatching.Tests
             var enumerator = actual.GetConfigParameters().GetEnumerator();
             while (enumerator.MoveNext())
             {
-                Console.WriteLine(enumerator.Current);
+                Console.WriteLine(enumerator.Current.Value);
             }
         }
     }

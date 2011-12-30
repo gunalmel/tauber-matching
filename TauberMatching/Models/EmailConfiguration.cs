@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Web;
 
 namespace TauberMatching.Models
 {
@@ -66,13 +67,13 @@ namespace TauberMatching.Models
             get { return _isTesting; }
             set { _isTesting = value; }
         }
-        private string _projectAccessUrlSubject;
+        private string _projectAccessUrlEmailSubject;
         [DisplayName("Subject of the Email that will notify project contacts of the unique access URL:")]
         [Required(ErrorMessage = "Mandatory Field: You must enter the subject phrase for the notification e-mail that will notify project contacts of the access url to use the application to rank the students !")]
-        public string ProjectAccessUrlSubject
+        public string ProjectAccessUrlEmailSubject
         {
-            get { return _projectAccessUrlSubject; }
-            set { _projectAccessUrlSubject = value; }
+            get { return _projectAccessUrlEmailSubject; }
+            set { _projectAccessUrlEmailSubject = value; }
         }
         private string _projectAccessUrlEmailBody;
         [DisplayName("Body of the Email that will notify project contacts of the unique access URL:")]
@@ -82,13 +83,13 @@ namespace TauberMatching.Models
             get { return _projectAccessUrlEmailBody; }
             set { _projectAccessUrlEmailBody = value; }
         }      
-        private string _studentAccessUrlSubject;
+        private string _studentAccessUrlEmailSubject;
         [DisplayName("Subject of the Email that will notify students of the unique access URL:")]
         [Required(ErrorMessage = "Mandatory Field: You must enter the subject phrase for the notification e-mail that will notify students of the access url to use the application to rank the projects !")]
-        public string StudentAccessUrlSubject
+        public string StudentAccessUrlEmailSubject
         {
-            get { return _studentAccessUrlSubject; }
-            set { _studentAccessUrlSubject = value; }
+            get { return _studentAccessUrlEmailSubject; }
+            set { _studentAccessUrlEmailSubject = value; }
         }
         private string _studentAccessUrlEmailBody;
         [DisplayName("Body of the Email that will notify students of the unique access URL:")]
@@ -115,7 +116,7 @@ namespace TauberMatching.Models
             set { _accessUrlEmailFooter = value; }
         }
         private string _invalidAccessUrlMessage;
-        [DisplayName("Invalide Access URL Error Message:")]
+        [DisplayName("Invalid Access URL Error Message:")]
         [Required(ErrorMessage = "Mandatory Field: You must specify the error message to be displayed to the users if they use an invalid access url to access to the application. !")]
         public string InvalidAccessUrlMessage
         {
@@ -152,6 +153,7 @@ namespace TauberMatching.Models
             set { _confirmationEmailReceivers = value; }
         }
         private Type thisType = typeof(EmailConfiguration);
+        public EmailConfiguration() { }
         public EmailConfiguration(IQueryable<ConfigParameter> parameters)
         {
             foreach (var param in parameters)
@@ -165,10 +167,10 @@ namespace TauberMatching.Models
                 }
             }
         }
-        private ConfigParameter GetConfigParameter(ConfigEnum name)
+        private ConfigParameter GetConfigParameter(EmailConfigEnum name)
         {
             int paramId = (int)name;
-            String propName = Enum.GetName(typeof(ConfigEnum), name);
+            String propName = Enum.GetName(typeof(EmailConfigEnum), name);
             var valueObject = thisType.GetProperty(propName).GetValue(this, null);
             String value = String.Empty;
             if (valueObject != null)
@@ -180,7 +182,7 @@ namespace TauberMatching.Models
         /// </summary>
         /// <param name="configParam">Configuration parameter as specified by the ConfigEnum</param>
         /// <returns>Instance of Configuration parameter object to manage persistence</returns>
-        public ConfigParameter this[ConfigEnum configParam]
+        public ConfigParameter this[EmailConfigEnum configParam]
         {
             get { return GetConfigParameter(configParam); }
             set
@@ -201,7 +203,7 @@ namespace TauberMatching.Models
         public IEnumerable<ConfigParameter> GetConfigParameters()
         {
             IList<ConfigParameter> configParameters = new List<ConfigParameter>();
-            foreach (ConfigEnum e in Enum.GetValues(typeof(ConfigEnum)))
+            foreach (EmailConfigEnum e in Enum.GetValues(typeof(EmailConfigEnum)))
             {
                 configParameters.Add(this[e]);
             }

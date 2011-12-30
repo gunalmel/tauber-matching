@@ -1,21 +1,20 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<TauberMatching.Models.AppConfiguration>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-	Edit
+	Tauber Matching Web Application - Edit Application Configuration
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <% Html.EnableClientValidation(); %>
     <h2>Edit Application Configuration</h2>
-    <p><%: Html.ActionLink("Change Admin Password", "ChangePassword", "Account")%></p>
-    <p>You can alter the business rules that are being nforced upon projects and students when submitting their prefrences for each other.</p>
+    <p>You can alter the business rules that are being forced upon projects and students when submitting their prefrences for each other.</p>
     <% =ViewContext.TempData["message"] %>
     <% using (Html.BeginForm()) {%>
         <%--<%: Html.ValidationSummary(true) %>--%>
         
         <fieldset>
             <legend>Configuration Parameters</legend>
-            
+            <p>* Site Master and contact information will be sent in the notification e-mails to the users to let them know whom to contact when they have any questions/concerns.</p>
             <div class="editor-label">
                 <%: Html.LabelFor(model => model.SiteMasterFirstName) %>
             </div>

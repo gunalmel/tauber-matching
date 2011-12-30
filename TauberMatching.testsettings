@@ -2,7 +2,8 @@
 <TestSettings name="TauberMatching" id="ba3eefd7-ffaf-4b2b-919a-87414b7c9b80" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Description>These are default test settings for a local test run.</Description>
   <Deployment>
-    <DeploymentItem filename="TauberMatching\App_Data\MatchingDB.sdf" />
+    <DeploymentItem filename="TauberMatching.Tests\App_Data\MatchingDB.sdf" />
+    <DeploymentItem filename="TauberMatching.Tests\App_Data\" />
   </Deployment>
   <Execution>
     <TestTypeSpecific>
