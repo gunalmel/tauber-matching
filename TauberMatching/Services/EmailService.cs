@@ -51,24 +51,14 @@ namespace TauberMatching.Services
             CreateMessage(to, subject, body);
             InitializeSmtpServer();
         }
-        public EmailService(string subject, string body, params string[] to)
-        {
-            CreateMessage(subject, body, to);
-            InitializeSmtpServer();
-        }
-        private void CreateMessage(string subject, string body, params string[] to)
-        {
-            _mail.From = new MailAddress(MAIL_FROM);
-            foreach (string receiver in to)
-                _mail.To.Add(receiver);
-            _mail.Subject = subject;
-            _mail.Body = body;
-            _mail.IsBodyHtml = IS_MAIL_HTML;
-        }
         private void CreateMessage(string to, string subject, string body)
         {
             _mail.From = new MailAddress(MAIL_FROM);
-            _mail.To.Add(to);
+            if(to.Contains(','))
+                foreach (string receiver in to.Split(','))
+                    _mail.To.Add(receiver);
+            else
+                _mail.To.Add(to);
             _mail.Subject = subject;
             _mail.Body = body;
             _mail.IsBodyHtml = IS_MAIL_HTML;

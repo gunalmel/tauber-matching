@@ -99,21 +99,21 @@ namespace TauberMatching.Models
             get { return _studentAccessUrlEmailBody; }
             set { _studentAccessUrlEmailBody = value; }
         }
-        private string _accessUrlEmailHeader;
+        private string _emailHeader;
         [DisplayName("Access URL Email Body Header Section:")]
         [Required(ErrorMessage = "Mandatory Field: You must enter the fixed header section of the e-mail body for the notification e-mail that will notify project contacts and students of the access url to use the application to submit rankings !")]
-        public string AccessUrlEmailHeader
+        public string EmailHeader
         {
-            get { return _accessUrlEmailHeader; }
-            set { _accessUrlEmailHeader = value; }
+            get { return _emailHeader; }
+            set { _emailHeader = value; }
         }
-        private string _accessUrlEmailFooter;
+        private string _emailFooter;
         [DisplayName("Access URL Email Body Footer Section:")]
         [Required(ErrorMessage = "Mandatory Field: You must enter the fixed footer section of the e-mail body for the notification e-mail that will notify project contacts and students of the access url to use the application to submit rankings !")]
-        public string AccessUrlEmailFooter
+        public string EmailFooter
         {
-            get { return _accessUrlEmailFooter; }
-            set { _accessUrlEmailFooter = value; }
+            get { return _emailFooter; }
+            set { _emailFooter = value; }
         }
         private string _invalidAccessUrlMessage;
         [DisplayName("Invalid Access URL Error Message:")]

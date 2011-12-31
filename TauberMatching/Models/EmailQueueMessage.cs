@@ -16,19 +16,23 @@ namespace TauberMatching.Models
         /// <summary>
         /// The subject line of the notification e-mail that is sent to the project contacts to inform them how to access the application.
         /// </summary>
-        private static readonly string PROJECT_URL_EMAIL_SUBJECT;// = System.Configuration.ConfigurationManager.AppSettings["ProjectAccessUrlSubject"];
+        private static readonly string PROJECT_URL_EMAIL_SUBJECT;
         /// <summary>
         /// The subject line of the notification e-mail that is sent to the students to inform them how to access the application.
         /// </summary>
-        private static readonly string STUDENT_URL_EMAIL_SUBJECT;// = System.Configuration.ConfigurationManager.AppSettings["StudentAccessUrlSubject"];
+        private static readonly string STUDENT_URL_EMAIL_SUBJECT;
         /// <summary>
         /// Notification e-mail body template that will be sent to the project contacts to inform them of Tauber Matching Web Application access url
         /// </summary>
-        private static readonly string PROJECT_URL_EMAIL_BODY;// = System.Configuration.ConfigurationManager.AppSettings["ProjectAccessUrlBody"];
+        private static readonly string PROJECT_URL_EMAIL_BODY;
         /// <summary>
         /// Notification e-mail body template that will be sent to the students to inform them of Tauber Matching Web Application access url
         /// </summary>
-        private static readonly string STUDENT_URL_EMAIL_BODY;// = System.Configuration.ConfigurationManager.AppSettings["StudentAccessUrlBody"];
+        private static readonly string STUDENT_URL_EMAIL_BODY;
+        private static readonly string STUDENT_SUBMIT_SUBJECT="Tauber Matching Web Application - Your project rankings";
+        private static readonly string PROJECT_SUBMIT_SUBJECT = "Tauber Matching Web Application - Your student rankings";
+        private static readonly string STUDENT_SUBMIT_BODY = "You submitted your rankings as below:<br/><br/>{0}";
+        private static readonly string PROJECT_SUBMIT_BODY="For your {0} project you submitted your rankings as below:<br/><br/>{1}";
         /// <summary>
         /// Dicitonary that holds ConfigParameters that are related to site admin information (name, email, phone)
         /// </summary>
@@ -36,11 +40,11 @@ namespace TauberMatching.Models
         /// <summary>
         /// The variables in the header in order are: ContactFullName.
         /// </summary>
-        private static readonly string _emailHeaderTemplate;// = System.Configuration.ConfigurationManager.AppSettings["NotificationEmailHeader"];
+        private static readonly string _emailHeaderTemplate;
         /// <summary>
         /// The variables in the footer in order are:  SiteAdminFullName, SiteAdminEmail, UserFullName,SiteAdminPhone
         /// </summary>
-        private static readonly string _emailFooterTemplate;// = System.Configuration.ConfigurationManager.AppSettings["NotificationEmailFooter"]; 
+        private static readonly string _emailFooterTemplate;
         #endregion
         #region Properties
         public int Id { get; set; }
@@ -64,8 +68,8 @@ namespace TauberMatching.Models
             STUDENT_URL_EMAIL_SUBJECT=emailConfig.StudentAccessUrlEmailSubject;
             PROJECT_URL_EMAIL_BODY=emailConfig.ProjectAccessUrlEmailBody;
             STUDENT_URL_EMAIL_BODY=emailConfig.StudentAccessUrlEmailBody;
-            _emailHeaderTemplate=emailConfig.AccessUrlEmailHeader;
-            _emailFooterTemplate = emailConfig.AccessUrlEmailFooter;
+            _emailHeaderTemplate=emailConfig.EmailHeader;
+            _emailFooterTemplate = emailConfig.EmailFooter;
             using (var db = new MatchingDB())
             {
                 _siteAdminInfoDict = db.ConfigParameters
@@ -88,6 +92,15 @@ namespace TauberMatching.Models
             Guid = guid;
             To = to;
         }
+        private EmailQueueMessage(int contactId, string contactType, string firstName, string lastName, Guid guid, params string[] to)
+        {
+            ContactId = contactId;
+            ContactType = contactType;
+            FirstName = firstName;
+            LastName = lastName;
+            Guid = guid;
+            To = String.Join(",", to);
+        }
         /// <summary>
         /// Initializes user specified e-mail message.
         /// </summary>
@@ -105,6 +118,7 @@ namespace TauberMatching.Models
             Subject = subject;
             Body = body;
         }
+        //TODO Create a new constructor that will allow for multiple receipent addresses in the to field
         /// <summary>
         /// Constructor to set subject and body sections of e-mail to the system generated values using pre-set e-mail templates. Used when system-generated notification e-mails are to be used to notify contacts. 
         /// Usage: EmailQueueService.EmailQueueMessage(new Contact(&lt;Project|Student&gt;),EmailType.&lt;Project|Student&gt;);
@@ -115,6 +129,18 @@ namespace TauberMatching.Models
         {
             Subject = GetEmailSubject(type);
             Body = GetEmailBody(contact.FirstName, contact.LastName, contact.Guid, type);
+        }
+        public EmailQueueMessage(Contact contact, EmailType type, string rankingText, string to)
+            : this(contact.Id, contact.ContactType.ToString(), contact.FirstName, contact.LastName, contact.Guid, to)
+        {
+            Subject = GetEmailSubject(type);
+            Body = GetEmailBody(contact.FirstName, contact.LastName, contact.Guid, type, rankingText);
+        } 
+        public EmailQueueMessage(Contact contact, EmailType type, string rankingText, params string[] receipents)
+            : this(contact.Id, contact.ContactType.ToString(), contact.FirstName, contact.LastName, contact.Guid, receipents)
+        {
+            Subject = GetEmailSubject(type);
+            Body = GetEmailBody(contact.FirstName, contact.LastName, contact.Guid, type, rankingText);
         } 
         #endregion
         private string GetEmailSubject(EmailType type)
@@ -129,13 +155,45 @@ namespace TauberMatching.Models
                     subject = STUDENT_URL_EMAIL_SUBJECT;
                     break;
                 case EmailType.ProjectSubmit:
+                    subject = PROJECT_SUBMIT_SUBJECT;
                     break;
                 case EmailType.StudentSubmit:
+                    subject = STUDENT_SUBMIT_SUBJECT;
                     break;
                 default:
                     break;
             }
             return subject;
+        }
+        private string GetEmailBody(string firstName, string lastName, Guid guid, EmailType type, string rankingText)
+        {
+            #region Build Email Header & Footer
+            string siteAdminFullName = _siteAdminInfoDict[ConfigEnum.SiteMasterFirstName] + " " + _siteAdminInfoDict[ConfigEnum.SiteMasterLastName];
+            string contactFullName = firstName + " " + lastName;
+            string emailHeader = String.Format(_emailHeaderTemplate, contactFullName);
+            string emailFooter = String.Format(_emailFooterTemplate, siteAdminFullName, _siteAdminInfoDict[ConfigEnum.SiteMasterEmail], contactFullName, _siteAdminInfoDict[ConfigEnum.SiteMasterPhone]);
+            #endregion
+            #region Build Email Body
+            string body = String.Empty;
+            switch (type)
+            {
+                case EmailType.ProjectSubmit:
+                    string project="";
+                    using(MatchingDB db = new MatchingDB())
+                    {
+                        project=db.Projects.Where(p=>p.Guid==guid).FirstOrDefault().Name;
+                    }
+                    body = String.Format(PROJECT_SUBMIT_BODY, project, rankingText);
+                    break;
+                case EmailType.StudentSubmit:
+                    body = String.Format(STUDENT_SUBMIT_BODY, rankingText);
+                    break;
+                default:
+                    break;
+            }
+            #endregion
+            string message = emailHeader + body + emailFooter;
+            return message;
         }
         private string GetEmailBody(string firstName, string lastName,Guid guid,EmailType type)
         {
@@ -154,10 +212,6 @@ namespace TauberMatching.Models
                     break;
                 case EmailType.StudentAccess:
                     body = String.Format(STUDENT_URL_EMAIL_BODY, UrlHelper.GetAccessUrlForTheUser(guid, UrlType.Student));
-                    break;
-                case EmailType.ProjectSubmit:
-                    break;
-                case EmailType.StudentSubmit:
                     break;
                 default:
                     break;

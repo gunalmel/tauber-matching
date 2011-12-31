@@ -5,11 +5,14 @@ using System.Web;
 using System.Web.Mvc;
 using TauberMatching.Models;
 using TauberMatching.Services;
+using System.Text;
 
 namespace TauberMatching.Controllers
 {
     public class RankProjectsController : Controller
     {
+        private static string _confMesgReceipents = ConfigurationService.GetEmailConfigParameters().ConfirmationEmailReceivers;
+
         public ActionResult Index(Guid? id)
         {
             return View(StudentService.GetRankProjectsIndexModelForStudent(id));
@@ -59,8 +62,55 @@ namespace TauberMatching.Controllers
             student.ScoreDate = DateTime.Now;
             db.SaveChanges();
             db.Dispose();
-
+            SendConfirmationMessage(student);
             return jsonResult;
+        }
+
+        private string GetRankingConfirmationText(Student s)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (var group in s.Matchings.GroupBy(m => m.StudentScore))
+            {
+                builder.Append("<b>"+group.Key + ": </b>");
+                foreach (Matching m in group)
+                    builder.Append(m.Project.Name + ", ");
+                builder.Remove((builder.Length - 2), 2);
+                builder.Append("<br/>");
+            }
+            builder.Append("<br/>");
+
+            var positiveFeedback = s.StudentFeedbacks.Where(f=>f.Type=="Positive").OrderBy(f=>f.FeedbackScore);
+            var constructiveFeedback = s.StudentFeedbacks.Where(f => f.Type == "Constructive").OrderBy(f => f.FeedbackScore);
+            if (positiveFeedback != null && positiveFeedback.Count() > 0)
+            {
+                builder.Append("<b>Positive Feedback: </b>");
+                foreach (var sf in positiveFeedback)
+                {
+                    builder.Append("<b>"+sf.FeedbackScore.ToString() + ".</b> " + sf.Project.Name + ", ");
+                }
+                builder.Remove((builder.Length - 2), 2);
+                builder.Append("<br/>");
+            }
+            if (constructiveFeedback != null && constructiveFeedback.Count() > 0)
+            {
+                builder.Append("<b>Constructive Feedback: </b>");
+                foreach (var sf in constructiveFeedback)
+                {
+                    builder.Append("<b>" + sf.FeedbackScore.ToString() + ".</b> " + sf.Project.Name + ", ");
+                }
+                builder.Remove((builder.Length - 2), 2);
+                builder.Append("<br/>");
+            }
+            if (s.OtherComments != null && s.OtherComments != "" && s.OtherComments.Length > 0)
+                builder.Append("<b>Your Comments: </b>"+s.OtherComments+"<br/>");
+            builder.Append("<br/>");
+            return builder.ToString();
+        }
+        private void SendConfirmationMessage(Student s)
+        {
+            Contact c = new Contact(s);
+            EmailQueueMessage eqm= new EmailQueueMessage(c,EmailType.StudentSubmit,GetRankingConfirmationText(s),c.Email+","+_confMesgReceipents);
+            EmailQueueService.QueueMessage(eqm);
         }
     }
 }

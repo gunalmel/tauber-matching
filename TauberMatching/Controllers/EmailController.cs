@@ -2,6 +2,8 @@
 using System.Web.Mvc;
 using TauberMatching.Models;
 using TauberMatching.Services;
+using System.Linq;
+using System;
 
 namespace TauberMatching.Controllers
 {
@@ -18,6 +20,5 @@ namespace TauberMatching.Controllers
                 EmailQueueService.QueueMessage(eqm);
             }
         }
-
     }
 }

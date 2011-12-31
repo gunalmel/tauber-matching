@@ -186,8 +186,8 @@ namespace TauberMatching.Models
         ProjectAccessUrlEmailBody=160,
         StudentAccessUrlEmailSubject=165,
         StudentAccessUrlEmailBody=170,
-        AccessUrlEmailHeader=175,
-        AccessUrlEmailFooter=180,
+        EmailHeader=175,
+        EmailFooter=180,
         ConfirmationEmailReceivers=185
     }
 }
