@@ -12,7 +12,6 @@ namespace TauberMatching.Models
         public DbSet<Student> Students { get; set; }
         public DbSet<StudentFeedback> StudentFeedbacks { get; set; }
         public DbSet<Matching> Matchings { get; set; }
-        public DbSet<UserError> UserErrors { get; set; }
         public DbSet<EmailLog> EmailLogs { get; set; }
         public DbSet<UploadEntity> UploadEntities { get; set; }
         public DbSet<ProjectReject> ProjectRejects { get; set; }

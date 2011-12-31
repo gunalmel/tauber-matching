@@ -3,15 +3,21 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Tauber Matching Web Application - Edit Application Configuration
 </asp:Content>
-
+<asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
+    <script type="text/javascript">
+        $(function () {
+            $("#spClearDatabase").bind("click", function () { return confirm("Are you sure you'd like to reset the database? That will clear all records from the database except the app setup and email config parameters."); });
+        });
+    </script>
+</asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <% Html.EnableClientValidation(); %>
     <h2>Edit Application Configuration</h2>
+    <p>If you'd like to delete all records in the database except App Setup and Email Config parameters then click on <span id="spClearDatabase"><%: Html.ActionLink("Clear Database", "ClearDatabase", "AppConfig")%></span></p>
     <p>You can alter the business rules that are being forced upon projects and students when submitting their prefrences for each other.</p>
     <% =ViewContext.TempData["message"] %>
     <% using (Html.BeginForm()) {%>
         <%--<%: Html.ValidationSummary(true) %>--%>
-        
         <fieldset>
             <legend>Configuration Parameters</legend>
             <p>* Site Master and contact information will be sent in the notification e-mails to the users to let them know whom to contact when they have any questions/concerns.</p>
@@ -150,7 +156,7 @@
     <% } %>
 
     <div>
-        <%: Html.ActionLink("Back to List", "Index") %>
+        <%: Html.ActionLink("Back to Home Page", "Index") %>
     </div>
 
 </asp:Content>
