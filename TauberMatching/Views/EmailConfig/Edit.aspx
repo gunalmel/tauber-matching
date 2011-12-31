@@ -11,8 +11,8 @@
             //$('#ProjectAccessUrlEmailBody').ckeditor(); // Instantiating CKEditor using jquery plugin
             CKEDITOR.replace('ProjectAccessUrlEmailBody', { width: '75%', height: '100' });
             CKEDITOR.replace('StudentAccessUrlEmailBody', { width: '75%', height: '100' });
-            CKEDITOR.replace('AccessUrlEmailHeader', { width: '75%', height: '100' });
-            CKEDITOR.replace('AccessUrlEmailFooter', { width: '75%', height: '100' });
+            CKEDITOR.replace('EmailHeader', { width: '75%', height: '100' });
+            CKEDITOR.replace('EmailFooter', { width: '75%', height: '100' });
         });
     </script>
 </asp:Content>
@@ -87,21 +87,21 @@
             </div>
             
             <div class="editor-label">
-                <br /><%: Html.LabelFor(model => model.AccessUrlEmailHeader) %><br />
+                <br /><%: Html.LabelFor(model => model.EmailHeader) %><br />
                 * {0} is the place holder for the contact full name. e.g.: If user full name is John Doe then "Dear {0}," will be displayed as "Dear John Doe,"
             </div>
             <div class="editor-field">
-                <%: Html.TextAreaFor(model => model.AccessUrlEmailHeader, new { @id = "AccessUrlEmailHeader", @style = "width: 800px;height:50px" })%>
-                <%: Html.ValidationMessageFor(model => model.AccessUrlEmailHeader) %>
+                <%: Html.TextAreaFor(model => model.EmailHeader, new { @id = "EmailHeader", @style = "width: 800px;height:50px" })%>
+                <%: Html.ValidationMessageFor(model => model.EmailHeader) %>
             </div>
             
             <div class="editor-label">
-                <br /><%: Html.LabelFor(model => model.AccessUrlEmailFooter) %><br />
+                <br /><%: Html.LabelFor(model => model.EmailFooter) %><br />
                 * If you click on "Source" in the toolbar you will see that the link for email address is built using the following parameters: {0}: Full name of the site admin, {1}: E-mail address of the site admin, {2}: Full name of the user who is contacting the site admin by following the link included in the notification e-mail, {3}: Phone# of the site admin
             </div>
             <div class="editor-field">
-                <%: Html.TextAreaFor(model => model.AccessUrlEmailFooter, new { @id = "AccessUrlEmailFooter",@style = "width: 800px;height:50px" }) %>
-                <%: Html.ValidationMessageFor(model => model.AccessUrlEmailFooter) %>
+                <%: Html.TextAreaFor(model => model.EmailFooter, new { @id = "EmailFooter",@style = "width: 800px;height:50px" }) %>
+                <%: Html.ValidationMessageFor(model => model.EmailFooter) %>
             </div>
 
             <div class="editor-label">

@@ -123,8 +123,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminLogsController.cs" />
     <Compile Include="Controllers\AppConfigController.cs" />
     <Compile Include="Controllers\EmailController.cs" />
+    <Compile Include="Models\SystemLogDto.cs" />
+    <Compile Include="Models\EmailLogDto.cs" />
     <Compile Include="Controllers\ExcelControllerExtension.cs" />
     <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
@@ -438,6 +441,9 @@
     <Content Include="Scripts\MicrosoftMvcJQueryValidation.js" />
     <Content Include="Scripts\RankStudents.js" />
     <Content Include="Scripts\UIFunctions.js" />
+    <Content Include="Views\AdminLogs\EmailLogs.aspx" />
+    <Content Include="Views\AdminLogs\EmailQueue.aspx" />
+    <Content Include="Views\AdminLogs\SystemLogs.aspx" />
     <Content Include="Views\AppConfig\Edit.aspx" />
     <Content Include="Views\EmailConfig\Edit.aspx" />
     <Content Include="Views\FileUpload\UploadMatchingFile.aspx" />

@@ -63,6 +63,12 @@
                         <%: Html.ActionLink("Upload Matching File", "UploadMatchingFile", "FileUpload")%></li>
                     <li>
                         <%: Html.ActionLink("Reports", "Index", "Reports")%></li>
+                    <li>
+                        <%: Html.ActionLink("System Logs", "SystemLogs", "AdminLogs")%></li>
+                    <li>
+                        <%: Html.ActionLink("Email Logs", "EmailLogs", "AdminLogs")%></li>
+                    <li>
+                        <%: Html.ActionLink("Email Queue", "EmailQueue", "AdminLogs")%></li>
                 </ul>
             </div>
         </div>
