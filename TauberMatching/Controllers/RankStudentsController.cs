@@ -5,11 +5,14 @@ using System.Web;
 using System.Web.Mvc;
 using TauberMatching.Models;
 using TauberMatching.Services;
+using System.Text;
 
 namespace TauberMatching.Controllers
 {
     public class RankStudentsController : Controller
     {
+        private static string _confMesgReceipents = ConfigurationService.GetEmailConfigParameters().ConfirmationEmailReceivers;
+
         public ActionResult Index(Guid? id)
         {
             return View(ProjectService.GetRankStudentsIndexModelForProject(id));
@@ -58,7 +61,36 @@ namespace TauberMatching.Controllers
             project.ScoreDate = DateTime.Now;
             db.SaveChanges();
             db.Dispose();
+            SendConfirmationMessage(project);
             return jsonResult;
+        }
+
+        private string GetRankingConfirmationText(Project p)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (var group in p.Matchings.Where(m=>m.ProjectScore!=ProjectScore.Reject.ToString()).OrderBy(m=>m.ProjectScore).GroupBy(m => m.ProjectScore))
+            {
+                builder.Append("<b>" + group.Key + ": </b>");
+                foreach (Matching m in group)
+                    builder.Append(m.Student.FullName + ", ");
+                builder.Remove((builder.Length - 2), 2);
+                builder.Append("<br/>");
+            }
+            builder.Append("<br/><br/>");
+            foreach (var reject in p.ProjectRejects)
+            {
+                builder.Append("<b>"+reject.Student.FullName+" is rejected. Reason is: </b>"+reject.Reason+"<br/>");
+            }
+            if (p.Feedback != null && p.Feedback != "" && p.Feedback.Length > 0)
+                builder.Append("<b>Your Comments: </b>" + p.Feedback + "<br/>");
+            builder.Append("<br/>");
+            return builder.ToString();
+        }
+        private void SendConfirmationMessage(Project p)
+        {
+            Contact c = new Contact(p);
+            EmailQueueMessage eqm = new EmailQueueMessage(c, EmailType.ProjectSubmit, GetRankingConfirmationText(p), c.Email + "," + _confMesgReceipents);
+            EmailQueueService.QueueMessage(eqm);
         }
     }
 }

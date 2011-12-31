@@ -118,7 +118,6 @@ namespace TauberMatching.Models
             Subject = subject;
             Body = body;
         }
-        //TODO Create a new constructor that will allow for multiple receipent addresses in the to field
         /// <summary>
         /// Constructor to set subject and body sections of e-mail to the system generated values using pre-set e-mail templates. Used when system-generated notification e-mails are to be used to notify contacts. 
         /// Usage: EmailQueueService.EmailQueueMessage(new Contact(&lt;Project|Student&gt;),EmailType.&lt;Project|Student&gt;);

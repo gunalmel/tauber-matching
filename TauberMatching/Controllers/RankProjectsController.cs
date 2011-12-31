@@ -69,7 +69,7 @@ namespace TauberMatching.Controllers
         private string GetRankingConfirmationText(Student s)
         {
             StringBuilder builder = new StringBuilder();
-            foreach (var group in s.Matchings.GroupBy(m => m.StudentScore))
+            foreach (var group in s.Matchings.OrderBy(m=>m.StudentScore).GroupBy(m => m.StudentScore))
             {
                 builder.Append("<b>"+group.Key + ": </b>");
                 foreach (Matching m in group)
