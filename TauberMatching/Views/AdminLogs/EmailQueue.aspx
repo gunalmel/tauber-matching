@@ -6,8 +6,9 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <h2>Email Queue Entries</h2>
+    <p><%: Html.ActionLink("Back To Admin Logs Main Menu", "Index", "AdminLogs")%></p>
     <p>* You have to hit your browser's refresh button whenever you'd like to get the most up to date email queue status information from the database. The page will not automatically update the records shown on this page.</p>
-     <%: Html.ActionLink("Clear The Queue", "Clear", new { id = "emailQueue" })%>
+     <%: Html.ActionLink("Delete All Emails Waiting In The Queue To Be Sent", "Clear", new { id = "emailQueue" })%>
     <table>
         <tr>
             <th>

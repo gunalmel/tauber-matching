@@ -132,7 +132,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Minimum number of business students who should be in A categeory
         /// </summary>
-        [DisplayName("Min # of Business Students to get A:")]
+        [DisplayName("Min # of Business Students to be ranked A:")]
         public int MinABusStudents
         {
             get { return _minABusStudents; }
@@ -141,7 +141,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Minimum number of engineering students who should be in A categeory
         /// </summary>
-        [DisplayName("Min # of Engineering Students to get A:")]
+        [DisplayName("Min # of Engineering Students to be ranked A:")]
         public int MinAEngStudents
         {
             get { return _minAEngStudents; }
@@ -150,7 +150,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Minimum number of students who should be in A category
         /// </summary>
-        [DisplayName("Min total # of Students to get A:")]
+        [DisplayName("Min total # of Students to be ranked A:")]
         public int MinAStudents
         {
             get { return _minAStudents; }
@@ -159,7 +159,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Minimum number of projects that needed to be picked as th first choice by the students
         /// </summary>
-        [DisplayName("Min # of Projects required to be picked as the first preference by the students:")]
+        [DisplayName("A student should rank at least this many projects as first choice:")]
         public int MinFirstProjects
         {
             get { return _minFirstProjects; }
@@ -168,7 +168,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Maximum number of business students who can be rejected
         /// </summary>
-        [DisplayName("Max # of Business Students a project can reject:")]
+        [DisplayName("Max # of Business Students a company can reject:")]
         public int MaxRejectedBusStudents
         {
             get { return _maxRejectedBusStudents; }
@@ -177,7 +177,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Maximum number of engineering students whou can be rejected
         /// </summary>
-        [DisplayName("Max # of Engineering Students a project can reject:")]
+        [DisplayName("Max # of Engineering Students a company can reject:")]
         public int MaxRejectedEngStudents
         {
             get { return _maxRejectedEngStudents; }
@@ -186,7 +186,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Maximum number of students whou can be rejected
         /// </summary>
-        [DisplayName("Max # of Students a project can reject:")]
+        [DisplayName("Max total # of Students a company can reject:")]
         public int MaxRejectedStudents
         {
             get { return _maxRejectedStudents; }
@@ -213,7 +213,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Decides whether projects should rank students in a continuum. E.g.: If there are students in A and D category then there should be students in B & C category as well.
         /// </summary>
-        [DisplayName("Should projects rank students in continuum:")]
+        [DisplayName("Should companies rank students in continuum:")]
         public bool EnforceContinuousStudentRanking
         {
             get { return _enforceContinuousStudentRanking; }
@@ -222,7 +222,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// If the number of projects are less than this number then students can not reject any projects
         /// </summary>
-        [DisplayName("Min # projects for a student for student to be able to reject projects:")]
+        [DisplayName("A student has to interview for at least this many projects to be able to reject any projects:")]
         public int RejectedProjectThreshold
         {
             get { return _rejectedProjectThreshold; }
@@ -231,7 +231,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// If the number of students are less than this number then projects can not reject any students
         /// </summary>
-        [DisplayName("Min # students for a project for project to be able to reject students")]
+        [DisplayName("A company has to interview at least this many students for a project to be able to reject any students:")]
         public int RejectedStudentThreshold
         {
             get { return _rejectedStudentThreshold; }

@@ -7,8 +7,9 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <h2>System Log Entries</h2>
+    <p><%: Html.ActionLink("Back To Admin Logs Main Menu", "Index", "AdminLogs")%></p>
     <p>* You have to hit your browser's refresh button whenever you'd like to get the most up to date log information from the database. The page will not automatically update the records shown on this page.</p>
-     <%: Html.ActionLink("Clear All Logs", "Clear", new { id="systemLogs" }) %>
+     <%: Html.ActionLink("Delete All Log Entries", "Clear", new { id="systemLogs" }) %>
     <table>
         <tr>
             <th>

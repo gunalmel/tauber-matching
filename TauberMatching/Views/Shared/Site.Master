@@ -64,11 +64,13 @@
                     <li>
                         <%: Html.ActionLink("Reports", "Index", "Reports")%></li>
                     <li>
+                        <%: Html.ActionLink("App Log Records", "Index", "AdminLogs")%></li>
+<%--                    <li>
                         <%: Html.ActionLink("System Logs", "SystemLogs", "AdminLogs")%></li>
                     <li>
                         <%: Html.ActionLink("Email Logs", "EmailLogs", "AdminLogs")%></li>
                     <li>
-                        <%: Html.ActionLink("Email Queue", "EmailQueue", "AdminLogs")%></li>
+                        <%: Html.ActionLink("Email Queue", "EmailQueue", "AdminLogs")%></li>--%>
                 </ul>
             </div>
         </div>

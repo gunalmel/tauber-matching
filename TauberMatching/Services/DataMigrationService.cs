@@ -40,6 +40,7 @@ namespace TauberMatching.Services
         public void CreateProjects(IList<ProjectDTO> pdtos)
         {
             db.Configuration.ValidateOnSaveEnabled = false;
+            DeleteEntity(EntityType.EmailLogs);
             DeleteEntity(EntityType.Matchings);
             DeleteEntity(EntityType.Projects);
             foreach (var pdto in pdtos)
@@ -67,6 +68,7 @@ namespace TauberMatching.Services
         public void CreateStudents(IList<StudentDTO> sdtos)
         {
             db.Configuration.ValidateOnSaveEnabled = false;
+            DeleteEntity(EntityType.EmailLogs);
             DeleteEntity(EntityType.Matchings);
             DeleteEntity(EntityType.Students);
             foreach (var sdto in sdtos)
@@ -107,5 +109,5 @@ namespace TauberMatching.Services
             return ConfigurationManager.ConnectionStrings["MatchingDB"].ConnectionString;
         }
     }
-    public enum EntityType { Projects, Students, UploadEntities, Matchings }
+    public enum EntityType { Projects, Students, UploadEntities, Matchings, EmailLogs }
 }

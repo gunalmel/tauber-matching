@@ -10,6 +10,11 @@ namespace TauberMatching.Controllers
     [Authorize(Roles = "Administrator")]
     public class AdminLogsController : Controller
     {
+        [HttpGet]
+        public ActionResult Index()
+        {
+            return View();
+        }
         //
         // GET: /AdminLogs/
         [HttpGet]
