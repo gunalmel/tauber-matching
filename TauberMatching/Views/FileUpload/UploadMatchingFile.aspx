@@ -46,7 +46,7 @@
     <div id="divMessage">
         <%= TempData["message"] %>
     </div>
-    <form action="/FileUpload/UploadMatchingFile" method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data">
     <label for="file">Filename:</label>
     <input type="file" name="file" id="file" />
     <input id="btnSubmit" type="submit" value="Upload File" />

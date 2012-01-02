@@ -215,6 +215,9 @@
     <Content Include="App_Data\MatchingDB.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\uploads\placeholder.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\images\wait.gif" />
     <Content Include="Content\ProjectAndStudentDetails.css" />
     <Content Include="Content\RankProjects.css" />
@@ -508,9 +511,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="log4net.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\uploads\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
