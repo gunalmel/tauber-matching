@@ -54,11 +54,19 @@ namespace TauberMatching.Services
         private void CreateMessage(string to, string subject, string body)
         {
             _mail.From = new MailAddress(MAIL_FROM);
-            if(to.Contains(','))
-                foreach (string receiver in to.Split(','))
-                    _mail.To.Add(receiver);
-            else
-                _mail.To.Add(to);
+            try
+            {
+                if (to.Contains(','))
+                    foreach (string receiver in to.Split(','))
+                        _mail.To.Add(receiver);
+                else
+                    _mail.To.Add(to);
+            }
+            catch (Exception ex)
+            {
+                log.Error("The e-mail address/es in \"ToString\" field is/are invalid. Please check the last data entry box under \"Email Configuration\" tab to make sure that if there are multipe e-mail addresses are specified theya are sparated by \",\" not by \";\"",ex);
+                throw ex;
+            }
             _mail.Subject = subject;
             _mail.Body = body;
             _mail.IsBodyHtml = IS_MAIL_HTML;

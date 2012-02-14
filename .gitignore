@@ -3,6 +3,7 @@
 *.DS_Store
 
 #Visual Studio files
+MatchingDB.2
 *.[Oo]bj
 *.old
 *.exe
