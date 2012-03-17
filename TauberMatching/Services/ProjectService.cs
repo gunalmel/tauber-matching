@@ -141,7 +141,7 @@ namespace TauberMatching.Services
         }
 
         /// <summary>
-        /// Replaces all the matching students within the list of matching objects of a project with the students specified by student id array provided as argument.
+        /// Updates the matchings for a project whenever user updates the details of a project
         /// </summary>
         /// <param name="studentIdsToAdd">List of student identifiers that will constitute the new matching list of the given project</param>
         public static void ReplaceMatchingsForProjectWith(int projectId, int[] studentIdsToAdd)
@@ -165,37 +165,20 @@ namespace TauberMatching.Services
                 // Add students that did not exist before
                 foreach (var sId in newStudentIds)
                 {
-                    Student st = db.Students.Where(s => s.Id == sId).FirstOrDefault();
+                    Student st = db.Students.Include("StudentFeedbacks.Project").Where(s => s.Id == sId).FirstOrDefault();
                     Matching m = new Matching() { Project = project, Student = st, ProjectScore = ProjectScore.NoScore.ToString(), StudentScore = StudentScore.NoScore.ToString() };
-                    project.Matchings.Add(m);
+                    db.Matchings.Add(m);
+                    StudentFeedback studenFeedbackToRemove = st.StudentFeedbacks.Where(sf => sf.Project.Id == project.Id).FirstOrDefault();
+                    db.StudentFeedbacks.Remove(studenFeedbackToRemove);
                 }
                 #endregion
                 #region Clear the collection for the students replaced off the db.
                 foreach (ProjectReject pr in projectRejectsToRemove)
                     db.ProjectRejects.Remove(pr);
                 #endregion
-
-                //ICollection<Matching> matchings = new List<Matching>();
-                //var existingMatchingsToBeReplaced = db.Matchings.Where(m=>m.Project.Id==projectId).ToList();
-                // Find the children collection of students that used be matching the project but will not be matching following the replacement.
-                //var studentsRemovedFromProject = db.Matchings.Include("Student.StudentFeedbacks").Where(m=>m.Project.Id==projectId&&!studentIdsToAdd.Contains(m.Student.Id)).Select(m=>m.Student.Id).ToArray();
-                //var projectRejectsToRemove = project.ProjectRejects.Where(pr => studentsRemovedFromProject.Contains(pr.Student.Id)).ToList();
-
-                //foreach (int studentId in studentIdsToAdd)
-                //{
-                //    Student st = db.Students.Where(s => s.Id == studentId).FirstOrDefault();
-                //    Matching m = new Matching() { Project = project, Student = st,ProjectScore=ProjectScore.NoScore.ToString(), StudentScore=StudentScore.NoScore.ToString() };
-                //    matchings.Add(m);
-                //}
-                //#region Clear the collection for the students replaced off the db.
-                //foreach (ProjectReject pr in projectRejectsToRemove)
-                //    db.ProjectRejects.Remove(pr);
-                //foreach (Matching m in existingMatchingsToBeReplaced)
-                //    db.Matchings.Remove(m);
-                //#endregion
-                //project.Matchings = matchings;
+                
                 db.SaveChanges();
-                // Not needed because only non-matching students should be providing Positive|Constructive Feedback StudentService.DeleteStudentFeedbacksReferencingProjectForStudents(projectId, studentsRemovedFromProject);
+                // Not needed to delete constructive and positive feedback because only non-matching students should be providing Positive|Constructive Feedback StudentService.DeleteStudentFeedbacksReferencingProjectForStudents(projectId, studentsRemovedFromProject);
             }
         }
 

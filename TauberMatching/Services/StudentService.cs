@@ -116,33 +116,36 @@ namespace TauberMatching.Services
             }
         }
         /// <summary>
-        /// Replaces all the matching students within the list of matching objects of a student with the projects specified by project id array provided as argument.
+        /// Updates matchings for a student with the user selections on Student Details screen
         /// </summary>
         /// <param name="projectIdsToAdd">List of project identifiers that will constitute the new matching list of the given student</param>
         public static void ReplaceMatchingsForStudentWith(int studentId, int[] projectIdsToAdd)
         {
             using (MatchingDB db = new MatchingDB())
             {
-                Student student = db.Students.Include("Matchings.Project").Include("StudentFeedbacks").Where(s => s.Id == studentId).FirstOrDefault();
-                ICollection<Matching> matchings = new List<Matching>();
-                var existingMatchingsToBeReplaced = db.Matchings.Where(m=>m.Student.Id==studentId).ToList();
-                var projectsRemovedFromStudent = db.Matchings.Where(m => m.Student.Id == studentId && !projectIdsToAdd.Contains(m.Project.Id)).Select(m => m.Project.Id).ToArray();
-                var studentFeedbacksToBeDeleted = student.StudentFeedbacks.ToList();//db.StudentFeedbacks.Where(sf => projectsRemovedFromStudent.Contains(sf.Project.Id) && sf.Student.Id == studentId).ToList();
+                Student student = db.Students.Include("Matchings.Project").Include("StudentFeedbacks.Project").Where(s => s.Id == studentId).FirstOrDefault();
+                if (student.Matchings == null)
+                    student.Matchings = new List<Matching>();
+                IList<Matching> existingStudentMatchings = student.Matchings.ToList();
+                IList<Matching> matchingsToRemove = existingStudentMatchings.Where(m => !projectIdsToAdd.Contains(m.Project.Id)).ToList();
+                int[] projectIdsToRemove = matchingsToRemove.Select(m => m.Project.Id).ToArray();
+                int[] newProjectIds = projectIdsToAdd.Where(pId => !existingStudentMatchings.Select(m => m.Project.Id).Contains(pId)).ToArray();
+                int[] projectsRemovedFromStudent = matchingsToRemove.Where(m => m.Student.Id == studentId && !projectIdsToAdd.Contains(m.Project.Id)).Select(m => m.Project.Id).ToArray();
+                IList<StudentFeedback> studentFeedbacksToBeDeleted = student.StudentFeedbacks.Where(sf => newProjectIds.Contains(sf.Project.Id)).ToList();
 
-                foreach (int projectId in projectIdsToAdd)
-                {
-                    Project project = db.Projects.Where(p => p.Id == projectId).FirstOrDefault();
-                    Matching m = new Matching() { Student = student, Project = project, ProjectScore = ProjectScore.NoScore.ToString(), StudentScore = StudentScore.NoScore.ToString() };
-                    matchings.Add(m);
-                }
-
-                #region Delete the student feedbacks and matchings to be removed of the student for the projects that appeared in the matchings that were replaced
-                foreach (StudentFeedback sf in studentFeedbacksToBeDeleted)
-                    db.StudentFeedbacks.Remove(sf);
-                foreach (Matching m in existingMatchingsToBeReplaced)
+                //Remove projects that do not appear in the list of projects to add
+                foreach (var m in matchingsToRemove)
                     db.Matchings.Remove(m);
-                #endregion
-                student.Matchings = matchings;
+                // Add projects that did not exist before
+                foreach (var pId in newProjectIds)
+                {
+                    Project project = db.Projects.Where(p => p.Id == pId).FirstOrDefault();
+                    Matching m = new Matching() { Project = project, Student = student, ProjectScore = ProjectScore.NoScore.ToString(), StudentScore = StudentScore.NoScore.ToString() };
+                    db.Matchings.Add(m);
+                }
+                foreach (var sf in studentFeedbacksToBeDeleted)
+                    db.StudentFeedbacks.Remove(sf);
+
                 db.SaveChanges();
                 ProjectService.DeleteProjectRejectsReferencingStudentForProjects(studentId, projectsRemovedFromStudent);
             }
