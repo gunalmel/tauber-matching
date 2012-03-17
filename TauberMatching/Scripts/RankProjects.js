@@ -222,7 +222,7 @@ function isRankingContinuous() {
     var isContinuous = true;
     var error = new UIError(!isContinuous, "");
     if (!EnforceContinuousProjectRanking)
-        return new UIError(isContinuous, "");
+        return error;
     ScoreBuckets.filter(":not(#ul_NoScore_Bucket,#ul_Reject_Bucket)").each(function (index) {
         var projectCountInTheBucket = $(this).find("li:not(.list-heading)").length;
         positionOfTheNextBucketWithProjects = projectCountInTheBucket > 0 ? index : positionOfTheNextBucketWithProjects;

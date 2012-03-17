@@ -359,7 +359,7 @@ function isRankingContinuous() {
     var isContinuous = true;
     var error = new UIError(!isContinuous, "");
     if (!EnforceContinuousStudentRanking)
-        return new UIError(isContinuous, "");
+       return error;
     ScoreBuckets.filter(":not(#ul_NoScore_Bucket,#ul_Reject_Bucket)").each(function (index) {
         var studentCountInTheBucket = $(this).find("li:not(.list-heading)").length;
         positionOfTheNextBucketWithStudents = studentCountInTheBucket > 0 ? index : positionOfTheNextBucketWithStudents;
