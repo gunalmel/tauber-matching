@@ -7,12 +7,33 @@
     <script src="<%=Url.Content("~/Scripts/ckeditor/ckeditor.js") %>" type="text/javascript"></script>
     <script src="<%=Url.Content("~/Scripts/ckeditor/adapters/jquery.js") %>" type="text/javascript"></script>
     <script type="text/javascript">
+        function validateEmail(email) {
+            var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
+        }
         $(function () {
             //$('#ProjectAccessUrlEmailBody').ckeditor(); // Instantiating CKEditor using jquery plugin
             CKEDITOR.replace('ProjectAccessUrlEmailBody', { width: '75%', height: '100' });
             CKEDITOR.replace('StudentAccessUrlEmailBody', { width: '75%', height: '100' });
             CKEDITOR.replace('EmailHeader', { width: '75%', height: '100' });
             CKEDITOR.replace('EmailFooter', { width: '75%', height: '100' });
+            $("#btnSave").live("click", function () {
+                var emailAddresses = $("#ConfirmationEmailReceivers").val();
+                if (emailAddresses != null && emailAddresses.length > 0 && (emailAddresses.indexOf(';') > -1 || emailAddresses.indexOf(':') > -1)) {
+                    alert("ERROR! PAGE IS NOT SAVED!: If there is more than one Confirmation Email Recipient email address then those addresses should be separated by comma (,) character");
+                    return false;
+                }
+                if (emailAddresses != null && emailAddresses.length > 0) {
+                    var emails = emailAddresses.split(',');
+                    for (var emailCounter = 0; emailCounter < emails.length; emailCounter++) {
+                        if (!validateEmail(emails[emailCounter])) {
+                            alert("ERROR! PAGE IS NOT SAVED!: There is an invalid e-mail address in the Confirmation Email Recipients text box");
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            });
         });
     </script>
 </asp:Content>
@@ -177,7 +198,7 @@
             
             <div class="editor-label">          
                 <br /><%: Html.LabelFor(model => model.ConfirmationEmailReceivers) %><br />
-                * Enter the list of e-mail addresses that will receive ranking confirmation e-mails that will also be sent to users to confirm their submissions.<br />
+                * Enter the list of e-mail addresses separated by comma that will receive ranking confirmation e-mails which will also be sent to users to confirm their submissions.<br />
             </div>
             <div class="editor-field">
                 <%: Html.TextBoxFor(model => model.ConfirmationEmailReceivers, new { @id = "ConfirmationEmailReceivers", @style = "width: 600px;" })%>
@@ -185,7 +206,7 @@
             </div>
             
             <p>
-                <input type="submit" value="Save" />
+                <input id="btnSave" type="submit" value="Save" />
             </p>
         </fieldset>
 

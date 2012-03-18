@@ -145,8 +145,8 @@ namespace TauberMatching.Models
             set { _rankStudentsController = value; }
         }
         private string _confirmationEmailReceivers;
-        [DisplayName("Confirmation Email Receivers:")]
-        [Required(ErrorMessage = "Mandatory Field: You must enter the list of e-mail accounts separated by comma character that will receive ranking submission confirmation e-mails !")]
+        [DisplayName("Confirmation Email Recipients:")]
+        [Required(ErrorMessage = "Mandatory Field: You must enter the list of e-mail accounts separated by comma (,) character that will receive ranking submission confirmation e-mails !")]
         public string ConfirmationEmailReceivers
         {
             get { return _confirmationEmailReceivers; }
