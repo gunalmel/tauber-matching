@@ -31,8 +31,8 @@ namespace TauberMatching.Controllers
                 db.Database.ExecuteSqlCommand(sqlLog, new object[0]);
                 db.Database.ExecuteSqlCommand(sqlMatchings, new object[0]);
                 db.Database.ExecuteSqlCommand(sqlProjectRejects, new object[0]);
-                db.Database.ExecuteSqlCommand(sqlProjects, new object[0]);
                 db.Database.ExecuteSqlCommand(sqlStudentFeedbacks, new object[0]);
+                db.Database.ExecuteSqlCommand(sqlProjects, new object[0]);
                 db.Database.ExecuteSqlCommand(sqlStudents, new object[0]);
                 db.Database.ExecuteSqlCommand(sqlUploadEntities, new object[0]);
                 connString = db.Database.Connection.ConnectionString;
