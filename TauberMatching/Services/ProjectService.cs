@@ -168,8 +168,9 @@ namespace TauberMatching.Services
                     Student st = db.Students.Include("StudentFeedbacks.Project").Where(s => s.Id == sId).FirstOrDefault();
                     Matching m = new Matching() { Project = project, Student = st, ProjectScore = ProjectScore.NoScore.ToString(), StudentScore = StudentScore.NoScore.ToString() };
                     db.Matchings.Add(m);
-                    StudentFeedback studenFeedbackToRemove = st.StudentFeedbacks.Where(sf => sf.Project.Id == project.Id).FirstOrDefault();
-                    db.StudentFeedbacks.Remove(studenFeedbackToRemove);
+                    StudentFeedback studentFeedbackToRemove = st.StudentFeedbacks.Where(sf => sf.Project.Id == project.Id).FirstOrDefault();
+                    if(studentFeedbackToRemove!=null)
+                        db.StudentFeedbacks.Remove(studentFeedbackToRemove);
                 }
                 #endregion
                 #region Clear the collection for the students replaced off the db.
