@@ -59,6 +59,7 @@ namespace TauberMatching.Models
         }
         [HiddenInput]
         public Guid Guid { get; set; }
+        [Required(ErrorMessage = "Mandatory Field: You must enter the first name for the project contact!")]
         [DisplayName("Contact First Name")]
         [MaxLength(128, ErrorMessage = "Contact first name can be at most 128 characters long.")]
         public string ContactFirst
@@ -71,6 +72,7 @@ namespace TauberMatching.Models
                 _firstName = value;
             }
         }
+        [Required(ErrorMessage = "Mandatory Field: You must enter the last name for the project contact!")]
         [DisplayName("Contact Last Name")]
         [MaxLength(128, ErrorMessage = "Contact last name can be at most 128 characters long.")]
         public string ContactLast
@@ -83,6 +85,7 @@ namespace TauberMatching.Models
                 _lastName = value;
             }
         }
+        [Required(ErrorMessage = "Mandatory Field: You must enter the email for the project contact!")]
         [DisplayName("Contact Email")]
         [RegularExpression(@"^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$", ErrorMessage = "Valid Email Address is required.")]
         [MaxLength(256, ErrorMessage = "Contact email name can be at most 256 characters long.")]
