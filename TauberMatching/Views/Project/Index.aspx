@@ -35,7 +35,7 @@
             <th>Name</th>
             <th>Contact Name</th>
             <th>Contact Email</th>
-            <th>URL Emailed?</th>
+            <th>URL Emailed</th>
             <th>Ranked</th>
             <th>Contact Phone</th>
             <th>Access Link</th>

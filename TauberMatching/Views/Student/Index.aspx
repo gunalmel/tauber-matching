@@ -35,8 +35,8 @@
             <th>Student Name</th>
             <th>Degree</th>
             <th>Email</th>
+            <th>URL Emailed</th>
             <th>Ranked</th>
-            <th>URL Emailed?</th>
             <th>Access Url</th>
             <th>Comments</th>
         </tr>
