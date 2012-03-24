@@ -210,7 +210,15 @@ namespace TauberMatching.Services
             StudentService.DeleteStudentFeedbacksReferencingProject(projectId);
             using (MatchingDB db = new MatchingDB())
             {
-                p = db.Projects.SingleOrDefault(pr => pr.Id == projectId);
+                p = db.Projects.Include("EmailLogs").SingleOrDefault(pr => pr.Id == projectId);
+
+                #region Remove EmailLogs for the project
+                IList<EmailLog> emailLogsToBeDeleted = p.EmailLogs.ToList();
+                foreach (EmailLog log in emailLogsToBeDeleted)
+                    db.EmailLogs.Remove(log);
+                db.SaveChanges(); 
+                #endregion
+
                 db.Projects.Remove(p);
                 db.SaveChanges();
             }

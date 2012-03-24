@@ -172,7 +172,15 @@ namespace TauberMatching.Services
             DeleteMatchingsForStudent(studentId);
             using (MatchingDB db = new MatchingDB())
             {
-                s = db.Students.SingleOrDefault(st => st.Id == studentId);
+                s = db.Students.Include("EmailLogs").SingleOrDefault(st => st.Id == studentId);
+
+                #region Remove EmailLogs for the project
+                IList<EmailLog> emailLogsToBeDeleted = s.EmailLogs.ToList();
+                foreach (EmailLog log in emailLogsToBeDeleted)
+                    db.EmailLogs.Remove(log);
+                db.SaveChanges();
+                #endregion
+
                 db.Students.Remove(s);
                 db.SaveChanges();
             }
