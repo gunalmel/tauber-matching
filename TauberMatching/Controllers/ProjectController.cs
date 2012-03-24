@@ -119,7 +119,7 @@ namespace TauberMatching.Controllers
             if (ModelState.IsValid)
             {
                 MatchingDB db = new MatchingDB();
-                p.Guid = new Guid();
+                p.Guid = Guid.NewGuid();
                 db.Projects.Add(p);
                 db.SaveChanges();
                 TempData["message"] = "Project \"" + p.Name + "\" is added!";

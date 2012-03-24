@@ -76,7 +76,7 @@ namespace TauberMatching.Controllers
             if (ModelState.IsValid)
             {
                 MatchingDB db = new MatchingDB();
-                st.Guid = new Guid();
+                st.Guid = Guid.NewGuid();
                 db.Students.Add(st);
                 db.SaveChanges();
                 TempData["message"] = "Student \"" + st.FirstName+" "+st.LastName + "\" is added!";
