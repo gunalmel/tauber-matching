@@ -17,7 +17,8 @@ namespace TauberMatching.Services
         private static readonly string MAIL_ACCOUNT;
         private static readonly string MAIL_PWD;
         private static readonly string MAIL_FROM;
-        private static readonly string MAIL_FROM_FULLNAME;
+        private static readonly string MAIL_FROM_INSTITUTE;
+        private static readonly string MAIL_FROM_ADMIN;
         private static readonly bool ENABLE_SSL;
         private static readonly bool IS_MAIL_HTML;
         private static readonly bool IS_TESTING;
@@ -37,8 +38,9 @@ namespace TauberMatching.Services
             IS_TESTING = emailConfig.IsTesting;//Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["IsTesting"]);
             using (MatchingDB db = new MatchingDB())
             {
-                MAIL_FROM = db.ConfigParameters.First(c => c.Id == ((int)ConfigEnum.SiteMasterEmail)).Value;
-                MAIL_FROM_FULLNAME = "Tauber Institute Matching Application";
+                MAIL_FROM = db.ConfigParameters.First(c => c.Id == ((int)ConfigEnum.SiteMasterEmail)).Value;                              
+                MAIL_FROM_INSTITUTE = "Tauber Institute Matching Application";
+                MAIL_FROM_ADMIN = db.ConfigParameters.First(c => c.Name == "SiteMasterFirstName").Value + " " + db.ConfigParameters.First(c => c.Name == "SiteMasterLastName").Value;
             }
             
             if(System.Web.HttpContext.Current==null)
@@ -58,9 +60,8 @@ namespace TauberMatching.Services
         }
         private void CreateMessage(string to, string subject, string body)
         {
-            string mailFromHeader =  "\""+MAIL_FROM_FULLNAME+"\" "+MAIL_FROM+"";
-            _mail.From = new MailAddress(MAIL_FROM,MAIL_FROM_FULLNAME);
-            _mail.ReplyToList.Add(new MailAddress(MAIL_FROM, MAIL_FROM_FULLNAME));
+            _mail.From = new MailAddress(MAIL_FROM, MAIL_FROM_INSTITUTE);
+            _mail.ReplyToList.Add(new MailAddress(MAIL_FROM, MAIL_FROM_ADMIN));
             try
             {
                 if (to.Contains(','))
