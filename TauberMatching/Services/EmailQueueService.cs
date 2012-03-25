@@ -35,26 +35,33 @@ namespace TauberMatching.Services
         {
             EmailLog eLog = new EmailLog(qMessage,status);
             Project pr; Student st;
-            switch (qMessage.ContactType)
+            try
             {
-                case "Project":
-                    pr = db.Projects.Where(p => p.Id == qMessage.ContactId).First();
-                    pr.Emailed=(status==EmailStatus.Success.ToString());
-                    if (pr.EmailLogs == null)
-                        pr.EmailLogs = new List<EmailLog>();
-                    pr.EmailLogs.Add(eLog);
-                    break;
-                case "Student":
-                    st = db.Students.Where(s => s.Id == qMessage.ContactId).First();
-                    st.Emailed = (status == EmailStatus.Success.ToString());
-                    if (st.EmailLogs == null)
-                        st.EmailLogs = new List<EmailLog>();
-                    st.EmailLogs.Add(eLog);
-                    break;
-                default:
-                    break;
+                switch (qMessage.ContactType)
+                {
+                    case "Project":
+                        pr = db.Projects.Where(p => p.Id == qMessage.ContactId).First();
+                        pr.Emailed = (status == EmailStatus.Success.ToString());
+                        if (pr.EmailLogs == null)
+                            pr.EmailLogs = new List<EmailLog>();
+                        pr.EmailLogs.Add(eLog);
+                        break;
+                    case "Student":
+                        st = db.Students.Where(s => s.Id == qMessage.ContactId).First();
+                        st.Emailed = (status == EmailStatus.Success.ToString());
+                        if (st.EmailLogs == null)
+                            st.EmailLogs = new List<EmailLog>();
+                        st.EmailLogs.Add(eLog);
+                        break;
+                    default:
+                        break;
+                }
+                db.SaveChanges();
             }
-            db.SaveChanges();
+            catch (Exception ex)
+            {
+                log.Error("An unexpected exception occured while creating a log record for the notification e-mail sent from the queue. The id for the " + qMessage.ContactType + " is: " + qMessage.ContactId + ". You can disregard this message if the " + qMessage.ContactType + " is deleted.", ex.InnerException ?? ex);
+            }
         }
         public static void SendMailsInTheQueue()
         {
