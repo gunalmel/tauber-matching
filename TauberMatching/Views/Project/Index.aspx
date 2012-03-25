@@ -18,9 +18,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div id="divWait" style="position:fixed;top:32%;left:42%;background-color:white;z-index:100;display:none">
-        Please Wait. Processing...
-    </div>
+    <div id="divWait">Please Wait. Processing...</div>
     <div id="divMessage">
         <% =ViewContext.TempData["message"] %>
     </div>

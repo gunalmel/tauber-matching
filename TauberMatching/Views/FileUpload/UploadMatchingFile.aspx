@@ -21,25 +21,6 @@
             divWait.toggle();
         }
     </script>
-    <style type="text/css">
-        #divWait
-        {
-            font-size:medium; 
-            font-weight:bold; 
-            color:Red; 
-            display:none;
-            position:fixed;
-            top:32%;
-            left:30%;
-            /*   background-color:white;*/
-            z-index:100;
-        }
-        #darkenScreenObject
-        {
-            height:100% !important;
-            width:100% !important;
-        }
-    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <h2>Upload Matching File</h2>
