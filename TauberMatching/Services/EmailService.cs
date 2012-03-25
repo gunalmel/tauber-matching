@@ -17,6 +17,7 @@ namespace TauberMatching.Services
         private static readonly string MAIL_ACCOUNT;
         private static readonly string MAIL_PWD;
         private static readonly string MAIL_FROM;
+        private static readonly string MAIL_FROM_FULLNAME;
         private static readonly bool ENABLE_SSL;
         private static readonly bool IS_MAIL_HTML;
         private static readonly bool IS_TESTING;
@@ -34,8 +35,12 @@ namespace TauberMatching.Services
             ENABLE_SSL = emailConfig.IsSSLEnabled;//Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["SSLEnabled"]);
             IS_MAIL_HTML = emailConfig.IsMailBodyHtml;//Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["IsMailBodyHtml"]);
             IS_TESTING = emailConfig.IsTesting;//Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["IsTesting"]);
-            MAIL_FROM = new MatchingDB().ConfigParameters.First(c => c.Id == ((int)ConfigEnum.SiteMasterEmail)).Value;
-
+            using (MatchingDB db = new MatchingDB())
+            {
+                MAIL_FROM = db.ConfigParameters.First(c => c.Id == ((int)ConfigEnum.SiteMasterEmail)).Value;
+                MAIL_FROM_FULLNAME = "Tauber Institute Matching Application";
+            }
+            
             if(System.Web.HttpContext.Current==null)
                 PICKUP_DIR = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName);
             else
@@ -53,7 +58,9 @@ namespace TauberMatching.Services
         }
         private void CreateMessage(string to, string subject, string body)
         {
-            _mail.From = new MailAddress(MAIL_FROM);
+            string mailFromHeader =  "\""+MAIL_FROM_FULLNAME+"\" "+MAIL_FROM+"";
+            _mail.From = new MailAddress(MAIL_FROM,MAIL_FROM_FULLNAME);
+            _mail.ReplyToList.Add(new MailAddress(MAIL_FROM, MAIL_FROM_FULLNAME));
             try
             {
                 if (to.Contains(','))
