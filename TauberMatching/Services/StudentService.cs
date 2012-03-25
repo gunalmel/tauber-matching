@@ -35,7 +35,7 @@ namespace TauberMatching.Services
         public static IDictionary<ScoreDetail, IList<Project>> GetProjectsForStudentGroupedByScore(Student student)
         {
             if (student.Matchings == null || student.Matchings.Count == 0 || student.Matchings.Select(m => m.Student).Count() == 0)
-                throw new ArgumentException("student", "There are no matching projects for the student. Make sure all properties of your student was eagerly loaded before it was passed as parameter.");
+                throw new ArgumentException("There are no matching projects for the student. Make sure all properties of your student was eagerly loaded before it was passed as parameter.", "student");
 
             var unsortedDict = student.Matchings.GroupBy(m => UIParamsAndMessages.StudentScoreDetails.Where(sd => sd.Score == m.StudentScore).FirstOrDefault()).ToDictionary(key => key.Key, value => value.Select(m => m.Project).ToList() as IList<Project>);
             
@@ -59,7 +59,7 @@ namespace TauberMatching.Services
                 IList<Project> projectsNotInterviewed = ProjectService.GetProjectsNotMatchingStudent(student.Id);
                 var positiveTypeName = StudentFeedbackType.Positive.ToString();
                 var constructiveTypeName = StudentFeedbackType.Constructive.ToString();
-                IDictionary<int,int> positiveFeedbacks = student.StudentFeedbacks.Where(sf => sf.Type == positiveTypeName).ToDictionary(key=>key.Project.Id,value=>value.FeedbackScore);
+                IDictionary<int, int> positiveFeedbacks = student.StudentFeedbacks.Where(sf => sf.Type == positiveTypeName).ToDictionary(key => key.Project.Id, value => value.FeedbackScore);
                 IDictionary<int, int> constructiveFeedbacks = student.StudentFeedbacks.Where(sf => sf.Type == constructiveTypeName).ToList().ToDictionary(key => key.Project.Id, value => value.FeedbackScore);
                 model = new RankProjectsIndexModel(student.Id, student.Guid.ToString(), student.FullName, scoreGroupedProjects, student.OtherComments, projectsNotInterviewed, positiveFeedbacks, constructiveFeedbacks);
             }
@@ -67,6 +67,13 @@ namespace TauberMatching.Services
             {
                 if (ex.ParamName == "project" || ex.ParamName == "guid")
                     model = new RankProjectsIndexModel(true, UIParamsAndMessages.INVALID_URL_ERROR_MESSAGE);
+                else
+                    throw ex;
+            }
+            catch (ArgumentException ex)
+            {
+                if (ex.ParamName=="student")
+                    model = new RankProjectsIndexModel(true, "There are no matchings for this student in the db yet. Interview data has not been entered.");
                 else
                     throw ex;
             }

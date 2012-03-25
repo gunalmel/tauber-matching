@@ -35,9 +35,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <h2><%= Model.IsError?"":"Welcome "+Model.StudentName %></h2>
-    <div id="divMessage">
-        <%= Model.IsError?Model.ErrorMessage:"" %>
-    </div>
+    <div id="divMessage" class="errorMessage"><%= Model.IsError?Model.ErrorMessage:"" %></div>
     <%if(!Model.IsError)
       {%>
     <div id="divInstructions">

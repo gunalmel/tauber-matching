@@ -36,7 +36,7 @@ namespace TauberMatching.Services
         public static IDictionary<ScoreDetail, IList<Student>> GetStudentsForProjectGroupedByScore(Project project)
         {
             if (project.Matchings == null || project.Matchings.Count == 0 || project.Matchings.Select(m => m.Student).Count() == 0)
-                throw new ArgumentException("project", "There are no matching students for the project. Make sure all properties of your project was eagerly loaded before it was passed as parameter.");
+                throw new ArgumentException("There are no matching students for the project. Make sure all properties of your project was eagerly loaded before it was passed as parameter.", "project");
            
             var unsortedDict = project.Matchings.GroupBy(m => UIParamsAndMessages.ProjectScoreDetails.Where(sd => sd.Score == m.ProjectScore).FirstOrDefault())
                                       .ToDictionary(key => key.Key, value => value.Select(m => m.Student).ToList() as IList<Student>);
@@ -79,6 +79,13 @@ namespace TauberMatching.Services
             {
                 if (ex.ParamName == "project" || ex.ParamName == "guid")
                     model = new RankStudentsIndexModel(true, UIParamsAndMessages.INVALID_URL_ERROR_MESSAGE);
+                else
+                    throw ex;
+            }
+            catch (ArgumentException ex)
+            {
+                if (ex.ParamName == "project")
+                    model = new RankStudentsIndexModel(true, "There are no matchings for this project in the db yet. Interview data has not been entered.");
                 else
                     throw ex;
             }
