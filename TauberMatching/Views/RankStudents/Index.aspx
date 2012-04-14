@@ -43,11 +43,11 @@
                Click on the yellow box with a student's name and discipline and 'drag and drop' it under the appropriate heading (A,B,C or Reject)
                <ol>
                    <li class="inst">
-                       Rank all of the candidates you interviewed using A,B,C, or X selections:
+                       Rank all of the candidates you interviewed using Ideal,Desired,Acceptable, or Reject selections:
                        <ul id="ulRanks">
-                           <li class="disc"><b>A:</b> Students who would be <b>ideal</b> members of your project team. Please rate at least <u><script type="text/javascript">document.write(MinAEngStudents);</script></u> engineering student and <u><script type="text/javascript">document.write(MinAEngStudents);</script></u> business student in the 'A' category. </li>
-                           <li class="disc"><b>B:</b> Students who would be <b>desired</b> members of your project team.</li>
-                           <li class="disc"><b>C:</b> Students who would be <b>acceptable</b> members of your project.</li>
+                           <li class="disc"><b>Ideal:</b> Students who would be <b>ideal</b> members of your project team. Please rate at least <u><script type="text/javascript">document.write(MinAEngStudents);</script></u> engineering student and <u><script type="text/javascript">document.write(MinAEngStudents);</script></u> business student in the 'A' category. </li>
+                           <li class="disc"><b>Desired:</b> Students who would be <b>desired</b> members of your project team.</li>
+                           <li class="disc"><b>Acceptable:</b> Students who would be <b>acceptable</b> members of your project.</li>
                            <li class="disc"><b>Reject:</b> <i>Optional.</i> If you feel strongly that a candidate would be <b>unacceptable</b> on your team, place his or her name here. A maximum of <u><script type="text/javascript">document.write(MaxRejectedEngStudents);</script></u> engineering student and <u><script type="text/javascript">document.write(MaxRejectedBusStudents);</script></u> business student can be placed in the 'Reject' category. </li>
                        </ul>
                    </li>
