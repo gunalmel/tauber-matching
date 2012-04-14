@@ -23,7 +23,7 @@
         <% =ViewContext.TempData["message"] %>
     </div>
     <h2>Projects</h2>
-    <b>Warning: </b>If there are any projects not matching any students you will not be able to select those project contatcs to send access url link.<br />
+    <b>Warning: </b>If there are any projects that did not interview with any students then you will not be able to select those project contatcs to send access url link.<br />
     The e-mails are not sent in real-time, e-mailed checkboxes will be updated after a minute you sent the e-mails. Once you sent e-mails do not get surprised that Emailed checkboxes are not immediately checked. Wait and refresh page every minute to see that Emailed information gets updated.<br />
     <a href="javascript:sendMail();">Send Email to the Selected Contacts</a>
     <table>

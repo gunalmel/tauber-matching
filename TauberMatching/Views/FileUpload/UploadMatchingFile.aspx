@@ -23,7 +23,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <h2>Upload Matching File</h2>
+    <h2>Upload Ranking File</h2>
     <div id="divMessage">
         <%= TempData["message"] %>
     </div>

@@ -46,7 +46,7 @@
         <div id="header">
             <div id="title">
                 <h1>
-                    TAUBER Institute Student/Project Matching Application</h1>
+                    TAUBER Institute Student/Project Ranking Application</h1>
             </div>
             <div id="logindisplay">
                 <% Html.RenderPartial("LogOnUserControl"); %>
@@ -65,7 +65,7 @@
                     <li>
                         <%: Html.ActionLink("Students", "Index", "Student")%></li>
                     <li>
-                        <%: Html.ActionLink("Upload Matching File", "UploadMatchingFile", "FileUpload")%></li>
+                        <%: Html.ActionLink("Upload Ranking File", "UploadMatchingFile", "FileUpload")%></li>
                     <li>
                         <%: Html.ActionLink("Reports", "Index", "Reports")%></li>
                     <li>
