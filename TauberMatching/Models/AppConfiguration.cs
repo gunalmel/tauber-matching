@@ -23,6 +23,9 @@ namespace TauberMatching.Models
         private int _minABusStudents;
         private int _minAEngStudents;
         private int _minAStudents;
+        private int _minBBusStudents;
+        private int _minBEngStudents;
+        private int _minBStudents;
         private int _maxRejectedBusStudents;
         private int _maxRejectedEngStudents;
         private int _maxRejectedStudents;
@@ -132,7 +135,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Minimum number of business students who should be in A categeory
         /// </summary>
-        [DisplayName("Min # of Business Students to be ranked A:")]
+        [DisplayName("Min # of Business Students to be ranked as Ideal (A):")]
         public int MinABusStudents
         {
             get { return _minABusStudents; }
@@ -141,7 +144,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Minimum number of engineering students who should be in A categeory
         /// </summary>
-        [DisplayName("Min # of Engineering Students to be ranked A:")]
+        [DisplayName("Min # of Engineering Students to be ranked as Ideal (A):")]
         public int MinAEngStudents
         {
             get { return _minAEngStudents; }
@@ -150,12 +153,41 @@ namespace TauberMatching.Models
         /// <summary>
         /// Minimum number of students who should be in A category
         /// </summary>
-        [DisplayName("Min total # of Students to be ranked A:")]
+        [DisplayName("Min total # of Students to be ranked as Ideal (A):")]
         public int MinAStudents
         {
             get { return _minAStudents; }
             set { _minAStudents = value; }
         }
+
+        /// <summary>
+        /// Minimum number of business students who should be in B categeory
+        /// </summary>
+        [DisplayName("Min # of Business Students to be ranked as Desired (B):")]
+        public int MinBBusStudents
+        {
+            get { return _minBBusStudents; }
+            set { _minBBusStudents = value; }
+        }
+        /// <summary>
+        /// Minimum number of engineering students who should be in B categeory
+        /// </summary>
+        [DisplayName("Min # of Engineering Students to be ranked as Desired (B):")]
+        public int MinBEngStudents
+        {
+            get { return _minBEngStudents; }
+            set { _minBEngStudents = value; }
+        }
+        /// <summary>
+        /// Minimum number of students who should be in B category
+        /// </summary>
+        [DisplayName("Min total # of Students to be ranked as Desired (B):")]
+        public int MinBStudents
+        {
+            get { return _minBStudents; }
+            set { _minBStudents = value; }
+        }
+
         /// <summary>
         /// Minimum number of projects that needed to be picked as th first choice by the students
         /// </summary>

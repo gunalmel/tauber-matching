@@ -4,9 +4,20 @@
 	Tauber Matching Web Application - Edit Application Configuration
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/themes/ui-lightness/jquery-ui.css" type="text/css" rel="stylesheet" />
+    <link href="../../Content/ui.spinner.css" rel="stylesheet" type="text/css" />
+    <script src="../../Scripts/jquery-ui-1.8.7.custom.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/ui.spinner.min.js" type="text/javascript"></script>
+    <style type="text/css">
+        .number_constraint
+        {
+            width: 20px !important;
+        }
+    </style>
     <script type="text/javascript">
         $(function () {
             $("#spClearDatabase").bind("click", function () { return confirm("!!!!!!!! ATTENTION !!!!!!!!!! Are you sure you'd like to reset the database? That will clear all records from the database except the app setup and email config parameters."); });
+            $(".number_constraint").spinner({ min: 0, max: 100, increment: 1 });
         });
     </script>
 </asp:Content>
@@ -57,7 +68,7 @@
                 <%: Html.LabelFor(model => model.MinABusStudents) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.MinABusStudents) %>
+                <%: Html.TextBoxFor(model => model.MinABusStudents, new { @class = "number_constraint" })%>
                 <%: Html.ValidationMessageFor(model => model.MinABusStudents) %>
             </div>
             
@@ -65,7 +76,7 @@
                 <%: Html.LabelFor(model => model.MinAEngStudents) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.MinAEngStudents) %>
+                <%: Html.TextBoxFor(model => model.MinAEngStudents, new { @class = "number_constraint" })%>
                 <%: Html.ValidationMessageFor(model => model.MinAEngStudents) %>
             </div>
 
@@ -73,15 +84,39 @@
                 <%: Html.LabelFor(model => model.MinAStudents) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.MinAStudents) %>
+                <%: Html.TextBoxFor(model => model.MinAStudents, new { @class = "number_constraint" })%>
                 <%: Html.ValidationMessageFor(model => model.MinAStudents) %>
+            </div>
+
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.MinBBusStudents) %>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextBoxFor(model => model.MinBBusStudents, new { @class = "number_constraint" })%>
+                <%: Html.ValidationMessageFor(model => model.MinBBusStudents) %>
+            </div>
+            
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.MinBEngStudents) %>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextBoxFor(model => model.MinBEngStudents, new { @class = "number_constraint" })%>
+                <%: Html.ValidationMessageFor(model => model.MinBEngStudents) %>
+            </div>
+
+            <div class="editor-label">
+                <%: Html.LabelFor(model => model.MinBStudents) %>
+            </div>
+            <div class="editor-field">
+                <%: Html.TextBoxFor(model => model.MinBStudents, new { @class = "number_constraint" })%>
+                <%: Html.ValidationMessageFor(model => model.MinBStudents) %>
             </div>
             
             <div class="editor-label">
                 <%: Html.LabelFor(model => model.MaxRejectedBusStudents) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.MaxRejectedBusStudents) %>
+                <%: Html.TextBoxFor(model => model.MaxRejectedBusStudents, new { @class = "number_constraint" })%>
                 <%: Html.ValidationMessageFor(model => model.MaxRejectedBusStudents) %>
             </div>
             
@@ -89,7 +124,7 @@
                 <%: Html.LabelFor(model => model.MaxRejectedEngStudents) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.MaxRejectedEngStudents) %>
+                <%: Html.TextBoxFor(model => model.MaxRejectedEngStudents, new { @class = "number_constraint" })%>
                 <%: Html.ValidationMessageFor(model => model.MaxRejectedEngStudents) %>
             </div>
 
@@ -97,7 +132,7 @@
                 <%: Html.LabelFor(model => model.MaxRejectedStudents) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.MaxRejectedStudents) %>
+                <%: Html.TextBoxFor(model => model.MaxRejectedStudents, new { @class = "number_constraint" })%>
                 <%: Html.ValidationMessageFor(model => model.MaxRejectedStudents) %>
             </div>
 
@@ -105,7 +140,7 @@
                 <%: Html.LabelFor(model => model.RejectedStudentThreshold) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.RejectedStudentThreshold) %>
+                <%: Html.TextBoxFor(model => model.RejectedStudentThreshold, new { @class = "number_constraint" })%>
                 <%: Html.ValidationMessageFor(model => model.RejectedStudentThreshold) %>
             </div>
 
@@ -113,7 +148,7 @@
                 <%: Html.LabelFor(model => model.MinFirstProjects) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.MinFirstProjects)%>
+                <%: Html.TextBoxFor(model => model.MinFirstProjects, new { @class = "number_constraint" })%>
                 <%: Html.ValidationMessageFor(model => model.MinFirstProjects)%>
             </div>
             
@@ -121,7 +156,7 @@
                 <%: Html.LabelFor(model => model.MaxRejectedProjects) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.MaxRejectedProjects) %>
+                <%: Html.TextBoxFor(model => model.MaxRejectedProjects, new { @class = "number_constraint" })%>
                 <%: Html.ValidationMessageFor(model => model.MaxRejectedProjects) %>
             </div>
 
@@ -129,7 +164,7 @@
                 <%: Html.LabelFor(model => model.RejectedProjectThreshold) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.RejectedProjectThreshold) %>
+                <%: Html.TextBoxFor(model => model.RejectedProjectThreshold, new { @class = "number_constraint" })%>
                 <%: Html.ValidationMessageFor(model => model.RejectedProjectThreshold) %>
             </div>
             

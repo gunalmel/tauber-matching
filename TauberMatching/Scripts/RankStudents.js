@@ -15,13 +15,19 @@
  * var webServiceUrlToSubmit, AdminPhone, AdminEmail is set in the view.
  */
 /** Error message to be displayed when the user assigns A to a number of engineering students less  than the number specified by MinAEngStudents */
-var engStudentsErrorMessage = "You have to assign A to at least " + MinAEngStudents + " engineering student" + (MinAEngStudents > 1 ? "s.\n" : ".\n");
+var engStudentsAErrorMessage = 'You have to pick at least ' + MinAEngStudents + ' engineering student' + (MinAEngStudents > 1 ? 's  as "Ideal".\n' : '  as "Ideal".\n');
+/** Error message to be displayed when the user assigns B to a number of engineering students less  than the number specified by MinBEngStudents */
+var engStudentsBErrorMessage = 'You have to pick at least ' + MinBEngStudents + ' engineering student' + (MinBEngStudents > 1 ? 's as "Desired".\n' : ' as "Desired".\n');
 /** Error message to be displayed when the user the user assigns A to a number of business students less than the number specified by MinABusStudents */
-var busStudentsErrorMessage = "You have to assign A to at least " + MinABusStudents + " business student" + (MinABusStudents > 1 ? "s.\n" : ".\n");
+var busStudentsAErrorMessage = 'You have to pick at least ' + MinABusStudents + ' business student' + (MinABusStudents > 1 ? 's as "Ideal".\n' : '  as "Ideal".\n');
+/** Error message to be displayed when the user the user assigns A to a number of business students less than the number specified by MinBBusStudents */
+var busStudentsBErrorMessage = 'You have to pick at least ' + MinBBusStudents + ' business student' + (MinBBusStudents > 1 ? 's as "Desired".\n' : ' as "Desired".\n');
 /** Error message to be displayed when the the user assigns A to a number of students less than the number specified by MinAStudents */
-var allStudentsErrorMessage = "You have to assign A to at least " + MinAStudents + " student" + (MinAStudents > 1 ? "s.\n" : ".\n");
+var allStudentsAErrorMessage = 'You have to pick at least ' + MinAStudents + ' student' + (MinAStudents > 1 ? 's as "Ideal" in total.\n' : ' as "Ideal" in total.\n');
+/** Error message to be displayed when the the user assigns B to a number of students less than the number specified by MinBStudents */
+var allStudentsBErrorMessage = 'You have  to pick at least ' + MinBStudents + ' student' + (MinBStudents > 1 ? 's as "Desired" in total.\n' : ' as "Desired" in total.\n');
 /** If EnforceContinuousStudentRanking then the Error message to be displayed when ranking scheme is sparse */
-var sparseRankingErrorMessage = "When you are ranking students, your ranking scheme should not be sparse, e.g.: If there are students in A and C when there are no students in B that's an error.\n";
+var sparseRankingErrorMessage = 'When you are ranking students, your ranking scheme should not be sparse, e.g.: If there are students in the "Ideal" and "Aceptable" boxes when there are no students in the "Desired" box that is an error.\n';
 
 var minTotalStudentsToRejectViolationErrorMessage = "You should have interviewed at least " + RejectedStudentThreshold + " students to be able to reject a student\n";
 var maxEngStudentsToRejectViolationErrorMessage = "Maximum # of Engineering students you can reject is: " + MaxRejectedEngStudents+"\n";
@@ -257,11 +263,12 @@ function buildProjectRankingDto() {
 function runAllValidations() {
     divUserErrors.html("");
     var AError = checkForAStudentError();
+    var BError = checkForBStudentError();
     var isContinuousError = isRankingContinuous();
     var isRejectReasonEmptyError = validateRejectReason();
     var areAllStudentsRanked = checkIfAllStudentsRanked();
-    var error = new UIError(AError.isError || isContinuousError.isError || isRejectReasonEmptyError.isError || areAllStudentsRanked.isError, "");
-    error.errorMessage = AError.errorMessage + isContinuousError.errorMessage + isRejectReasonEmptyError.errorMessage + areAllStudentsRanked.errorMessage;
+    var error = new UIError(AError.isError || BError.isError || isContinuousError.isError || isRejectReasonEmptyError.isError || areAllStudentsRanked.isError, "");
+    error.errorMessage = AError.errorMessage + BError.errorMessage + isContinuousError.errorMessage + isRejectReasonEmptyError.errorMessage + areAllStudentsRanked.errorMessage;
     error.errorMessage = error.errorMessage.replace(/\n/g, '<br/>').replace(/  ,/g, '<br/>');
     divUserErrors.html(error.errorMessage);
     return error;
@@ -336,15 +343,40 @@ function checkForAStudentError() {
     var errorMessage = "";
     if (MinAEngStudents != -1 && aEngStudentCount < MinAEngStudents && StudentCount.Eng > 0) {
         isError = true;
-        errorMessage += engStudentsErrorMessage;
+        errorMessage += engStudentsAErrorMessage;
     }
     if (MinABusStudents != -1 && aBusStudentCount < MinABusStudents && StudentCount.Bus > 0) {
         isError = true;
-        errorMessage += busStudentsErrorMessage;
+        errorMessage += busStudentsAErrorMessage;
     }
     if (MinAStudents != -1 && aStudentCount < MinAStudents) {
         isError = true;
-        errorMessage += allStudentsErrorMessage;
+        errorMessage += allStudentsAErrorMessage;
+    }
+    return new UIError(isError, errorMessage);
+}
+
+/**
+* @function Checks if the required min # of eng, bus and total students are assigned B
+* @returns {UIError} Returns an UIError object to indicate whether the validation result is an error, if it is then errorMessage property is set to the error message to be displayed.
+*/
+function checkForBStudentError() {
+    var bEngStudentCount = getStudentCountForScoreForDegree("B", "Eng");
+    var bBusStudentCount = getStudentCountForScoreForDegree("B", "Bus");
+    var bStudentCount = bEngStudentCount + bBusStudentCount;
+    var isError = false;
+    var errorMessage = "";
+    if (MinBEngStudents != -1 && bEngStudentCount < MinBEngStudents && StudentCount.Eng > 0) {
+        isError = true;
+        errorMessage += engStudentsBErrorMessage;
+    }
+    if (MinBBusStudents != -1 && bBusStudentCount < MinBBusStudents && StudentCount.Bus > 0) {
+        isError = true;
+        errorMessage += busStudentsBErrorMessage;
+    }
+    if (MinBStudents != -1 && bStudentCount < MinBStudents) {
+        isError = true;
+        errorMessage += allStudentsBErrorMessage;
     }
     return new UIError(isError, errorMessage);
 }

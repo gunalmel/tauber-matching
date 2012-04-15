@@ -458,6 +458,8 @@
     <Content Include="Scripts\json.js" />
     <Content Include="Scripts\MicrosoftMvcJQueryValidation.js" />
     <Content Include="Scripts\RankStudents.js" />
+    <Content Include="Content\ui.spinner.css" />
+    <Content Include="Scripts\ui.spinner.min.js" />
     <Content Include="Scripts\UIFunctions.js" />
     <Content Include="Views\AdminLogs\EmailLogs.aspx" />
     <Content Include="Views\AdminLogs\EmailQueue.aspx" />

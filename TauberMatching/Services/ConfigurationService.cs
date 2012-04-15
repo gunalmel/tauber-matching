@@ -45,7 +45,7 @@ namespace TauberMatching.Services
             { 
                 case ContactType.Project:
                     projectConfigParams= new string[]{
-                    ConfigEnum.EnforceContinuousStudentRanking.ToString(),ConfigEnum.MaxRejectedBusStudents.ToString(),ConfigEnum.MaxRejectedEngStudents.ToString(),ConfigEnum.MaxRejectedStudents.ToString(),ConfigEnum.MinABusStudents.ToString(),ConfigEnum.MinAEngStudents.ToString(),ConfigEnum.MinAStudents.ToString(),ConfigEnum.RejectedStudentThreshold.ToString()
+                    ConfigEnum.EnforceContinuousStudentRanking.ToString(),ConfigEnum.MaxRejectedBusStudents.ToString(),ConfigEnum.MaxRejectedEngStudents.ToString(),ConfigEnum.MaxRejectedStudents.ToString(),ConfigEnum.MinABusStudents.ToString(),ConfigEnum.MinAEngStudents.ToString(),ConfigEnum.MinAStudents.ToString(),ConfigEnum.MinBBusStudents.ToString(),ConfigEnum.MinBEngStudents.ToString(),ConfigEnum.MinBStudents.ToString(),ConfigEnum.RejectedStudentThreshold.ToString()
                     };
                     break;
                 case ContactType.Student:

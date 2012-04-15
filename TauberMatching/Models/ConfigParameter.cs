@@ -98,8 +98,6 @@ namespace TauberMatching.Models
                 return true;
             return false;
         } 
-
-
     }
     
     public enum ConfigEnum
@@ -132,6 +130,18 @@ namespace TauberMatching.Models
         /// Minimum number of students who should be in A category
         /// </summary>
         MinAStudents=35,
+        /// <summary>
+        /// Min number of Busines students who should be ranked as B (desired)
+        /// </summary>
+        MinBBusStudents = 36,
+        /// <summary>
+        /// Min number of Engineering students who should be ranked as B (desired)
+        /// </summary>
+        MinBEngStudents = 37,
+        /// <summary>
+        /// Min number of students who should be ranked as B (desired)
+        /// </summary>
+        MinBStudents = 38,
         /// <summary>
         /// Maximum number of business students who can be rejected
         /// </summary>
@@ -167,7 +177,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Decides whether projects should rank students in a continuum. If there are students in A and D category then there should be students in B and C category as well.
         /// </summary>
-        EnforceContinuousStudentRanking=75,
+        EnforceContinuousStudentRanking=75
     }
     public enum EmailConfigEnum
     {
