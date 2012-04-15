@@ -20,14 +20,14 @@
             $("#btnSave").live("click", function () {
                 var emailAddresses = $("#ConfirmationEmailReceivers").val();
                 if (emailAddresses != null && emailAddresses.length > 0 && (emailAddresses.indexOf(';') > -1 || emailAddresses.indexOf(':') > -1)) {
-                    alert("ERROR! PAGE IS NOT SAVED!: If there is more than one Confirmation Email Recipient email address then those addresses should be separated by comma (,) character");
+                    alert("ERROR! PAGE IS NOT SAVED!: If there is more than one Confirmation Recipient email address then those addresses should be separated by comma (,) character. Space character or (;) character are not valid e-mail address separators.");
                     return false;
                 }
                 if (emailAddresses != null && emailAddresses.length > 0) {
                     var emails = emailAddresses.split(',');
                     for (var emailCounter = 0; emailCounter < emails.length; emailCounter++) {
                         if (!validateEmail(emails[emailCounter])) {
-                            alert("ERROR! PAGE IS NOT SAVED!: There is an invalid e-mail address in the Confirmation Email Recipients text box");
+                            alert("ERROR! PAGE IS NOT SAVED!: There is an invalid e-mail address in the Confirmation Email Recipients text box. There should not be any preceding or trailing space characters in the e-mail addresses. Please make sure that you do not leave space before/after any e-mail address you entered.");
                             return false;
                         }
                     }
@@ -60,7 +60,7 @@
                 <%: Html.LabelFor(model => model.MailServerPort) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.MailServerPort) %>
+                <%: Html.TextBoxFor(model => model.MailServerPort, new { @style = "width: 50px;" })%>
                 <%: Html.ValidationMessageFor(model => model.MailServerPort) %>
             </div>
             

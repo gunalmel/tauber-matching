@@ -41,7 +41,8 @@ namespace TauberMatching.Models
             }
             set
             {
-                _uniqueName = Regex.Replace(value.Trim(), @"\s+", " ").ToLower();
+                if(value!=null)
+                    _uniqueName = Regex.Replace(value.Trim(), @"\s+", " ").ToLower();
             } 
         }
         [Required(ErrorMessage = "Mandatory Field: You must enter the first name of the student!")]
@@ -55,7 +56,8 @@ namespace TauberMatching.Models
             }
             set
             {
-                _first = Regex.Replace(value.Trim(), @"\s+", " ").InitCap();
+                if (value != null)
+                    _first = Regex.Replace(value.Trim(), @"\s+", " ").InitCap();
             }
         }
         [Required(ErrorMessage = "Mandatory Field: You must enter the last name of the student!")]
@@ -69,7 +71,8 @@ namespace TauberMatching.Models
             }
             set
             {
-                _last = Regex.Replace(value.Trim(), @"\s+", " ").InitCap();
+                if (value != null)
+                    _last = Regex.Replace(value.Trim(), @"\s+", " ").InitCap();
             }
         }
         [Required(ErrorMessage = "Mandatory Field: You must choose the degree for the student!")]
@@ -96,7 +99,8 @@ namespace TauberMatching.Models
             {
                 if (value != null && value.Trim() != null)
                     _comments = Regex.Replace(value.Trim(), @"\s+", " ");
-                _comments = value;
+                else
+                    _comments = value;
             }
         }
         [HiddenInput]

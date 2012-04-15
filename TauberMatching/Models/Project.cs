@@ -13,6 +13,7 @@ namespace TauberMatching.Models
         private string _comments;
         private string _firstName;
         private string _lastName;
+        private string _contactPhone;
         private bool _emailed=false;
         private string _feedback;
 
@@ -38,7 +39,8 @@ namespace TauberMatching.Models
             {
                 if (value != null && value.Trim() != null)
                     _name = Regex.Replace(value.Trim(), @"\s+", " ");
-                _name = value;
+                else
+                    _name = value;
             }
         }
         [DisplayName("Emailed?")]
@@ -54,7 +56,8 @@ namespace TauberMatching.Models
             {
                 if (value != null && value.Trim() != null)
                     _comments = Regex.Replace(value.Trim(), @"\s+", " ");
-                _comments = value;
+                else
+                    _comments = value;
             }
         }
         [HiddenInput]
@@ -69,7 +72,8 @@ namespace TauberMatching.Models
             {
                 if (value != null && value.Trim() != null)
                     _firstName = Regex.Replace(value.Trim(), @"\s+", " ");
-                _firstName = value;
+                else
+                    _firstName = value;
             }
         }
         [Required(ErrorMessage = "Mandatory Field: You must enter the last name for the project contact!")]
@@ -82,7 +86,8 @@ namespace TauberMatching.Models
             {
                 if (value != null && value.Trim() != null)
                     _lastName = Regex.Replace(value.Trim(), @"\s+", " ");
-                _lastName = value;
+                else
+                    _lastName = value;
             }
         }
         [Required(ErrorMessage = "Mandatory Field: You must enter the email for the project contact!")]
@@ -92,7 +97,17 @@ namespace TauberMatching.Models
         public string ContactEmail { get; set; }
         [DisplayName("Contact Phone")]
         [MaxLength(16, ErrorMessage = "Phone number can be at most 16 characters long.")]
-        public string ContactPhone { get; set; }
+        public string ContactPhone {
+            get
+            {
+                return _contactPhone;
+            }
+            set
+            {
+                if (value != null)
+                    this._contactPhone = value.Trim();
+            }
+        }
         public virtual ICollection<Matching> Matchings { get; set; }
         public virtual ICollection<EmailLog> EmailLogs { get; set; }
         public virtual ICollection<ProjectReject> ProjectRejects { get; set; }
@@ -106,7 +121,8 @@ namespace TauberMatching.Models
             {
                 if (value != null && value.Trim() != null)
                     _feedback = Regex.Replace(value.Trim(), @"\s+", " ");
-                _feedback = value;
+                else
+                    _feedback = value;
             }
         }
         /// <summary>

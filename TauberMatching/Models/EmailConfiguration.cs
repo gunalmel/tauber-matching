@@ -17,7 +17,11 @@ namespace TauberMatching.Models
         public string MailServer
         {
             get { return _mailServer; }
-            set { _mailServer = value; }
+            set 
+            { 
+                if(value!=null)
+                    _mailServer = value.Trim(); 
+            }
         }     
         private int _mailServerPort;
         [DisplayName("Email Server Port:")]
@@ -49,7 +53,11 @@ namespace TauberMatching.Models
         public string MailAccount
         {
             get { return _mailAccount; }
-            set { _mailAccount = value; }
+            set 
+            {
+                if (value != null)
+                    _mailAccount = value.Trim(); 
+            }
         }
         private string _mailPassword;
         [DisplayName("Email Server Account Password:")]

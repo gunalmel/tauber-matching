@@ -101,7 +101,11 @@ namespace TauberMatching.Models
         public string SiteMasterFirstName
         {
             get { return _siteMasterFirstName; }
-            set { _siteMasterFirstName = value; }
+            set 
+            { 
+                if(value!=null)
+                    _siteMasterFirstName = value.Trim(); 
+            }
         }
         /// <summary>
         /// Last name of the person whose contact information is going to be sent with the notification emails
@@ -110,14 +114,18 @@ namespace TauberMatching.Models
         public string SiteMasterLastName
         {
             get { return _siteMasterLastName; }
-            set { _siteMasterLastName = value; }
+            set 
+            {
+                if (value != null)
+                    _siteMasterLastName = value.Trim(); 
+            }
         }
         /// <summary>
         /// Email of the person whose contact information is going to be sent with the notification emails
         /// </summary>
         [DisplayName("Site Admin Email:")]
         [Required(ErrorMessage = "Mandatory Field: You must enter the email for the site admin for users to reply back when there is a problem !")]
-        [RegularExpression(@"^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$", ErrorMessage = "Valid Email Address is required.")]  
+        [RegularExpression(@"^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$", ErrorMessage = "Valid Email Address is required. Besides requiring the correct e-mail format, trailing/preceding spaces in e-mail addresses are not allowed.)")]  
         public string SiteMasterEmail
         {
             get { return _siteMasterEmail; }
@@ -130,7 +138,11 @@ namespace TauberMatching.Models
         public string SiteMasterPhone
         {
             get { return _siteMasterPhone; }
-            set { _siteMasterPhone = value; }
+            set 
+            {
+                if (value != null)
+                    _siteMasterPhone = value.Trim(); 
+            }
         }
         /// <summary>
         /// Minimum number of business students who should be in A categeory
@@ -236,7 +248,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Decides whether students should rank projects in a continuum. E.g.: If there are projects in 1st and 4th category then there should be projects in 2nd & 3rd category as well.
         /// </summary>
-        [DisplayName("Should students rank projects in continuum:")]
+        [DisplayName("Should students rank projects in continuum e.g. If there are projects in the 1st and 4th category then there should be projects in 2nd & 3rd category as well:")]
         public bool EnforceContinuousProjectRanking
         {
             get { return _enforceContinuousProjectRanking; }
@@ -245,7 +257,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Decides whether projects should rank students in a continuum. E.g.: If there are students in A and D category then there should be students in B & C category as well.
         /// </summary>
-        [DisplayName("Should companies rank students in continuum:")]
+        [DisplayName("Should companies rank students in continuum. e.g. If there are students in Ideal(A) category and in Acceptable(C) category then there should be students in Desired (B) category as well:")]
         public bool EnforceContinuousStudentRanking
         {
             get { return _enforceContinuousStudentRanking; }
