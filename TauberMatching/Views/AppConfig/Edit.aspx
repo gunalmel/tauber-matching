@@ -4,12 +4,13 @@
 	Tauber Matching Web Application - Edit Application Configuration
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ScriptOrCssContent" runat="server">
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/themes/ui-lightness/jquery-ui.css" type="text/css" rel="stylesheet" />
-    <link href="../../Content/ui.spinner.css" rel="stylesheet" type="text/css" />
-    <script src="../../Scripts/jquery-ui-1.8.7.custom.min.js" type="text/javascript"></script>
-    <script src="../../Scripts/ui.spinner.min.js" type="text/javascript"></script>
+<%--<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/themes/ui-lightness/jquery-ui.css" type="text/css" rel="stylesheet" />--%>
+    <link href="<%= Url.Content("~/Content/jquery-ui.css") %>" rel="stylesheet" type="text/css" />
+    <link href="<%= Url.Content("~/Content/ui.spinner.css") %>" rel="stylesheet" type="text/css" />
+    <script src="<%= Url.Content("~/Scripts/jquery-ui-1.8.16.custom.min.js") %>" type="text/javascript"></script>
+    <script src="<%= Url.Content("~/Scripts/ui.spinner.min.js") %>" type="text/javascript"></script>
     <style type="text/css">
-        .number_constraint
+        .number_constraint,.number_constraint_negative
         {
             width: 20px !important;
         }
@@ -18,6 +19,7 @@
         $(function () {
             $("#spClearDatabase").bind("click", function () { return confirm("!!!!!!!! ATTENTION !!!!!!!!!! Are you sure you'd like to reset the database? That will clear all records from the database except the app setup and email config parameters."); });
             $(".number_constraint").spinner({ min: 0, max: 100, increment: 1 });
+            $(".number_constraint_negative").spinner({ min: -1, max: 100, increment: 1 });
         });
     </script>
 </asp:Content>
@@ -116,7 +118,7 @@
                 <%: Html.LabelFor(model => model.MaxRejectedBusStudents) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.MaxRejectedBusStudents, new { @class = "number_constraint" })%>
+                <%: Html.TextBoxFor(model => model.MaxRejectedBusStudents, new { @class = "number_constraint_negative" })%>
                 <%: Html.ValidationMessageFor(model => model.MaxRejectedBusStudents) %>
             </div>
             
@@ -124,7 +126,7 @@
                 <%: Html.LabelFor(model => model.MaxRejectedEngStudents) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.MaxRejectedEngStudents, new { @class = "number_constraint" })%>
+                <%: Html.TextBoxFor(model => model.MaxRejectedEngStudents, new { @class = "number_constraint_negative" })%>
                 <%: Html.ValidationMessageFor(model => model.MaxRejectedEngStudents) %>
             </div>
 
@@ -132,7 +134,7 @@
                 <%: Html.LabelFor(model => model.MaxRejectedStudents) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.MaxRejectedStudents, new { @class = "number_constraint" })%>
+                <%: Html.TextBoxFor(model => model.MaxRejectedStudents, new { @class = "number_constraint_negative" })%>
                 <%: Html.ValidationMessageFor(model => model.MaxRejectedStudents) %>
             </div>
 
@@ -156,7 +158,7 @@
                 <%: Html.LabelFor(model => model.MaxRejectedProjects) %>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.MaxRejectedProjects, new { @class = "number_constraint" })%>
+                <%: Html.TextBoxFor(model => model.MaxRejectedProjects, new { @class = "number_constraint_negative" })%>
                 <%: Html.ValidationMessageFor(model => model.MaxRejectedProjects) %>
             </div>
 

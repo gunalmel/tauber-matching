@@ -249,7 +249,7 @@ function checkForRejectedProjectError() {
     var error = new UIError();
     if (RejectedProjectThreshold != -1 && ProjectCount < RejectedProjectThreshold && rejectedProjectCount > 0) { //Students can reject projects only when they interviewed more than certain # of projects
         error.isError = true;
-        error.errorMessage = minTotalProjectstsToRejectViolationErrorMessage;
+        error.errorMessage = minTotalProjectsToRejectViolationErrorMessage;
     }
     else if (MaxRejectedProjects != -1 && rejectedProjectCount > MaxRejectedProjects) {
         error.isError = true;

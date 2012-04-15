@@ -219,6 +219,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\images\wait.gif" />
+    <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\ProjectAndStudentDetails.css" />
     <Content Include="Content\RankProjects.css" />
     <Content Include="Scripts\AdminContactIndex.js" />
@@ -236,6 +237,7 @@
     <Content Include="Scripts\ckeditor\contents.css" />
     <Content Include="Scripts\ckeditor\images\spacer.gif" />
     <Content Include="Scripts\ckeditor\INSTALL.html" />
+    <Content Include="Scripts\jquery-1.7.min.js" />
     <Content Include="Scripts\ckeditor\lang\af.js" />
     <Content Include="Scripts\ckeditor\lang\ar.js" />
     <Content Include="Scripts\ckeditor\lang\bg.js" />

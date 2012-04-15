@@ -212,7 +212,7 @@ namespace TauberMatching.Models
         /// <summary>
         /// Maximum number of business students who can be rejected
         /// </summary>
-        [DisplayName("Max # of Business Students a company can reject:")]
+        [DisplayName("Max # of Business Students a company can reject (Ignored if set to -1):")]
         public int MaxRejectedBusStudents
         {
             get { return _maxRejectedBusStudents; }
@@ -221,25 +221,25 @@ namespace TauberMatching.Models
         /// <summary>
         /// Maximum number of engineering students whou can be rejected
         /// </summary>
-        [DisplayName("Max # of Engineering Students a company can reject:")]
+        [DisplayName("Max # of Engineering Students a company can reject (Ignored if set to -1):")]
         public int MaxRejectedEngStudents
         {
             get { return _maxRejectedEngStudents; }
             set { _maxRejectedEngStudents = value; }
         }
         /// <summary>
-        /// Maximum number of students whou can be rejected
+        /// Maximum number of students who can be rejected
         /// </summary>
-        [DisplayName("Max total # of Students a company can reject:")]
+        [DisplayName("Max total # of Students a company can reject (Ignored if set to -1):")]
         public int MaxRejectedStudents
         {
             get { return _maxRejectedStudents; }
             set { _maxRejectedStudents = value; }
         }
         /// <summary>
-        /// mMax number of projects that can be rejected by a student
+        /// Max number of projects that can be rejected by a student
         /// </summary>
-        [DisplayName("Max # of Projects a student can reject:")]
+        [DisplayName("Max # of Projects a student can reject (Ignored if set to -1):")]
         public int MaxRejectedProjects
         {
             get { return _maxRejectedProjects; }
