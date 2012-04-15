@@ -14,18 +14,21 @@
  * var EnforceContinuousStudentRanking = true;
  * var webServiceUrlToSubmit, AdminPhone, AdminEmail is set in the view.
  */
-/** Error message to be displayed when the user assigns A to a number of engineering students less  than the number specified by MinAEngStudents */
-var engStudentsAErrorMessage = 'You have to pick at least ' + MinAEngStudents + ' engineering student' + (MinAEngStudents > 1 ? 's  as "Ideal".\n' : '  as "Ideal".\n');
-/** Error message to be displayed when the user assigns B to a number of engineering students less  than the number specified by MinBEngStudents */
-var engStudentsBErrorMessage = 'You have to pick at least ' + MinBEngStudents + ' engineering student' + (MinBEngStudents > 1 ? 's as "Desired".\n' : ' as "Desired".\n');
-/** Error message to be displayed when the user the user assigns A to a number of business students less than the number specified by MinABusStudents */
-var busStudentsAErrorMessage = 'You have to pick at least ' + MinABusStudents + ' business student' + (MinABusStudents > 1 ? 's as "Ideal".\n' : '  as "Ideal".\n');
-/** Error message to be displayed when the user the user assigns A to a number of business students less than the number specified by MinBBusStudents */
-var busStudentsBErrorMessage = 'You have to pick at least ' + MinBBusStudents + ' business student' + (MinBBusStudents > 1 ? 's as "Desired".\n' : ' as "Desired".\n');
-/** Error message to be displayed when the the user assigns A to a number of students less than the number specified by MinAStudents */
-var allStudentsAErrorMessage = 'You have to pick at least ' + MinAStudents + ' student' + (MinAStudents > 1 ? 's as "Ideal" in total.\n' : ' as "Ideal" in total.\n');
-/** Error message to be displayed when the the user assigns B to a number of students less than the number specified by MinBStudents */
-var allStudentsBErrorMessage = 'You have  to pick at least ' + MinBStudents + ' student' + (MinBStudents > 1 ? 's as "Desired" in total.\n' : ' as "Desired" in total.\n');
+
+ /** 0th argument is the minumum number constraint for the students with a degree specified by 1st argument (engineering, business) for the rank category specified by the 3rd argument. 2nd argument is used to pluralize student word if the number specified by oth argument is greater than 1*/
+var rankingMinCountErrorMsg = 'You have to pick at least {0} {1}student{2} as "{3}"{4}';
+var rankingMinCountErrorMsgSuffix = '.\n';
+var rankingMinTotalCountErrorMsgSuffix = ' in total.\n'
+
+function getRankingValidationErrorMsgTextForMinNumberConstraints(minNumber, degree, ranking, total) {
+    var rankingName = ranking=="A"?"Ideal":(ranking=="B"?"Desired":(ranking=="C"?"Acceptable":"Reject"));
+    var msg="";
+    if (total)
+        msg = rankingMinCountErrorMsg.format(minNumber, "", (minNumber > 1 ? "s" : ""), rankingName, rankingMinTotalCountErrorMsgSuffix);
+    else
+        msg = rankingMinCountErrorMsg.format(minNumber, degree+" ", (minNumber > 1 ? "s" : ""), rankingName, rankingMinCountErrorMsgSuffix);
+    return msg;
+}
 /** If EnforceContinuousStudentRanking then the Error message to be displayed when ranking scheme is sparse */
 var sparseRankingErrorMessage = 'When you are ranking students, your ranking scheme should not be sparse, e.g.: If there are students in the "Ideal" and "Aceptable" boxes when there are no students in the "Desired" box that is an error.\n';
 
@@ -198,12 +201,7 @@ function onReceived(event, ui) {
             var fullName = ui.item.text();
             addRejectReasonForStudent(studentId, fullName);
         }
-        // alert("Eng:"+rejectedEngStudentCount+" Bus:"+rejectedBusStudentCount);
-       // alert(validateRejectReason().errorMessage);
     }
-    //alert(isRankingContinuous().isError+" "+isRankingContinuous().errorMessage);
-    //alert(checkForAStudentError().errorMessage);
-    //alert(runAllValidations().errorMessage);
 }
 /**
  * @function Event handler function for JQuery sortable drag and drop UI. Whenever a draggable elemnt is removed from a sortable droppable element this function is triggered to discard reject reason textarea if rejected student is removed from rejected bucket.
@@ -261,9 +259,10 @@ function buildProjectRankingDto() {
  * @returns {UIError}
  */
 function runAllValidations() {
+    var studentCountMap = getStudentCountGroupedByScoreAndDegree();
     divUserErrors.html("");
-    var AError = checkForAStudentError();
-    var BError = checkForBStudentError();
+    var AError = checkForAStudentError(studentCountMap);
+    var BError = checkForBStudentError(studentCountMap);
     var isContinuousError = isRankingContinuous();
     var isRejectReasonEmptyError = validateRejectReason();
     var areAllStudentsRanked = checkIfAllStudentsRanked();
@@ -335,50 +334,87 @@ function validateRejectReason() {
 * @function Checks if the required min # of eng, bus and total students are assigned A
 * @returns {UIError} Returns an UIError object to indicate whether the validation result is an error, if it is then errorMessage property is set to the error message to be displayed.
 */
-function checkForAStudentError() {
-    var aEngStudentCount = getStudentCountForScoreForDegree("A", "Eng");
-    var aBusStudentCount = getStudentCountForScoreForDegree("A", "Bus");
+function checkForAStudentError(stCountMap) {
+    var aEngStudentCount = stCountMap.AEngCount;
+    var aBusStudentCount = stCountMap.ABusCount;
     var aStudentCount = aEngStudentCount + aBusStudentCount;
-    var isError = false;
-    var errorMessage = "";
-    if (MinAEngStudents != -1 && aEngStudentCount < MinAEngStudents && StudentCount.Eng > 0) {
-        isError = true;
-        errorMessage += engStudentsAErrorMessage;
+
+    var error = new UIError(false, "");
+
+    MinAEngStudents = (MinAEngStudents > StudentCount.Eng) ? StudentCount.Eng : MinAEngStudents;
+    MinABusStudents = (MinABusStudents > StudentCount.Bus) ? StudentCount.Bus : MinABusStudents;
+    MinAStudents = (MinAStudents > StudentCount.All) ? StudentCount.All : (MinAStudents > (MinAEngStudents + MinABusStudents) ? MinAStudents : (MinAEngStudents + MinABusStudents));
+
+    var isAEngRequired = (MinAEngStudents > 0 && StudentCount.Eng > 0 && aEngStudentCount < StudentCount.Eng );
+    var isABusRequired = (MinABusStudents > 0 && StudentCount.Bus > 0 && aBusStudentCount < StudentCount.Bus);
+    var isARequired = (MinAStudents > 0 && StudentCount.Bus > 0 && aStudentCount < StudentCount.All);
+
+    var noValidationRequired = (!isAEngRequired && !isABusRequired && !isARequired);
+
+    if (noValidationRequired) {
+        return error;
+    } else {
+        if (isAEngRequired && aEngStudentCount < MinAEngStudents) {
+            error.isError = true;
+            error.errorMessage += getRankingValidationErrorMsgTextForMinNumberConstraints(MinAEngStudents,"engineering","A",false);
+        }
+        if (isABusRequired && aBusStudentCount < MinABusStudents) {
+            error.isError = true;
+            error.errorMessage += getRankingValidationErrorMsgTextForMinNumberConstraints(MinABusStudents, "business", "A", false);
+        }
+        if (isARequired > 0 && aStudentCount < MinAStudents) {
+            error.isError = true;
+            error.errorMessage += getRankingValidationErrorMsgTextForMinNumberConstraints(MinAStudents, "", "A", true);
+        }
     }
-    if (MinABusStudents != -1 && aBusStudentCount < MinABusStudents && StudentCount.Bus > 0) {
-        isError = true;
-        errorMessage += busStudentsAErrorMessage;
-    }
-    if (MinAStudents != -1 && aStudentCount < MinAStudents) {
-        isError = true;
-        errorMessage += allStudentsAErrorMessage;
-    }
-    return new UIError(isError, errorMessage);
+    return error;
 }
 
 /**
 * @function Checks if the required min # of eng, bus and total students are assigned B
+* @param isAError If there are enough eng/bus and in total students in A then when there's only one eng/bus student validation should automatically pass because it can not be forced that there should be at least 1 eng and 1 us student in B
 * @returns {UIError} Returns an UIError object to indicate whether the validation result is an error, if it is then errorMessage property is set to the error message to be displayed.
 */
-function checkForBStudentError() {
-    var bEngStudentCount = getStudentCountForScoreForDegree("B", "Eng");
-    var bBusStudentCount = getStudentCountForScoreForDegree("B", "Bus");
+function checkForBStudentError(stCountMap) {
+    var bEngStudentCount = stCountMap.BEngCount;
+    var bBusStudentCount = stCountMap.BBusCount;
     var bStudentCount = bEngStudentCount + bBusStudentCount;
-    var isError = false;
-    var errorMessage = "";
-    if (MinBEngStudents != -1 && bEngStudentCount < MinBEngStudents && StudentCount.Eng > 0) {
-        isError = true;
-        errorMessage += engStudentsBErrorMessage;
+    var engStudents = StudentCount.Eng;
+    var busStudents = StudentCount.Bus;
+
+    var error = new UIError(false,"");
+
+    var engStudentsLeftAfterA = (engStudents - MinAEngStudents)>0?(engStudents - MinAEngStudents):0;
+    var busStudentsLeftAfterA = (busStudents - MinABusStudents)>0?(busStudents - MinAEngStudents):0;
+    var totalStudentsLeftAfterA = engStudentsLeftAfterA+busStudentsLeftAfterA;
+
+    var isBEngRequired = (MinBEngStudents > 0 && engStudentsLeftAfterA > 0 && engStudentsLeftAfterA > bEngStudentCount);
+    var isBBusRequired = (MinBBusStudents > 0 && busStudentsLeftAfterA > 0 && busStudentsLeftAfterA > bBusStudentCount);
+    var isBRequired = (MinBStudents > 0 && totalStudentsLeftAfterA > 0 && totalStudentsLeftAfterA > bStudentCount);
+
+    MinBEngStudents = (MinBEngStudents < engStudentsLeftAfterA) ? MinBEngStudents : engStudentsLeftAfterA;
+    MinBBusStudents = (MinBBusStudents < busStudentsLeftAfterA)?MinBBusStudents:busStudentsLeftAfterA;
+    MinBStudents = (MinBStudents < totalStudentsLeftAfterA) ? MinBStudents : totalStudentsLeftAfterA;
+
+    var noValidationRequired = (!isBEngRequired && !isBBusRequired && !isBRequired);
+
+    if (noValidationRequired) {
+        return error;
+    } else {
+        if (isBEngRequired && MinBEngStudents > bEngStudentCount) {
+            error.isError = true;
+            error.errorMessage += getRankingValidationErrorMsgTextForMinNumberConstraints(MinBEngStudents, "engineering", "B", false);
+        }
+        if (isBBusRequired && MinBBusStudents > bBusStudentCount) {
+            error.isError = true;
+            error.errorMessage += getRankingValidationErrorMsgTextForMinNumberConstraints(MinBBusStudents, "business", "B", false);
+        }
+        if (isBRequired && MinBStudents > bStudentCount) {
+            error.isError = true;
+            error.errorMessage += getRankingValidationErrorMsgTextForMinNumberConstraints(MinBStudents, "", "B", true);
+        }
     }
-    if (MinBBusStudents != -1 && bBusStudentCount < MinBBusStudents && StudentCount.Bus > 0) {
-        isError = true;
-        errorMessage += busStudentsBErrorMessage;
-    }
-    if (MinBStudents != -1 && bStudentCount < MinBStudents) {
-        isError = true;
-        errorMessage += allStudentsBErrorMessage;
-    }
-    return new UIError(isError, errorMessage);
+    return error;
 }
 
 /**
