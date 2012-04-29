@@ -9,8 +9,9 @@
  * var MinFirstProjects = 1;
  * var webServiceUrlToSubmit, AdminPhone, AdminEmail is set in the view.
  */
-/** Error message to be displayed when the user rejects more engineering students than the number specified by MinFirstProjects */
-var minFirstProjectsErrorMessage = "You have to select at least " + MinFirstProjects + " project" + (MinFirstProjects > 1 ? "s" : "")+ " as your first preference.\n";
+
+/** 0th argument is the minumum number constraint for the projects */
+var rankingMinCountErrorMsg = 'You have to pick at least {0} project{1} as your first preference.\n';
 /** If EnforceContinuousProjectRanking then the error message to be displayed when ranking scheme is sparse */
 var sparseRankingErrorMessage = "When you are ranking projects, your ranking scheme should not be sparse, e.g.: If there are projects in First and Fourth when there are no projects in Second and Third that's an error.\n";
 /** If the student tries to reject a project when in total there are less than RejectedProjectThreshold projects */
@@ -36,6 +37,12 @@ var ScoreBuckets;
  * @see Error
  */
 var ProjectCount;
+
+function getRankingValidationErrorMsgTextForMinNumberConstraints(minFirstProjects) {
+    var msg="";
+    msg = rankingMinCountErrorMsg.format(minFirstProjects, (minFirstProjects > 1 ? "s" : ""));
+    return msg;
+}
 
 /**** CLASS DECLARATIONS STARTS */
 
@@ -281,9 +288,13 @@ function checkForFirstChoiceProjectError() {
     var firstChoiceProjectCount = getProjectCountForScore("1");
     var isError = false;
     var errorMessage = "";
-    if (MinFirstProjects != -1 && firstChoiceProjectCount < MinFirstProjects && ProjectCount > 0) {
+
+    var isMinFirstRequired = (MinFirstProjects > 0 && ProjectCount > 0);
+    MinFirstProjects = (MinFirstProjects > ProjectCount) ? ProjectCount : MinFirstProjects;
+
+    if (isMinFirstRequired && firstChoiceProjectCount < MinFirstProjects) {
         isError = true;
-        errorMessage += minFirstProjectsErrorMessage;
+        errorMessage += getRankingValidationErrorMsgTextForMinNumberConstraints(MinFirstProjects);
     }
     return new UIError(isError, errorMessage);
 }
