@@ -40,13 +40,13 @@
     <%  if (!Model.IsError)
         {%>
            <div id="divInstructions">
-               Click on the yellow box with a student's name and discipline and 'drag and drop' it under the appropriate heading (A,B,C or Reject)
+               Click on the yellow box with a student's name and discipline and 'drag and drop' it under the appropriate heading (Ideal,Desired,Acceptable or Reject)
                <ol>
                    <li class="inst">
                        Rank all of the candidates you interviewed using Ideal,Desired,Acceptable, or Reject selections:
                        <ul id="ulRanks">
-                           <li class="disc"><b>Ideal:</b> Students who would be <b>ideal</b> members of your project team. Please rate at least <u><script type="text/javascript">document.write(MinAEngStudents);</script></u> engineering student and <u><script type="text/javascript">document.write(MinAEngStudents);</script></u> business student in the 'A' category. </li>
-                           <li class="disc"><b>Desired:</b> Students who would be <b>desired</b> members of your project team.</li>
+                           <li class="disc"><b>Ideal:</b> Students who would be <b>ideal</b> members of your project team. Please rate at least <u><script type="text/javascript">document.write(MinAEngStudents);</script></u> engineering student and <u><script type="text/javascript">document.write(MinABusStudents);</script></u> business student in the 'Ideal' category. </li>
+                           <li class="disc"><b>Desired:</b> Students who would be <b>desired</b> members of your project team. Please rate at least <u><script type="text/javascript">document.write(MinBEngStudents);</script></u> engineering student and <u><script type="text/javascript">document.write(MinBBusStudents);</script></u> business student in the 'Desired' category. </li>
                            <li class="disc"><b>Acceptable:</b> Students who would be <b>acceptable</b> members of your project.</li>
                            <li class="disc"><b>Reject:</b> <i>Optional.</i> If you feel strongly that a candidate would be <b>unacceptable</b> on your team, place his or her name here. A maximum of <u><script type="text/javascript">document.write(MaxRejectedEngStudents);</script></u> engineering student and <u><script type="text/javascript">document.write(MaxRejectedBusStudents);</script></u> business student can be placed in the 'Reject' category. </li>
                        </ul>
@@ -54,7 +54,7 @@
                    <li class="inst">Engineering (Eng) students are those pursuing Masters degrees in any engineering discipline; Business (Bus) students are those pursuing MBAs (including dual degree students) and those students in the MSCM program.</li>
                    <script type="text/javascript">
                         if(EnforceContinuousStudentRanking)
-                            document.write('<li class="inst">You can assign more than one student to the same ranking category, however, your ranking list should be continuous (e.g., if you want to rank a student in the \'C\' category, you must have already ranked students in the \'A\' and \'B\' category, otherwise you will receive an error message).</li>');
+                            document.write('<li class="inst">You can assign more than one student to the same ranking category, however, your ranking list should be continuous (e.g., if you want to rank a student in the \'Acceptable\' category, you must have already ranked students in the \'Ideal\' and \'Desired\' category, otherwise you will receive an error message).</li>');
                    </script>
                    <li class="inst">
                        Students with the same ranking will be given equal weight during the matching process. There is a significant difference between rankings.

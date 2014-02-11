@@ -212,9 +212,7 @@
     <None Include="_bin_deployableAssemblies\EN\System.Data.SqlServerCe.xml" />
     <None Include="_bin_deployableAssemblies\System.Data.SqlServerCe.dll" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
-    <Content Include="App_Data\MatchingDB.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="App_Data\MatchingDB.sdf" />
     <Content Include="App_Data\uploads\placeholder.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

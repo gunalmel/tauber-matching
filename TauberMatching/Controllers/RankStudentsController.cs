@@ -12,6 +12,12 @@ namespace TauberMatching.Controllers
     public class RankStudentsController : Controller
     {
         private static string _confMesgReceipents = ConfigurationService.GetEmailConfigParameters().ConfirmationEmailReceivers;
+        private static Dictionary<string, string> _scoreDictionary = new Dictionary<string, string>();
+
+        static RankStudentsController(){
+            MatchingDB db = new MatchingDB();
+            _scoreDictionary= db.ScoreDetails.Where(s => s.ScoreFor == "Project").ToDictionary(k => k.Score, v => v.ScoreTypeDisplay);
+        }
 
         public ActionResult Index(Guid? id)
         {
@@ -70,7 +76,7 @@ namespace TauberMatching.Controllers
             StringBuilder builder = new StringBuilder();
             foreach (var group in p.Matchings.Where(m=>m.ProjectScore!=ProjectScore.Reject.ToString()).OrderBy(m=>m.ProjectScore).GroupBy(m => m.ProjectScore))
             {
-                builder.Append("<b>" + group.Key + ": </b>");
+                builder.Append("<b>" + _scoreDictionary[group.Key] + ": </b>");
                 foreach (Matching m in group)
                     builder.Append(m.Student.FullName + ", ");
                 builder.Remove((builder.Length - 2), 2);
