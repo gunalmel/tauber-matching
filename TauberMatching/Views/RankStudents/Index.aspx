@@ -40,7 +40,7 @@
     <%  if (!Model.IsError)
         {%>
            <div id="divInstructions">
-               Click on the yellow box with a student's name and discipline and 'drag and drop' it under the appropriate heading (Ideal,Desired,Acceptable or Reject)
+               Click on the yellow box with a student's name and discipline and 'drag and drop' it under the appropriate heading (Ideal, Desired, Acceptable or Reject)
                <ol>
                    <li class="inst">
                        Rank all of the candidates you interviewed using Ideal,Desired,Acceptable, or Reject selections:
